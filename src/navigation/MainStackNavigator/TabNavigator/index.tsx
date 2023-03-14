@@ -7,10 +7,11 @@ import HomeTest from '@src/screens/HomeTest';
 // import Profile from '@src/screens/Main/Profile';
 // import { fontFamily } from '@src/utils/fonts';
 import colours from '@utils/colours';
-import { FULL_TAB_BAR_HEIGHT, SCREEN_WIDTH } from '@utils/deviceDimensions';
+import { DEVICE_OS, FULL_TAB_BAR_HEIGHT, SCREEN_WIDTH } from '@utils/deviceDimensions';
 import { StyleSheet, Text, View, ViewStyle } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import Ionicons from '@expo/vector-icons/Ionicons';
+import Home from '@src/screens/Main/Home';
 // import ChatStackNavigator from './ChatStack';
 // import HomeStackNavigator from './HomeStack';
 // import ProfileStackNavigator from './HomeStack/ProfileStack';
@@ -46,21 +47,23 @@ const TabNavigator = () => {
       }}>
       <Tab.Screen
         name='HomeStack'
-        component={HomeTest}
+        component={Home}
         options={({ navigation, route }) => {
           const isFocused = navigation.isFocused();
           return {
             // tabBarStyle: { display: getTabBarVisibility(route), borderStyle: 'solid' },
             headerShown: false,
             tabBarLabel: ({ focused, color }: { focused: boolean; color: string }) => (
-              <Text style={{ color: colours.greenNormal }}>Home</Text>
+              <Text style={{ color: focused ? colours.greenNormal : colours.black }}>Home</Text>
             ),
-            tabBarIcon: ({ focused }) => <Ionicons name='md-home' size={24} color={colours.greenNormal} />,
+            tabBarIcon: ({ focused }) => (
+              <Ionicons name='md-home' size={24} color={focused ? colours.greenNormal : colours.black} />
+            ),
           };
         }}
       />
       <Tab.Screen
-        name='ChatStack'
+        name='RecordStack'
         component={HomeTest}
         // component={ChatStackNavigator}
         options={({ navigation, route }) => {
@@ -69,14 +72,16 @@ const TabNavigator = () => {
             // tabBarStyle: { display: getTabBarVisibility(route) },
             headerShown: false,
             tabBarLabel: ({ focused, color }: { focused: boolean; color: string }) => (
-              <Text style={{ color: colours.black }}>Records</Text>
+              <Text style={{ color: focused ? colours.greenNormal : colours.black }}>Records</Text>
             ),
-            tabBarIcon: ({ focused }) => <Ionicons name='receipt' size={24} color='black' />,
+            tabBarIcon: ({ focused }) => (
+              <Ionicons name='receipt' size={24} color={focused ? colours.greenNormal : colours.black} />
+            ),
           };
         }}
       />
       <Tab.Screen
-        name='Adad'
+        name='Add'
         component={HomeTest}
         // component={ProfileStackNavigator}
         options={({ navigation, route }) => {
@@ -96,15 +101,10 @@ const TabNavigator = () => {
                   position: 'absolute',
                   alignItems: 'center',
                   justifyContent: 'center',
+                  paddingLeft: DEVICE_OS === 'ios' ? 4 : 0,
                   backgroundColor: colours.greenNormal,
                 }}>
-                <Text
-                  style={{
-                    fontSize: 44,
-                    color: colours.white,
-                  }}>
-                  +
-                </Text>
+                <Ionicons size={44} name='add-outline' color={colours.white} />
               </View>
             ),
           };
@@ -120,9 +120,11 @@ const TabNavigator = () => {
             // tabBarStyle: { display: getTabBarVisibility(route) },
             headerShown: false,
             tabBarLabel: ({ focused, color }: { focused: boolean; color: string }) => (
-              <Text style={{ color: colours.black }}>Friends</Text>
+              <Text style={{ color: focused ? colours.greenNormal : colours.black }}>Friends</Text>
             ),
-            tabBarIcon: ({ focused }: { focused: boolean }) => <Ionicons name='book' size={24} color='black' />,
+            tabBarIcon: ({ focused }: { focused: boolean }) => (
+              <Ionicons name='book' size={24} color={focused ? colours.greenNormal : colours.black} />
+            ),
           };
         }}
       />
@@ -136,9 +138,11 @@ const TabNavigator = () => {
             // tabBarStyle: { display: getTabBarVisibility(route) },
             headerShown: false,
             tabBarLabel: ({ focused, color }: { focused: boolean; color: string }) => (
-              <Text style={{ color: colours.black }}>Profile</Text>
+              <Text style={{ color: focused ? colours.greenNormal : colours.black }}>Profile</Text>
             ),
-            tabBarIcon: ({ focused }: { focused: boolean }) => <Ionicons name='person' size={24} color='black' />,
+            tabBarIcon: ({ focused }: { focused: boolean }) => (
+              <Ionicons name='person' size={24} color={focused ? colours.greenNormal : colours.black} />
+            ),
           };
         }}
       />
