@@ -9,8 +9,17 @@ import { moderateScale, moderateVerticalScale } from 'react-native-size-matters'
 import GreenSection from './GreenSection';
 import TransactionCard from '@src/components/TransactionCard';
 import { ScrollView } from 'react-native-gesture-handler';
+import CustomButton from '@src/components/Input/CustomButton';
+import ActionSheet from '@alessiocancian/react-native-actionsheet';
+import { useRef } from 'react';
 
 const Home = () => {
+  const actionSheetRef = useRef<ActionSheet>();
+
+  const showActionSheet = () => {
+    if (actionSheetRef.current) actionSheetRef.current.show();
+  };
+
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <ScrollView
@@ -35,6 +44,7 @@ const Home = () => {
           />
 
           <GreenSection />
+          <CustomButton text='Click me!' onPress={showActionSheet} />
 
           <View style={{ gap: 12, marginTop: 20 }}>
             <Text style={{ fontFamily: 'dm-500', fontSize: moderateScale(16, 2) }}>Recent</Text>
@@ -44,6 +54,17 @@ const Home = () => {
           </View>
         </View>
       </ScrollView>
+      <ActionSheet
+        ref={actionSheetRef}
+        title={'Which one do you like ?'}
+        options={['Apple', 'Banana', 'Cancel']}
+        cancelButtonIndex={2}
+        destructiveButtonIndex={1}
+        theme='ios'
+        onPress={(index) => {
+          /* do something */
+        }}
+      />
     </SafeAreaView>
   );
 };

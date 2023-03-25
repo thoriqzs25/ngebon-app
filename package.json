@@ -9,12 +9,14 @@
     "web": "expo start --web"
   },
   "dependencies": {
+    "@alessiocancian/react-native-actionsheet": "^3.2.0",
     "@react-navigation/bottom-tabs": "^6.5.7",
     "@react-navigation/native": "^6.1.6",
     "@react-navigation/native-stack": "^6.9.12",
     "@react-navigation/stack": "^6.3.16",
     "expo": "~48.0.6",
     "expo-status-bar": "~1.4.4",
+    "firebase": "^9.18.0",
     "react": "18.2.0",
     "react-native": "0.71.3",
     "react-native-fast-image": "^8.6.3",

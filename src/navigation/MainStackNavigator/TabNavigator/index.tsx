@@ -12,6 +12,7 @@ import { StyleSheet, Text, View, ViewStyle } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import Home from '@src/screens/Main/Home';
+import Profile from '@src/screens/Main/Profile';
 // import ChatStackNavigator from './ChatStack';
 // import HomeStackNavigator from './HomeStack';
 // import ProfileStackNavigator from './HomeStack/ProfileStack';
@@ -129,8 +130,8 @@ const TabNavigator = () => {
         }}
       />
       <Tab.Screen
-        name='ProfileStack'
-        component={HomeTest}
+        name='Profile'
+        component={Profile}
         // component={ProfileStackNavigator}
         options={({ navigation, route }) => {
           const isFocused = navigation.isFocused();
