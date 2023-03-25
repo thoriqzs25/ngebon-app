@@ -22,3 +22,5 @@ export const NAV_BUTTON_HEIGHT = 44;
 export const NAV_BUTTON_ALIGN_OFFSET = STATUS_BAR_HEIGHT + NAV_BUTTON_HEIGHT;
 
 export const DEVICE_OS = (() => Platform.OS)();
+
+export const IS_ANDROID = (() => Platform.OS === 'android')();
