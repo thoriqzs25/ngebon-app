@@ -2,9 +2,10 @@ import IcGreenCircleArrow from '@src/assets/svg/IcGreenCircleArrow';
 import IcRedCircleArrow from '@src/assets/svg/IcRedCircleArrow';
 import colours from '@src/utils/colours';
 import { IS_ANDROID } from '@src/utils/deviceDimensions';
-import { StyleSheet, Text } from 'react-native';
+import { StyleSheet, Text, Easing } from 'react-native';
 import { View } from 'react-native';
 import { moderateScale } from 'react-native-size-matters';
+import TextTicker from 'react-native-text-ticker';
 import CustomButton from '../Input/CustomButton';
 
 const TransactionCard = ({ type = 'Incoming' }: { type?: 'Incoming' | 'Outcoming' }) => {
@@ -20,9 +21,19 @@ const TransactionCard = ({ type = 'Incoming' }: { type?: 'Incoming' | 'Outcoming
             {type === 'Incoming' ? ` | March 13 - 02:35 pm` : ` | March 11 - 08:19 pm`}
           </Text>
         </View>
-        <Text style={{ fontFamily: 'dm', fontSize: moderateScale(12, 2), alignSelf: 'center' }}>
-          {type === 'Incoming' ? 'Confirm Hamish’s Payment' : 'Payment requested by Zalina'}
-        </Text>
+        <View style={{ width: 200 }}>
+          <TextTicker
+            style={{ fontFamily: 'dm', fontSize: moderateScale(12, 2) }}
+            duration={5000}
+            // scrollSpeed={2500}
+            // loop
+            bounce={false}
+            easing={Easing.inOut(Easing.linear)}
+            scroll={'toLeft'}
+            repeatSpacer={30}>
+            {type === 'Incoming' ? 'Confirm Hamish’s Payment' : 'Payment requested by Zalina'}
+          </TextTicker>
+        </View>
         {type === 'Incoming' ? (
           <CustomButton
             text='Confirm'
