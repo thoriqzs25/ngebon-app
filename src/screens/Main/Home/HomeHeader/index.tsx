@@ -8,11 +8,21 @@ const HomeHeader = () => {
   return (
     <View
       style={{
+        paddingBottom: 14,
         alignItems: 'center',
         flexDirection: 'row',
         paddingHorizontal: 20,
+        backgroundColor: colours.white,
         justifyContent: 'space-between',
         paddingTop: IS_ANDROID ? STATUS_BAR_HEIGHT + 4 : 0,
+        elevation: 4,
+        shadowColor: '#000',
+        shadowOffset: {
+          width: 0,
+          height: 1,
+        },
+        shadowOpacity: 0.2,
+        shadowRadius: 1,
       }}>
       <ImageView name='logo' style={{ width: IS_ANDROID ? 36 : 32, height: 32 }} />
       <View style={{ flexDirection: 'row', gap: IS_ANDROID ? 24 : 12 }}>
