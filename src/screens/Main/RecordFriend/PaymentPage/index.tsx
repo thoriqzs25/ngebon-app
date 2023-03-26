@@ -5,8 +5,10 @@ import colours from '@src/utils/colours';
 import { StyleSheet, Text } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { moderateScale } from 'react-native-size-matters';
+import { moderateScale, moderateVerticalScale } from 'react-native-size-matters';
 import { useState } from 'react';
+import CustomButton from '@src/components/Input/CustomButton';
+import { navigate } from '@src/navigation';
 
 const PaymentCard = () => {
   const [amount, setAmount] = useState<string>();
@@ -64,6 +66,7 @@ const PaymentCard = () => {
         style={{
           width: '90%',
           flexDirection: 'row',
+          marginVertical: 16,
         }}>
         <Text style={{ fontFamily: 'inter-500', fontSize: moderateScale(36, 2) }}>Rp</Text>
 
@@ -85,6 +88,18 @@ const PaymentCard = () => {
           placeholderTextColor={colours.gray300}
         />
       </View>
+      <TextInput
+        style={{
+          fontFamily: 'inter',
+          fontSize: moderateScale(10, 2),
+          color: colours.gray500,
+          textAlign: 'center',
+          width: '100%',
+        }}
+        placeholderTextColor={colours.gray300}
+        placeholder={'add note (optional)'}
+        maxLength={32}
+      />
     </View>
   );
 };
@@ -105,10 +120,28 @@ const PaymentPage = () => {
             Enter Payment Amount
           </Text>
           <ScrollView
+            contentInsetAdjustmentBehavior='automatic'
             style={{ flex: 1, width: '100%' }}
-            contentContainerStyle={{ alignItems: 'center' }}
+            contentContainerStyle={{ alignItems: 'center', paddingBottom: moderateVerticalScale(140, -1.5), gap: 20 }}
             showsVerticalScrollIndicator={true}>
-            <PaymentCard />
+            {Array(4)
+              .fill(0)
+              .map((_, idx) => {
+                return <PaymentCard key={idx} />;
+              })}
+            <View style={{ flexDirection: 'row', width: '96%', justifyContent: 'space-between' }}>
+              <CustomButton
+                style={[styles.button, { backgroundColor: colours.grayNormal }]}
+                text='Add another friend'
+                textStyle={styles.buttonText}
+              />
+              <CustomButton
+                style={[styles.button]}
+                text='Next'
+                textStyle={styles.buttonText}
+                onPress={() => navigate('PaymentDetails')}
+              />
+            </View>
           </ScrollView>
         </View>
       </SubPage>
@@ -122,6 +155,14 @@ const styles = StyleSheet.create({
   },
   dmFont: {
     fontFamily: 'dm',
+  },
+  button: {
+    width: 160,
+    borderRadius: 12,
+  },
+  buttonText: {
+    fontFamily: 'dm',
+    fontSize: moderateScale(11, 2),
   },
 });
 

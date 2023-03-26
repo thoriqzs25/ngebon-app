@@ -16,6 +16,12 @@ export const imageSource = (name: string) => {
       return require('@src/assets/images/tree_6.webp');
     case 'tree-7':
       return require('@src/assets/images/tree_7.webp');
+    case 'gopay':
+      return require('@src/assets/images/GOPAY.webp');
+    case 'ovo':
+      return require('@src/assets/images/OVO.webp');
+    case 'bca':
+      return require('@src/assets/images/BCA.webp');
     default:
       return undefined;
   }

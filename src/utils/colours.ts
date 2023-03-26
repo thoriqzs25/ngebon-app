@@ -9,6 +9,7 @@ const colours = {
   gray500: '#777676',
   gray600: '#535252',
   gray700: '#2F2E2E',
+  grayNormal: '#455A64',
 
   labelPrimary: '#000000',
   fieldStroke: '#C9C9C9',
