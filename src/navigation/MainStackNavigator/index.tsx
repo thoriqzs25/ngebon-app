@@ -1,4 +1,5 @@
 import { createStackNavigator } from '@react-navigation/stack';
+import PaymentPage from '@src/screens/Main/RecordFriend/PaymentPage';
 import TabNavigator from './TabNavigator';
 
 const Main = createStackNavigator<Record<string, any>>();

@@ -13,6 +13,7 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import Home from '@src/screens/Main/Home';
 import Profile from '@src/screens/Main/Profile';
+import RecordStack from './RecordStack';
 // import ChatStackNavigator from './ChatStack';
 // import HomeStackNavigator from './HomeStack';
 // import ProfileStackNavigator from './HomeStack/ProfileStack';
@@ -30,6 +31,7 @@ const TabNavigator = () => {
   return (
     <Tab.Navigator
       screenOptions={{
+        tabBarHideOnKeyboard: true,
         tabBarStyle: {
           left: -1,
           height: 80,
@@ -64,7 +66,7 @@ const TabNavigator = () => {
         }}
       />
       <Tab.Screen
-        name='RecordStack'
+        name='Records'
         component={HomeTest}
         // component={ChatStackNavigator}
         options={({ navigation, route }) => {
@@ -83,8 +85,8 @@ const TabNavigator = () => {
         }}
       />
       <Tab.Screen
-        name='Add'
-        component={HomeTest}
+        name='RecordStack'
+        component={RecordStack}
         // component={ProfileStackNavigator}
         options={({ navigation, route }) => {
           const isFocused = navigation.isFocused();
