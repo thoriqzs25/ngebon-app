@@ -10,15 +10,21 @@ import GreenSection from './GreenSection';
 import TransactionCard from '@src/components/TransactionCard';
 import { ScrollView } from 'react-native-gesture-handler';
 import CustomButton from '@src/components/Input/CustomButton';
-import ActionSheet from '@alessiocancian/react-native-actionsheet';
-import { useRef } from 'react';
+import ActionSheet, { ActionSheetCustom } from '@alessiocancian/react-native-actionsheet';
+import { useCallback, useMemo, useRef } from 'react';
+import { useSelector } from 'react-redux';
+import { RootState } from '@src/types/states/root';
+import { IS_ANDROID } from '@src/utils/deviceDimensions';
+import IcRecord from '@src/assets/svg/IcRecord';
+import IcDivide from '@src/assets/svg/IcDivide';
 
 const Home = () => {
-  const actionSheetRef = useRef<ActionSheet>();
+  const { auth } = useSelector((state: RootState) => state);
+  // const actionSheetRef = useRef<ActionSheet>();
 
-  const showActionSheet = () => {
-    if (actionSheetRef.current) actionSheetRef.current.show();
-  };
+  // const showActionSheet = () => {
+  //   if (actionSheetRef.current) actionSheetRef.current.show();
+  // };
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -44,8 +50,7 @@ const Home = () => {
           />
 
           <GreenSection />
-          <CustomButton text='Click me!' onPress={showActionSheet} />
-
+          {/* <CustomButton text='Click me!' onPress={showActionSheet} /> */}
           <View style={{ gap: 12, marginTop: 20 }}>
             <Text style={{ fontFamily: 'dm-500', fontSize: moderateScale(16, 2) }}>Recent</Text>
             <TransactionCard type='Incoming' />
@@ -54,17 +59,52 @@ const Home = () => {
           </View>
         </View>
       </ScrollView>
-      <ActionSheet
-        ref={actionSheetRef}
-        title={'Which one do you like ?'}
-        options={['Apple', 'Banana', 'Cancel']}
-        cancelButtonIndex={2}
-        destructiveButtonIndex={1}
-        theme='ios'
-        onPress={(index) => {
-          /* do something */
-        }}
-      />
+      {/* {IS_ANDROID ? (
+        <ActionSheetCustom
+          // @ts-ignore
+          ref={actionSheetRef}
+          title={'Which one do you like ?'}
+          options={[
+            <View
+              style={{
+                gap: 12,
+                width: '100%',
+                paddingLeft: 20,
+                alignItems: 'center',
+                flexDirection: 'row',
+              }}>
+              <IcRecord />
+              <View>
+                <Text style={{ fontFamily: 'inter' }}>Record</Text>
+                <Text style={{ fontFamily: 'inter', color: colours.gray300 }}>Log your debt and receivables</Text>
+              </View>
+            </View>,
+            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12, width: '100%', paddingLeft: 20 }}>
+              <IcDivide />
+              <View>
+                <Text style={{ fontFamily: 'inter' }}>Divide</Text>
+                <Text style={{ fontFamily: 'inter', color: colours.gray300 }}>Automatically share expenses</Text>
+              </View>
+            </View>,
+            'Cancel',
+          ]}
+          cancelButtonIndex={2}
+          destructiveButtonIndex={1}
+          theme='ios'
+          onPress={() => null}
+        />
+      ) : (
+        <ActionSheet
+          // @ts-ignore
+          ref={actionSheetRef}
+          title={'Which one do you like ?'}
+          options={['Record', 'Divide', 'Cancel']}
+          cancelButtonIndex={2}
+          destructiveButtonIndex={1}
+          theme='ios'
+          onPress={() => null}
+        />
+      )} */}
     </SafeAreaView>
   );
 };

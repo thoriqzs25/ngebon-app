@@ -71,6 +71,7 @@ const TabNavigator = () => {
           const isFocused = navigation.isFocused();
           return {
             // tabBarStyle: { display: getTabBarVisibility(route) },
+            // tabBarItemStyle:  { backgroundColor: colours.blueNormal, borderRadius: 16, },
             headerShown: false,
             tabBarLabel: ({ focused, color }: { focused: boolean; color: string }) => (
               <Text style={{ color: focused ? colours.greenNormal : colours.black }}>Records</Text>
@@ -93,20 +94,22 @@ const TabNavigator = () => {
             headerShown: false,
             tabBarLabel: ({ focused }: { focused: boolean }) => <Text></Text>,
             tabBarIcon: ({ focused }: { focused: boolean }) => (
-              <View
-                style={{
-                  top: -20,
-                  width: 72,
-                  height: 72,
-                  borderRadius: 50,
-                  position: 'absolute',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  paddingLeft: DEVICE_OS === 'ios' ? 4 : 0,
-                  backgroundColor: colours.greenNormal,
-                }}>
-                <Ionicons size={44} name='add-outline' color={colours.white} />
-              </View>
+              <TouchableOpacity activeOpacity={0.75}>
+                <View
+                  style={{
+                    // top: -20,
+                    width: 72,
+                    height: 72,
+                    borderRadius: 50,
+
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    paddingLeft: DEVICE_OS === 'ios' ? 4 : 0,
+                    backgroundColor: colours.greenNormal,
+                  }}>
+                  <Ionicons size={44} name='add-outline' color={colours.white} />
+                </View>
+              </TouchableOpacity>
             ),
           };
         }}
