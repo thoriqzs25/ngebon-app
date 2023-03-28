@@ -12,7 +12,15 @@ const TransactionCard = ({ type = 'Incoming' }: { type?: 'Incoming' | 'Outcoming
   return (
     <View style={styles.container}>
       {type === 'Incoming' ? <IcGreenCircleArrow /> : <IcRedCircleArrow />}
-      <View style={{ marginLeft: 8, height: '100%', justifyContent: 'center', gap: 4 }}>
+      <View
+        style={{
+          marginLeft: 8,
+          height: '100%',
+          justifyContent: 'center',
+          gap: 4,
+
+          width: '58%',
+        }}>
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
           <Text style={[styles.detailsText, { color: type === 'Incoming' ? colours.greenNormal : colours.redNormal }]}>
             {type === 'Incoming' ? 'Receivables' : 'Debt'}
@@ -21,17 +29,16 @@ const TransactionCard = ({ type = 'Incoming' }: { type?: 'Incoming' | 'Outcoming
             {type === 'Incoming' ? ` | March 13 - 02:35 pm` : ` | March 11 - 08:19 pm`}
           </Text>
         </View>
-        <View style={{ width: 200 }}>
+        <View style={{}}>
           <TextTicker
             style={{ fontFamily: 'dm', fontSize: moderateScale(12, 2) }}
             duration={5000}
-            // scrollSpeed={2500}
-            // loop
             bounce={false}
             easing={Easing.inOut(Easing.linear)}
+            // @ts-ignore
             scroll={'toLeft'}
             repeatSpacer={30}>
-            {type === 'Incoming' ? 'Confirm Hamish’s Payment' : 'Payment requested by Zalina'}
+            {type === 'Incoming' ? 'Confirm Hamish’s Payment' : 'Payment requested by Zalina Arga'}
           </TextTicker>
         </View>
         {type === 'Incoming' ? (

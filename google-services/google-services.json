@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "454004759004",
+    "project_id": "ngebon-app",
+    "storage_bucket": "ngebon-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:454004759004:android:f0f4e35955d35190b6d719",
+        "android_client_info": {
+          "package_name": "com.ngebon"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "454004759004-q7v66u112c27agpp1k006u7h0emh00m2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ngebon",
+            "certificate_hash": "cc702f9a2c1322331c4d8e38d2a5230c17ffa807"
+          }
+        },
+        {
+          "client_id": "454004759004-0apkv1ci2e0pv0ugrp87o6bnpp9q15j5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDWPvVazyfSJsm4Nfsz0PvBTakMvGptmPE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "454004759004-0apkv1ci2e0pv0ugrp87o6bnpp9q15j5.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "454004759004-ig5hqa984es3beoams3ir4lhp8ks273j.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.ngebon"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

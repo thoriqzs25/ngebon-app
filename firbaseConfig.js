@@ -9,11 +9,11 @@ import { getAuth } from 'firebase/auth';
 // import {...} from "firebase/storage";
 
 const firebaseConfig = {
-  apiKey: 'AIzaSyDWPvVazyfSJsm4Nfsz0PvBTakMvGptmPE',
+  apiKey: 'AIzaSyBrHdDDDGqKU9tsF5Y-iEj0szL8W9YVVTs',
   authDomain: 'ngebon-app.firebaseapp.com',
   // databaseURL: 'https://ngebon-app.firebaseio.com',
   projectId: 'ngebon-app',
-  // storageBucket: 'project-id.appspot.com',
+  storageBucket: 'ngebon-app.appspot.com',
   // messagingSenderId: 'sender-id',
   // appId: 'app-id',
   // measurementId: 'G-measurement-id',

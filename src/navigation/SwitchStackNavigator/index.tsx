@@ -24,7 +24,7 @@ const SwitchStackNavigator = () => {
   // const { loggedIn } = useSelector((state: RootState) => state.auth);
 
   return (
-    <Switch.Navigator initialRouteName='MainStackScreen'>
+    <Switch.Navigator initialRouteName='AuthStackScreen'>
       {/* {loggedIn ? ( */}
       <Switch.Screen name={'MainStackScreen'} options={{ headerShown: false }}>
         {() => <MainStackNavigator />}
