@@ -8,9 +8,10 @@ import {
   getAuth,
   GoogleAuthProvider,
   signInWithPopup,
+  User,
 } from 'firebase/auth';
 import { useEffect, useState } from 'react';
-import { Text, View } from 'react-native';
+import { Alert, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import * as AuthSession from 'expo-auth-session';
 import { useAuthRequest } from 'expo-auth-session/build/providers/Google';
@@ -21,27 +22,30 @@ const AuthScreen = () => {
   const [pass, setPass] = useState<string>('');
 
   const [token, setToken] = useState<string>('');
-  const [userInfo, setUserInfo] = useState(null);
+  const [userInfo, setUserInfo] = useState<User>();
 
   const [request, response, promptAsync] = Google.useAuthRequest({
     androidClientId: '454004759004-if37fqse9j813lcthn2r54ae17mpjfc8.apps.googleusercontent.com',
     iosClientId: '454004759004-ig5hqa984es3beoams3ir4lhp8ks273j.apps.googleusercontent.com',
     expoClientId: '454004759004-c3l2um169nb33n1mnd1l8peikers2vm0.apps.googleusercontent.com',
+    redirectUri: AuthSession.makeRedirectUri({
+      scheme: 'ngebonapp',
+    }),
   });
 
-  const handleLogin = async () => {
-    createUserWithEmailAndPassword(auth, email, pass)
-      .then((userCred) => {
-        const user = userCred.user;
-        console.log('line 18 success login', user);
-      })
-      .catch((err) => {
-        const errCode = err.code;
-        const errMsg = err.message;
+  // const handleLogin = async () => {
+  //   createUserWithEmailAndPassword(auth, email, pass)
+  //     .then((userCred) => {
+  //       const user = userCred.user;
+  //       console.log('line 18 success login', user);
+  //     })
+  //     .catch((err) => {
+  //       const errCode = err.code;
+  //       const errMsg = err.message;
 
-        console.log('line 24 error login', errCode, ', msg:', errMsg);
-      });
-  };
+  //       console.log('line 24 error login', errCode, ', msg:', errMsg);
+  //     });
+  // };
 
   const handleGoogleLogin = async () => {
     const credential = GoogleAuthProvider.credential(null, token);
@@ -49,26 +53,33 @@ const AuthScreen = () => {
     signInWithCredential(auth, credential)
       .then((userCred) => {
         console.log('line 44', userCred);
+        setUserInfo(userCred.user);
       })
       .catch((err) => {
         console.log('line 47', err);
       });
-
-    // try {
-    //   if (!token) throw Error('No token found');
-    //   const response = await fetch('https://www.googleapis.com/userinfo/v2/me', {
-    //     headers: { Authorization: `Bearer ${token}` },
-    //   });
-    //   console.log('response line 47', response, response.json());
-    //   const user = await response.json();
-    //   console.log('line 51', user.authentication.idToken, user.authentication.accessToken);
-    //   // const credential = GoogleAuthProvider.credential(user.authentication.idToken, user.authentication.accessToken);
-
-    //   setUserInfo(user);
-    // } catch (error) {
-    //   console.log('line 53', error);
-    // }
   };
+
+  // const loginIos = async () => {
+  //   const redirect = AuthSession.makeRedirectUri({
+  //     scheme: 'ngebonapp',
+  //     path: 'ngebon-app',
+  //     preferLocalhost: true,
+  //   });
+
+  //   const request = new AuthSession.AuthRequest({
+  //     clientId: '454004759004-ig5hqa984es3beoams3ir4lhp8ks273j.apps.googleusercontent.com',
+  //     redirectUri: redirect,
+  //     prompt: AuthSession.Prompt.SelectAccount,
+  //     scopes: ['email', 'profile'],
+  //   });
+
+  //   const result = await request.promptAsync({
+  //     authorizationEndpoint: 'https://accounts.google.com/o/oauth2/v2/auth',
+  //   });
+
+  //   const code = JSON.parse(JSON.stringify(result)).params.code;
+  // };
 
   useEffect(() => {
     if (response?.type === 'success') {
@@ -88,6 +99,7 @@ const AuthScreen = () => {
           gap: 6,
           alignItems: 'center',
         }}>
+        <Text>{userInfo?.displayName ?? 'nothjing'}</Text>
         <TextField title='email' placeholderText='Masukkan email' setValue={setEmail} />
         <TextField
           title='password'
@@ -101,6 +113,7 @@ const AuthScreen = () => {
           onPress={() => {
             // handleLogin();
             promptAsync();
+            // loginIos();
           }}
         />
       </View>
