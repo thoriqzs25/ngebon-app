@@ -7,7 +7,7 @@ import { ScrollView } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { moderateScale, moderateVerticalScale } from 'react-native-size-matters';
 import { useState } from 'react';
-import CustomButton from '@src/components/Input/CustomButton';
+import CustomButton from '@src/components/input/CustomButton';
 import { navigate } from '@src/navigation';
 
 const PaymentCard = () => {

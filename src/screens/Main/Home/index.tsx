@@ -9,7 +9,7 @@ import { moderateScale, moderateVerticalScale } from 'react-native-size-matters'
 import GreenSection from './GreenSection';
 import TransactionCard from '@src/components/TransactionCard';
 import { ScrollView } from 'react-native-gesture-handler';
-import CustomButton from '@src/components/Input/CustomButton';
+import CustomButton from '@src/components/input/CustomButton';
 import ActionSheet, { ActionSheetCustom } from '@alessiocancian/react-native-actionsheet';
 import { useCallback, useMemo, useRef } from 'react';
 import { useSelector } from 'react-redux';

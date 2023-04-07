@@ -1,6 +1,6 @@
-export const userLogin = ({ token, email }: { token?: string | null; email?: string | null }) => ({
+export const userLogin = ({ uid, email }: { uid?: string | null; email?: string | null }) => ({
   type: 'USER_LOGIN',
-  token: token,
+  uid: uid,
   email: email,
 });
 

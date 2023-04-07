@@ -78,8 +78,8 @@ const TextField = ({
         style={[
           styles.inputContainer,
           {
-            borderColor: error ? colours.redNormal : active ? colours.gray500 : colours.backgroundClickable,
-            backgroundColor: disable ? colours.gray700 : colours.backgroundClickable,
+            borderColor: error ? colours.redNormal : colours.greenNormal,
+            // backgroundColor: disable ? colours.gray700 : colours.backgroundClickable,
           },
           inputStyle,
         ]}>
@@ -93,7 +93,7 @@ const TextField = ({
             styles.inputText,
             {
               width: secureInput ? '84%' : '100%',
-              color: disable ? colours.gray300 : colours.white,
+              color: disable ? colours.gray300 : colours.black,
             },
           ]}
           value={value ?? value}
@@ -130,14 +130,14 @@ const styles = StyleSheet.create({
     fontSize: 16,
     lineHeight: 20,
     paddingBottom: 4,
-    color: colours.white,
+    color: colours.black,
     fontFamily: 'dm',
   },
   inputContainer: {
     fontSize: 16,
     lineHeight: 20,
     borderWidth: 1,
-    borderRadius: 12,
+    borderRadius: 8,
     paddingHorizontal: 8,
     flexDirection: 'row',
     alignItems: 'center',
@@ -148,7 +148,7 @@ const styles = StyleSheet.create({
   inputText: {
     fontSize: 14,
     paddingVertical: 8,
-    color: colours.white,
+    color: colours.black,
     fontFamily: 'dm',
   },
   icon: {

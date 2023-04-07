@@ -1,7 +1,7 @@
-import CustomButton from '@src/components/Input/CustomButton';
-import TextField from '@src/components/Input/TextField';
+import CustomButton from '@src/components/input/CustomButton';
+import TextField from '@src/components/input/TextField';
 import colours from '@src/utils/colours';
-import { auth } from 'firbaseConfig';
+import { auth, db } from 'firbaseConfig';
 import {
   createUserWithEmailAndPassword,
   signInWithCredential,
@@ -10,6 +10,7 @@ import {
   signInWithPopup,
   User,
   signInWithEmailAndPassword,
+  UserCredential,
 } from 'firebase/auth';
 import { useEffect, useState } from 'react';
 import { Alert, Text, View } from 'react-native';
@@ -19,6 +20,8 @@ import { useAuthRequest } from 'expo-auth-session/build/providers/Google';
 import * as Google from 'expo-auth-session/providers/google';
 import { store } from '@src/redux/store';
 import { userLogin } from '@src/redux/actions/auth';
+import { collection, getDocs } from 'firebase/firestore';
+import { navigate } from '@src/navigation';
 
 const AuthScreen = () => {
   const [email, setEmail] = useState<string>('');
@@ -42,7 +45,7 @@ const AuthScreen = () => {
     createUserWithEmailAndPassword(auth, email, pass)
       .then((userCred) => {
         const user = userCred.user;
-        store.dispatch(userLogin({ token: user.uid, email: user.email }));
+        store.dispatch(userLogin({ uid: user.uid, email: user.email }));
         console.log('line 18 success login', user);
       })
       .catch((err) => {
@@ -58,7 +61,7 @@ const AuthScreen = () => {
       .then((userCred) => {
         const user = userCred.user;
         console.log('line 18 success login', user);
-        store.dispatch(userLogin({ token: user.uid, email: user.email }));
+        store.dispatch(userLogin({ uid: user.uid, email: user.email }));
       })
       .catch((err) => {
         const errCode = err.code;
@@ -70,16 +73,31 @@ const AuthScreen = () => {
 
   const handleGoogleLogin = async () => {
     const credential = GoogleAuthProvider.credential(null, token);
-
     signInWithCredential(auth, credential)
       .then((userCred) => {
-        const user = userCred.user;
-        store.dispatch(userLogin({ token: user.uid, email: user.email }));
+        const user = userCred;
+        // store.dispatch(userLogin({ uid: user.uid, email: user.email }));
         setUserInfo(userCred.user);
+        checkUserRegistered(userCred.user.uid);
       })
       .catch((err) => {
         console.log('line 47', err);
       });
+  };
+
+  const checkUserRegistered = async (userId: string) => {
+    const usersRef = await getDocs(collection(db, 'users'));
+    let userExists = false;
+    usersRef.forEach((doc) => {
+      if (doc.id === userId) {
+        userExists = true;
+        console.log('User exists!');
+      }
+    });
+    if (!userExists) {
+      navigate('UserRegistration');
+      console.log('User does not exist!');
+    }
   };
 
   useEffect(() => {

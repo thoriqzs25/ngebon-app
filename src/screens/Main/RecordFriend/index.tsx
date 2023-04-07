@@ -1,6 +1,6 @@
 import { useNavigation } from '@react-navigation/native';
 import ImageView from '@src/components/ImageView';
-import CustomButton from '@src/components/Input/CustomButton';
+import CustomButton from '@src/components/input/CustomButton';
 import SubPage from '@src/components/SubPage';
 import UserCard from '@src/components/UserCard';
 import { navigate } from '@src/navigation';

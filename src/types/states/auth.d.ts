@@ -1,9 +1,7 @@
 export interface AuthReducerState {
   email?: string | null;
-  token?: string | null;
+  uid?: string | null;
   loggedIn?: boolean | null;
 }
 
-export type AuthReducerAction =
-  | { type: 'USER_LOGIN'; token: string; email: string; phone: string }
-  | { type: 'USER_LOGOUT' };
+export type AuthReducerAction = { type: 'USER_LOGIN'; uid: string; email: string } | { type: 'USER_LOGOUT' };

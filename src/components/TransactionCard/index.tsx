@@ -6,7 +6,7 @@ import { StyleSheet, Text, Easing } from 'react-native';
 import { View } from 'react-native';
 import { moderateScale } from 'react-native-size-matters';
 import TextTicker from 'react-native-text-ticker';
-import CustomButton from '../Input/CustomButton';
+import CustomButton from '../input/CustomButton';
 
 const TransactionCard = ({ type = 'Incoming' }: { type?: 'Incoming' | 'Outcoming' }) => {
   return (
