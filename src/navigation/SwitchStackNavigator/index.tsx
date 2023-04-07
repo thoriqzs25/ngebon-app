@@ -5,6 +5,7 @@ import { TransitionPresets } from '@react-navigation/stack';
 import { useSelector } from 'react-redux';
 import AuthStackNavigator from '../AuthStackNavigator';
 import MainStackNavigator from '../MainStackNavigator';
+import { RootState } from '@src/types/states/root';
 // import AuthStackNavigator from '../AuthStackNavigator';
 
 const Switch = createNativeStackNavigator<SwitchStackParamList>();
@@ -20,21 +21,19 @@ const noGesturesAndNoHeaderAndAnimateFromTheSideOptions = {
 };
 
 const SwitchStackNavigator = () => {
-  // const user = false;
-  // const { loggedIn } = useSelector((state: RootState) => state.auth);
+  const { loggedIn } = useSelector((state: RootState) => state.auth);
 
   return (
     <Switch.Navigator initialRouteName='AuthStackScreen'>
-      {/* {loggedIn ? ( */}
-      <Switch.Screen name={'MainStackScreen'} options={{ headerShown: false }}>
-        {() => <MainStackNavigator />}
-        {/* <MainStackNavigator /> */}
-      </Switch.Screen>
-      {/* ) : ( */}
-      <Switch.Screen name={'AuthStackScreen'} options={{ headerShown: false }}>
-        {() => <AuthStackNavigator />}
-      </Switch.Screen>
-      {/* )} */}
+      {loggedIn ? (
+        <Switch.Screen name={'MainStackScreen'} options={{ headerShown: false }}>
+          {() => <MainStackNavigator />}
+        </Switch.Screen>
+      ) : (
+        <Switch.Screen name={'AuthStackScreen'} options={{ headerShown: false }}>
+          {() => <AuthStackNavigator />}
+        </Switch.Screen>
+      )}
     </Switch.Navigator>
   );
 };

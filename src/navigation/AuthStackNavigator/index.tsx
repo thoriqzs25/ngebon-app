@@ -7,6 +7,7 @@ const AuthStackNavigator = () => {
   return (
     <Auth.Navigator initialRouteName='AuthScreen'>
       <Auth.Screen name={'AuthScreen'} component={AuthScreen} options={{ headerShown: false }} />
+      
     </Auth.Navigator>
   );
 };
