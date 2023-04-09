@@ -1,8 +1,8 @@
 import Svg, { Path } from 'react-native-svg';
 
-const IcDivide = () => {
+const IcDivide = ({ size }: { size?: number }) => {
   return (
-    <Svg width={50} height={50} viewBox='0 0 50 50' fill='none'>
+    <Svg width={size ?? 50} height={size ?? 50} viewBox='0 0 50 50' fill='none'>
       <Path
         d='M0 25c0-4.647 0-6.97.384-8.902A20 20 0 0116.098.384C18.03 0 20.353 0 25 0c4.647 0 6.97 0 8.902.384a20 20 0 0115.714 15.714C50 18.03 50 20.353 50 25c0 4.647 0 6.97-.384 8.902a20 20 0 01-15.714 15.714C31.97 50 29.647 50 25 50c-4.647 0-6.97 0-8.902-.384A20 20 0 01.384 33.902C0 31.97 0 29.647 0 25z'
         fill='#455A64'

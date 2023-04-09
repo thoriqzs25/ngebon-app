@@ -122,7 +122,11 @@ const PaymentPage = () => {
           <ScrollView
             contentInsetAdjustmentBehavior='automatic'
             style={{ flex: 1, width: '100%' }}
-            contentContainerStyle={{ alignItems: 'center', paddingBottom: moderateVerticalScale(140, -1.5), gap: 20 }}
+            contentContainerStyle={{
+              alignItems: 'center',
+              paddingBottom: moderateVerticalScale(140, -1.5),
+              // gap: 20
+            }}
             showsVerticalScrollIndicator={true}>
             {Array(4)
               .fill(0)

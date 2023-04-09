@@ -137,7 +137,7 @@ const styles = StyleSheet.create({
     fontFamily: 'dm',
   },
   titleAlt: {
-    left: 8,
+    left: 12,
     top: -10,
     fontFamily: 'dm',
     position: 'absolute',

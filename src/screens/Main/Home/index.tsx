@@ -69,52 +69,6 @@ const Home = () => {
           </View>
         </View>
       </ScrollView>
-      {/* {IS_ANDROID ? (
-        <ActionSheetCustom
-          // @ts-ignore
-          ref={actionSheetRef}
-          title={'Which one do you like ?'}
-          options={[
-            <View
-              style={{
-                gap: 12,
-                width: '100%',
-                paddingLeft: 20,
-                alignItems: 'center',
-                flexDirection: 'row',
-              }}>
-              <IcRecord />
-              <View>
-                <Text style={{ fontFamily: 'inter' }}>Record</Text>
-                <Text style={{ fontFamily: 'inter', color: colours.gray300 }}>Log your debt and receivables</Text>
-              </View>
-            </View>,
-            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12, width: '100%', paddingLeft: 20 }}>
-              <IcDivide />
-              <View>
-                <Text style={{ fontFamily: 'inter' }}>Divide</Text>
-                <Text style={{ fontFamily: 'inter', color: colours.gray300 }}>Automatically share expenses</Text>
-              </View>
-            </View>,
-            'Cancel',
-          ]}
-          cancelButtonIndex={2}
-          destructiveButtonIndex={1}
-          theme='ios'
-          onPress={() => null}
-        />
-      ) : (
-        <ActionSheet
-          // @ts-ignore
-          ref={actionSheetRef}
-          title={'Which one do you like ?'}
-          options={['Record', 'Divide', 'Cancel']}
-          cancelButtonIndex={2}
-          destructiveButtonIndex={1}
-          theme='ios'
-          onPress={() => null}
-        />
-      )} */}
     </SafeAreaView>
   );
 };

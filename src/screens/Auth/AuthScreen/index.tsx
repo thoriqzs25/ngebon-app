@@ -24,8 +24,12 @@ import { collection, getDocs } from 'firebase/firestore';
 import { navigate } from '@src/navigation';
 import { checkUserRegistered, getUser } from '@src/utils/userCollection';
 import { setUser } from '@src/redux/actions/user';
+import { useSelector } from 'react-redux';
+import { RootState } from '@src/types/states/root';
 
 const AuthScreen = () => {
+  const authRedux = useSelector((state: RootState) => state.auth);
+
   const [email, setEmail] = useState<string>('');
   const [pass, setPass] = useState<string>('');
 
@@ -106,6 +110,11 @@ const AuthScreen = () => {
       handleGoogleLogin();
     }
   }, [response, token]);
+
+  useEffect(() => {
+    console.log('line 111', authRedux.uid);
+    if (authRedux.uid) checkUser(authRedux.uid);
+  }, []);
 
   return (
     <SafeAreaView style={{ flex: 1, justifyContent: 'center', alignItems: 'center', height: '100%', padding: 24 }}>
