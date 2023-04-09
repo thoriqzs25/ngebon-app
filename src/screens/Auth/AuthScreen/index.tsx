@@ -19,9 +19,11 @@ import * as AuthSession from 'expo-auth-session';
 import { useAuthRequest } from 'expo-auth-session/build/providers/Google';
 import * as Google from 'expo-auth-session/providers/google';
 import { store } from '@src/redux/store';
-import { userLogin } from '@src/redux/actions/auth';
+import { currentUser, userLogin } from '@src/redux/actions/auth';
 import { collection, getDocs } from 'firebase/firestore';
 import { navigate } from '@src/navigation';
+import { checkUserRegistered, getUser } from '@src/utils/userCollection';
+import { setUser } from '@src/redux/actions/user';
 
 const AuthScreen = () => {
   const [email, setEmail] = useState<string>('');
@@ -45,8 +47,8 @@ const AuthScreen = () => {
     createUserWithEmailAndPassword(auth, email, pass)
       .then((userCred) => {
         const user = userCred.user;
-        store.dispatch(userLogin({ uid: user.uid, email: user.email }));
-        console.log('line 18 success login', user);
+        store.dispatch(currentUser({ email: user.email, uid: user.uid }));
+        navigate('UserRegistration');
       })
       .catch((err) => {
         const errCode = err.code;
@@ -60,8 +62,9 @@ const AuthScreen = () => {
     signInWithEmailAndPassword(auth, email, pass)
       .then((userCred) => {
         const user = userCred.user;
-        console.log('line 18 success login', user);
-        store.dispatch(userLogin({ uid: user.uid, email: user.email }));
+        store.dispatch(currentUser({ email: user.email, uid: user.uid }));
+
+        checkUser(user.uid);
       })
       .catch((err) => {
         const errCode = err.code;
@@ -75,28 +78,25 @@ const AuthScreen = () => {
     const credential = GoogleAuthProvider.credential(null, token);
     signInWithCredential(auth, credential)
       .then((userCred) => {
-        const user = userCred;
+        const user = userCred.user;
         // store.dispatch(userLogin({ uid: user.uid, email: user.email }));
-        setUserInfo(userCred.user);
-        checkUserRegistered(userCred.user.uid);
+        setUserInfo(user);
+        store.dispatch(currentUser({ email: user.email, uid: user.uid }));
+        checkUser(user.uid);
       })
       .catch((err) => {
         console.log('line 47', err);
       });
   };
 
-  const checkUserRegistered = async (userId: string) => {
-    const usersRef = await getDocs(collection(db, 'users'));
-    let userExists = false;
-    usersRef.forEach((doc) => {
-      if (doc.id === userId) {
-        userExists = true;
-        console.log('User exists!');
-      }
-    });
+  const checkUser = async (userId: string) => {
+    const userExists = await checkUserRegistered(userId);
+
     if (!userExists) {
       navigate('UserRegistration');
       console.log('User does not exist!');
+    } else {
+      store.dispatch(userLogin());
     }
   };
 

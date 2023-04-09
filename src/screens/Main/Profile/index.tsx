@@ -1,5 +1,6 @@
 import CustomButton from '@src/components/input/CustomButton';
 import { userLogout } from '@src/redux/actions/auth';
+import { removeUser } from '@src/redux/actions/user';
 import { store } from '@src/redux/store';
 import colours from '@src/utils/colours';
 import { View } from 'react-native';
@@ -10,7 +11,10 @@ const Profile = () => {
       <CustomButton
         text='Logout'
         style={{ paddingHorizontal: 28, backgroundColor: colours.redNormal }}
-        onPress={() => store.dispatch(userLogout())}
+        onPress={() => {
+          store.dispatch(userLogout());
+          store.dispatch(removeUser());
+        }}
       />
     </View>
   );

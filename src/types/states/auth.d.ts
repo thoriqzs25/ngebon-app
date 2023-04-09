@@ -4,4 +4,7 @@ export interface AuthReducerState {
   loggedIn?: boolean | null;
 }
 
-export type AuthReducerAction = { type: 'USER_LOGIN'; uid: string; email: string } | { type: 'USER_LOGOUT' };
+export type AuthReducerAction =
+  | { type: 'CURRENT_USER'; uid: string; email: string }
+  | { type: 'USER_LOGIN' }
+  | { type: 'USER_LOGOUT' };

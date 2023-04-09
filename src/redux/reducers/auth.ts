@@ -8,11 +8,15 @@ const defaultState = {
 
 const authReducer = (prevState = defaultState, action: AuthReducerAction) => {
   switch (action.type) {
-    case 'USER_LOGIN':
+    case 'CURRENT_USER':
       return {
         ...prevState,
         email: action.email,
         uid: action.uid,
+      };
+    case 'USER_LOGIN':
+      return {
+        ...prevState,
         loggedIn: true,
       };
     case 'USER_LOGOUT':
