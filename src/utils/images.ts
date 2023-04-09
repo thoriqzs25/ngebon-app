@@ -22,6 +22,10 @@ export const imageSource = (name: string) => {
       return require('@src/assets/images/OVO.webp');
     case 'bca':
       return require('@src/assets/images/BCA.webp');
+    case 'regis_pana_1':
+      return require('@src/assets/images/regis_pana_1.webp');
+    case 'regis_pana_2':
+      return require('@src/assets/images/regis_pana_2.webp');
     default:
       return undefined;
   }

@@ -15,6 +15,7 @@ import { Text, TextInput, View } from 'react-native';
 
 const TextField = ({
   title,
+  titleAlt,
   autoFocus,
   placeholderText,
   style,
@@ -32,6 +33,7 @@ const TextField = ({
   disable = false,
 }: {
   title?: string;
+  titleAlt?: string;
   autoFocus?: boolean;
   placeholderText?: string;
   style?: StyleProp<any>;
@@ -63,9 +65,9 @@ const TextField = ({
   }, [autoFocus]);
 
   return (
-    <View style={[styles.wholeContainer, style]}>
+    <View style={[style]}>
       {title && (
-        <View style={[styles.labelContainer, { flexDirection: 'row', justifyContent: 'space-between' }]}>
+        <View style={[{ flexDirection: 'row', justifyContent: 'space-between' }]}>
           <Text style={styles.labelTitle}>{title}</Text>
           {title === 'Password' && lupaPass && (
             <TouchableOpacity activeOpacity={0.75} onPress={() => navigate('LupaPassword')}>
@@ -78,11 +80,14 @@ const TextField = ({
         style={[
           styles.inputContainer,
           {
-            borderColor: error ? colours.redNormal : colours.greenNormal,
+            borderColor: error ? colours.redNormal : active ? colours.greenNormal : colours.black,
             // backgroundColor: disable ? colours.gray700 : colours.backgroundClickable,
           },
           inputStyle,
         ]}>
+        {titleAlt && (
+          <Text style={[styles.titleAlt, { color: active ? colours.greenNormal : colours.black }]}>{titleAlt}</Text>
+        )}
         <TextInput
           placeholder={placeholderText}
           placeholderTextColor={colours.gray300}
@@ -124,14 +129,20 @@ const TextField = ({
 };
 
 const styles = StyleSheet.create({
-  wholeContainer: {},
-  labelContainer: {},
   labelTitle: {
     fontSize: 16,
     lineHeight: 20,
     paddingBottom: 4,
     color: colours.black,
     fontFamily: 'dm',
+  },
+  titleAlt: {
+    left: 8,
+    top: -10,
+    fontFamily: 'dm',
+    position: 'absolute',
+    paddingHorizontal: 4,
+    backgroundColor: colours.white,
   },
   inputContainer: {
     fontSize: 16,
@@ -144,6 +155,7 @@ const styles = StyleSheet.create({
     fontFamily: 'pop',
     justifyContent: 'space-between',
     borderColor: colours.backgroundClickable,
+    position: 'relative',
   },
   inputText: {
     fontSize: 14,
