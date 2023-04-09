@@ -14,6 +14,7 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import Home from '@src/screens/Main/Home';
 import Profile from '@src/screens/Main/Profile';
 import ActionStack from './ActionStack';
+import AddFriend from '@src/screens/Main/Friends/AddFriend';
 // import ChatStackNavigator from './ChatStack';
 // import HomeStackNavigator from './HomeStack';
 // import ProfileStackNavigator from './HomeStack/ProfileStack';
@@ -118,7 +119,7 @@ const TabNavigator = () => {
       />
       <Tab.Screen
         name='Friends'
-        component={HomeTest}
+        component={AddFriend}
         // component={ProfileStackNavigator}
         options={({ navigation, route }) => {
           const isFocused = navigation.isFocused();

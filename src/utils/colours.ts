@@ -36,6 +36,7 @@ const colours = {
   redOld: '#B71800',
 
   placeholderBorder: '#EDEDED',
+  backgroundCustom: '#D9D9D9',
 };
 
 export default colours;
