@@ -17,11 +17,15 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { moderateScale } from 'react-native-size-matters';
 import { useSelector } from 'react-redux';
 
-const RecordFriend = ({ route }: { route: RouteProp<{ params: { recordFriends: UserDocument[] } }> }) => {
+const RecordFriend = ({
+  route,
+}: {
+  route: RouteProp<{ params: { prevInputs: Array<{ user: UserDocument; value: string; note: string }> } }>;
+}) => {
   const { user } = useSelector((state: RootState) => state);
 
   const [friends, setFriends] = useState<UserDocument[]>([]);
-  const [prevRecordList, setPrevRecordList] = useState<UserDocument[]>([]);
+  const [prevRecordList, setPrevRecordList] = useState<Array<{ user: UserDocument; value: string; note: string }>>([]);
 
   const getFriends = async () => {
     const data = await getFriendCollection(user.uid!!);
@@ -36,7 +40,7 @@ const RecordFriend = ({ route }: { route: RouteProp<{ params: { recordFriends: U
 
   useEffect(() => {
     if (route.params) {
-      setPrevRecordList(route.params.recordFriends);
+      setPrevRecordList(route.params.prevInputs);
     }
   }, [route.params]);
 
@@ -59,17 +63,17 @@ const RecordFriend = ({ route }: { route: RouteProp<{ params: { recordFriends: U
                   <UserCard
                     key={idx}
                     onPress={() => {
-                      let newRecords = [...prevRecordList, friend];
+                      let newRecords = [...prevRecordList, { user: friend, value: '', note: '' }];
 
-                      prevRecordList.map((record, idx) => {
-                        if (record.username === friend.username) {
-                          console.log('line 66');
-                          newRecords = [...prevRecordList];
-                          return;
-                        }
-                      });
+                      if (prevRecordList.length > 0)
+                        prevRecordList.map((record, idx) => {
+                          if (record.user.username === friend.username) {
+                            newRecords = [...prevRecordList];
+                            return;
+                          }
+                        });
 
-                      navigate('PaymentPage', { recordFriends: newRecords });
+                      navigate('PaymentPage', { prevInputs: newRecords });
                     }}
                     user={friend}
                   />

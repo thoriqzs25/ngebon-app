@@ -22,6 +22,7 @@ export const ItemList = ({
 }) => {
   const [priceItem, setPrice] = useState<string>('');
   const [total, setTotal] = useState<string>('');
+
   const parseTotalPrice = () => {
     const formattedTotal = 'Rp' + totalPrice.toLocaleString('id-ID');
     const formattedPrice = parseInt(price).toLocaleString('id-ID');

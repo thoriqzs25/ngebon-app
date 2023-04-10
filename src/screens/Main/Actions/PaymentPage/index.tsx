@@ -16,28 +16,21 @@ const PaymentCard = ({
   user,
   value,
   setValue,
+  note,
+  setNote,
 }: {
   user: UserDocument;
   value: string;
   setValue: (text: string) => void;
+  note: string;
+  setNote: (text: string) => void;
 }) => {
-  // const [amount, setAmount] = useState<string>();
-
   const convertAmount = (rp: string) => {
     if (rp.length === 0) return setValue('');
 
-    const formatter = new Intl.NumberFormat('id-ID', {
-      style: 'currency',
-      currency: 'IDR',
-    });
-
     const cleared = rp.replace(/\./g, '');
 
-    const num = formatter
-      .format(parseInt(cleared))
-      .replace(/,\d{2}$/, '')
-      .split('Rp')[1]
-      .trim();
+    const num = parseInt(cleared).toLocaleString('id-ID');
 
     if (num) setValue(num);
   };
@@ -110,6 +103,8 @@ const PaymentCard = ({
           textAlign: 'center',
           width: '100%',
         }}
+        value={note}
+        onChangeText={(text: string) => setNote(text)}
         placeholderTextColor={colours.gray300}
         placeholder={'add note (optional)'}
         maxLength={32}
@@ -118,25 +113,47 @@ const PaymentCard = ({
   );
 };
 
-const PaymentPage = ({ route }: { route: RouteProp<{ params: { recordFriends: UserDocument[] } }> }) => {
-  const [recordList, setRecordList] = useState<UserDocument[]>([]);
-  const [inputs, setInputs] = useState<Array<string>>([]);
+const PaymentPage = ({
+  route,
+}: {
+  route: RouteProp<{ params: { prevInputs: Array<{ user: UserDocument; value: string; note: string }> } }>;
+}) => {
+  // const [recordList, setRecordList] = useState<UserDocument[]>([]);
+  const [inputs, setInputs] = useState<Array<{ user: UserDocument; value: string; note: string }>>([]);
 
   useEffect(() => {
-    if (route.params) setRecordList(route.params.recordFriends);
+    if (route.params.prevInputs) {
+      const newArr: Array<{ user: UserDocument; value: string; note: string }> = [];
+
+      route.params.prevInputs.map((input, idx) => {
+        newArr.push({ user: input.user, value: input.value ?? '', note: input.note ?? '' });
+      });
+
+      setInputs(newArr);
+      // setRecordList(route.params.recordFriends);
+    }
   }, []);
 
   const handleAmountChange = useCallback(
     (text: string, index: number) => {
       const newInputs = [...inputs];
-      newInputs[index] = text;
+      newInputs[index].value = text;
+      setInputs(newInputs);
+    },
+    [inputs]
+  );
+
+  const handleNoteChange = useCallback(
+    (text: string, index: number) => {
+      const newInputs = [...inputs];
+      newInputs[index].note = text;
       setInputs(newInputs);
     },
     [inputs]
   );
 
   const handleAddAnother = () => {
-    navigate('RecordFriend', { recordFriends: recordList }, true);
+    navigate('RecordFriend', { prevInputs: inputs }, true);
   };
 
   const handleBack = () => {
@@ -166,12 +183,14 @@ const PaymentPage = ({ route }: { route: RouteProp<{ params: { recordFriends: Us
               // gap: 20
             }}
             showsVerticalScrollIndicator={true}>
-            {recordList.map((friend, idx) => {
+            {inputs.map((record, idx) => {
               return (
                 <PaymentCard
                   key={idx}
-                  user={friend}
-                  value={inputs[idx]}
+                  user={record.user}
+                  value={inputs[idx].value}
+                  note={inputs[idx].note}
+                  setNote={(text: string) => handleNoteChange(text, idx)}
                   setValue={(text: string) => handleAmountChange(text, idx)}
                 />
               );
