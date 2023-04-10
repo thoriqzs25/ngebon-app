@@ -32,6 +32,7 @@ const UserRegistration = () => {
       avatar: avatar ?? '',
       payments: [],
     } as UserDocument;
+
     const newFriendDoc = {
       allFriends: [],
       ownRequests: [],

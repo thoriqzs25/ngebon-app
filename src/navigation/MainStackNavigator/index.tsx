@@ -7,6 +7,7 @@ import DivideChooseFriends from '@src/screens/Main/Actions/DivideChooseFriends';
 import RecordFriend from '@src/screens/Main/Actions/RecordFriend';
 import PaymentDetails from '@src/screens/Main/Actions/PaymentDetails';
 import DivideAssign from '@src/screens/Main/Actions/DivideAssign';
+import AddFriend from '@src/screens/Main/Friends/AddFriend';
 
 const Main = createStackNavigator<Record<string, any>>();
 
@@ -24,7 +25,8 @@ const MainStackNavigator = () => {
       <Main.Screen name={'PaymentPage'} component={PaymentPage} options={{ headerShown: false }} />
       <Main.Screen name={'PaymentDetails'} component={PaymentDetails} options={{ headerShown: false }} />
 
-      {/*  */}
+      {/* Friends */}
+      <Main.Screen name={'AddFriend'} component={AddFriend} options={{ headerShown: false }} />
     </Main.Navigator>
   );
 };

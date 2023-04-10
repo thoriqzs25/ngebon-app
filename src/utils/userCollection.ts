@@ -39,3 +39,15 @@ export const checkUserRegistered = async (userId: string) => {
 
   return userExists;
 };
+
+export const getAllUsers = async () => {
+  const usersRef = collection(db, 'users');
+  const users = await getDocs(usersRef);
+
+  let usersList: UserDocument[] = [];
+  users.forEach((user) => {
+    if (user.data().username !== '') usersList.push(user.data() as UserDocument);
+  });
+
+  return usersList;
+};

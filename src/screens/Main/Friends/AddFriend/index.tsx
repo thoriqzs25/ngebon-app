@@ -1,9 +1,11 @@
 import ImageView from '@src/components/ImageView';
 import SubPage from '@src/components/SubPage';
 import CustomButton from '@src/components/input/CustomButton';
+import { UserDocument } from '@src/types/collection/usersCollection';
 import { RootState } from '@src/types/states/root';
 import colours from '@src/utils/colours';
 import { IS_ANDROID } from '@src/utils/deviceDimensions';
+import { addNewFriend } from '@src/utils/friendCollection';
 import { db } from 'firbaseConfig';
 import { collection, getDocs, query, where } from 'firebase/firestore';
 import React, { useState } from 'react';
@@ -12,19 +14,12 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { moderateScale, moderateVerticalScale } from 'react-native-size-matters';
 import { useSelector } from 'react-redux';
 
-type User = {
-  name: string;
-  email: string;
-  avatar: string;
-  username: string;
-  createdAt: string;
-};
-
 const AddFriend = () => {
-  const currUsername = useSelector((state: RootState) => state.user.username);
+  const { username: currUsername, uid } = useSelector((state: RootState) => state.user);
 
   const [username, setUsername] = useState<string>('');
-  const [friend, setFriend] = useState<User | null>(null);
+  const [friend, setFriend] = useState<UserDocument | null>(null);
+  const [friendId, setFriendId] = useState<string | null>(null);
 
   const handleSearch = async () => {
     const usersRef = collection(db, 'users');
@@ -34,7 +29,8 @@ const AddFriend = () => {
     if (querySnapshot.docs.length === 1)
       querySnapshot.forEach((doc) => {
         const data = doc.data();
-        setFriend(data as User);
+        setFriend(data as UserDocument);
+        setFriendId(doc.id);
       });
     else console.log('no user found line 32');
   };
@@ -94,7 +90,18 @@ const AddFriend = () => {
                 backgroundColor: colours.greenNormal,
                 alignSelf: 'center',
               }}
-              onPress={handleSearch}
+              onPress={() => {
+                username === currUsername
+                  ? null
+                  : friend !== null
+                  ? addNewFriend({
+                      userId: uid!!,
+                      friendId: friendId!!,
+                      userUname: currUsername!!,
+                      friendUname: friend.username,
+                    })
+                  : handleSearch();
+              }}
               textStyle={{ fontSize: 16 }}
             />
           </View>
