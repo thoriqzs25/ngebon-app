@@ -29,7 +29,7 @@ const Home = () => {
   //   if (actionSheetRef.current) actionSheetRef.current.show();
   // };
   useEffect(() => {
-    if (user.name === undefined) {
+    if (user?.name === undefined) {
       getUser(auth.uid as string);
     }
   }, []);
@@ -43,7 +43,7 @@ const Home = () => {
         <HomeHeader />
         <View style={[globalStyle.paddingHorizontal, { paddingTop: 14 }]}>
           <Text style={styles.name}>
-            {user.name !== undefined ? `Hello ${user.name?.split(' ')[0]},` : 'Loading..'}
+            {user?.name !== undefined ? `Hello ${user.name?.split(' ')[0]},` : 'Loading..'}
           </Text>
           <Text style={{ fontFamily: 'dm', fontSize: moderateScale(14, 2) }}>
             Let's log and monitor your transactions!

@@ -21,6 +21,7 @@ const AppComponent = () => {
         <StatusBar barStyle={'light-content'} backgroundColor={colours.backgroundPrimary} />
         {/* <CustomSnackBar visible={message !== null && message !== ''} desc={message ?? ''} /> */}
         {/* <CodepushCheck /> */}
+
         <SwitchStackNavigator />
       </NavigationContainer>
     </View>

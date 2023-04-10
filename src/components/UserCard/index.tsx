@@ -44,7 +44,7 @@ const UserCard = ({
       <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center' }}>
         <ImageView
           name='tree-1'
-          remoteAssetFullUri={user.avatar}
+          remoteAssetFullUri={user !== undefined ? user.avatar : ''}
           style={{
             width: moderateScale(46, 2),
             height: moderateScale(46, 2),
@@ -54,10 +54,10 @@ const UserCard = ({
         />
         <View style={{ flexShrink: 1, marginLeft: 24 }}>
           <Text style={[styles.name]} numberOfLines={1}>
-            {user.name ?? 'Loading'}
+            {user ? user.name : 'Loading'}
           </Text>
           <Text style={[styles.dmFont, { color: colours.gray300, fontSize: moderateScale(10, 2) }]}>
-            {user.username}
+            {user ? user.username : ''}
           </Text>
         </View>
         {withCheckBox && (

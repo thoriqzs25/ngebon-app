@@ -3,6 +3,7 @@ import CustomButton from '@src/components/input/CustomButton';
 import CustomCheckbox from '@src/components/input/CustomCheckbox';
 import SubPage from '@src/components/SubPage';
 import UserCard from '@src/components/UserCard';
+import { RootState } from '@src/types/states/root';
 import colours from '@src/utils/colours';
 import { IS_ANDROID } from '@src/utils/deviceDimensions';
 import useBoolean from '@src/utils/useBoolean';
@@ -13,6 +14,7 @@ import { View } from 'react-native';
 import { Switch, TouchableHighlight, ScrollView } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { moderateScale, moderateVerticalScale } from 'react-native-size-matters';
+import { useSelector } from 'react-redux';
 
 const PaymentCard = ({
   type = 'BCA',
@@ -53,6 +55,7 @@ const PaymentCard = ({
 };
 
 const PaymentDetails = () => {
+  const { user } = useSelector((state: RootState) => state);
   const { value: required, setValue: setRequired } = useBoolean(false);
 
   return (
@@ -77,7 +80,7 @@ const PaymentDetails = () => {
             <Text style={[styles.dmBold, { fontSize: moderateScale(14, 2), marginBottom: 8, marginTop: 4 }]}>
               Pay To
             </Text>
-            <UserCard />
+            <UserCard user={user} />
 
             <Text style={[styles.dmBold, { fontSize: moderateScale(15, 2), marginTop: 4 }]}>Payment Method</Text>
             <Text style={[styles.dmFont, { color: colours.gray300, fontSize: moderateScale(10, 2) }]}>
@@ -86,10 +89,7 @@ const PaymentDetails = () => {
             <PaymentCard type='BCA' account='999292123 (Raisa Andriana)' />
             <PaymentCard type='GoPay' account='081293122134 (Raisa A)' />
             <PaymentCard type='OVO' account='081293122134 (Raisa Andriana)' />
-            <PaymentCard type='OVO' account='081293122134 (Raisa Andriana)' />
-            <PaymentCard type='OVO' account='081293122134 (Raisa Andriana)' />
-            <PaymentCard type='OVO' account='081293122134 (Raisa Andriana)' />
-            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 20, marginTop: IS_ANDROID ? 4 : 16 }}>
+            <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: IS_ANDROID ? 4 : 16 }}>
               <Text style={[styles.dmFont, { fontSize: moderateScale(14, 2) }]}>Require Proof</Text>
               <Switch
                 value={required}

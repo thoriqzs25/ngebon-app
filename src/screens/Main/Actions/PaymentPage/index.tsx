@@ -6,15 +6,25 @@ import { StyleSheet, Text } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { moderateScale, moderateVerticalScale } from 'react-native-size-matters';
-import { useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import CustomButton from '@src/components/input/CustomButton';
 import { navigate } from '@src/navigation';
+import { RouteProp, useNavigation } from '@react-navigation/native';
+import { UserDocument } from '@src/types/collection/usersCollection';
 
-const PaymentCard = () => {
-  const [amount, setAmount] = useState<string>();
+const PaymentCard = ({
+  user,
+  value,
+  setValue,
+}: {
+  user: UserDocument;
+  value: string;
+  setValue: (text: string) => void;
+}) => {
+  // const [amount, setAmount] = useState<string>();
 
   const convertAmount = (rp: string) => {
-    if (rp.length === 0) return setAmount('');
+    if (rp.length === 0) return setValue('');
 
     const formatter = new Intl.NumberFormat('id-ID', {
       style: 'currency',
@@ -29,7 +39,7 @@ const PaymentCard = () => {
       .split('Rp')[1]
       .trim();
 
-    if (num) setAmount(num);
+    if (num) setValue(num);
   };
 
   return (
@@ -54,14 +64,18 @@ const PaymentCard = () => {
       }}>
       <ImageView
         name='tree-1'
+        remoteAssetFullUri={user ? user.avatar : ''}
         style={{
           width: moderateScale(52, 2),
           height: moderateScale(52, 2),
+          borderRadius: moderateScale(23, 2),
           alignSelf: 'center',
         }}
       />
-      <Text style={[styles.dmFont]}>Jisoo</Text>
-      <Text style={[styles.dmFont, { color: colours.gray300, fontSize: moderateScale(10, 2) }]}>sooyaaa_</Text>
+      <Text style={[styles.name, { marginVertical: 4 }]}>{user ? user.name : ''}</Text>
+      <Text style={[styles.dmFont, { color: colours.gray300, fontSize: moderateScale(10, 2) }]}>
+        {user ? user.username : ''}
+      </Text>
       <View
         style={{
           width: '90%',
@@ -74,7 +88,7 @@ const PaymentCard = () => {
           onChangeText={(e) => {
             convertAmount(e);
           }}
-          value={amount}
+          value={value}
           maxLength={9}
           placeholder='0'
           keyboardType='number-pad'
@@ -104,10 +118,34 @@ const PaymentCard = () => {
   );
 };
 
-const PaymentPage = () => {
+const PaymentPage = ({ route }: { route: RouteProp<{ params: { recordFriends: UserDocument[] } }> }) => {
+  const [recordList, setRecordList] = useState<UserDocument[]>([]);
+  const [inputs, setInputs] = useState<Array<string>>([]);
+
+  useEffect(() => {
+    if (route.params) setRecordList(route.params.recordFriends);
+  }, []);
+
+  const handleAmountChange = useCallback(
+    (text: string, index: number) => {
+      const newInputs = [...inputs];
+      newInputs[index] = text;
+      setInputs(newInputs);
+    },
+    [inputs]
+  );
+
+  const handleAddAnother = () => {
+    navigate('RecordFriend', { recordFriends: recordList }, true);
+  };
+
+  const handleBack = () => {
+    navigate('RecordFriend', { recordFriends: [] }, true);
+  };
+
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      <SubPage>
+      <SubPage customGoBack={handleBack}>
         <View style={{ flex: 1, alignItems: 'center' }}>
           <Text
             style={[
@@ -128,22 +166,29 @@ const PaymentPage = () => {
               // gap: 20
             }}
             showsVerticalScrollIndicator={true}>
-            {Array(4)
-              .fill(0)
-              .map((_, idx) => {
-                return <PaymentCard key={idx} />;
-              })}
+            {recordList.map((friend, idx) => {
+              return (
+                <PaymentCard
+                  key={idx}
+                  user={friend}
+                  value={inputs[idx]}
+                  setValue={(text: string) => handleAmountChange(text, idx)}
+                />
+              );
+            })}
             <View style={{ flexDirection: 'row', width: '96%', justifyContent: 'space-between' }}>
               <CustomButton
                 style={[styles.button, { backgroundColor: colours.grayNormal }]}
                 text='Add another friend'
                 textStyle={styles.buttonText}
+                onPress={handleAddAnother}
               />
               <CustomButton
                 style={[styles.button]}
                 text='Next'
                 textStyle={styles.buttonText}
-                onPress={() => navigate('PaymentDetails')}
+                onPress={() => console.log('line next 190', inputs)}
+                // onPress={() => navigate('PaymentDetails')}
               />
             </View>
           </ScrollView>
@@ -156,6 +201,9 @@ const PaymentPage = () => {
 const styles = StyleSheet.create({
   dmBold: {
     fontFamily: 'dm-700',
+  },
+  name: {
+    fontFamily: 'dm-500',
   },
   dmFont: {
     fontFamily: 'dm',

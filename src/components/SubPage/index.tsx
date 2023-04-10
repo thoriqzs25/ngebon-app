@@ -12,6 +12,7 @@ const SubPage = ({
   subTitle,
   subTitleIcon,
   style,
+  customGoBack,
 }: {
   children: JSX.Element;
   title?: string;
@@ -19,11 +20,13 @@ const SubPage = ({
   subTitle?: string;
   subTitleIcon?: string;
   style?: StyleProp<any>;
+  customGoBack?: () => void;
 }) => {
   const { navigate, goBack, canGoBack } = useNavigation();
 
   const handleBack = () => {
-    if (canGoBack()) goBack();
+    if (customGoBack !== undefined) customGoBack();
+    else if (canGoBack()) goBack();
   };
   return (
     <View
