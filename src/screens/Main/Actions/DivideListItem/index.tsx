@@ -11,6 +11,7 @@ import CustomButton from '@src/components/input/CustomButton';
 import { ItemList } from '@src/components/ItemList';
 import { InputItem } from '@src/components/InputItem';
 import { IS_ANDROID } from '@src/utils/deviceDimensions';
+import { navigate } from '@src/navigation';
 
 const DivideListItem = () => {
   const [inputs, setInputs] = useState<Array<{ itemName: string; price: string; qty: string; totalPrice: number }>>([]);
@@ -61,9 +62,7 @@ const DivideListItem = () => {
 
   const handleEditInput = useCallback(
     (index: number) => {
-      console.log('line 163', index, itemConfirmation);
       const newArr = itemConfirmation.filter((num) => num !== index);
-      console.log('line 164', newArr);
 
       setItemConfirmation(newArr);
     },
@@ -138,6 +137,7 @@ const DivideListItem = () => {
                 text='Confirm'
                 style={{ borderRadius: 10, width: '60%', backgroundColor: colours.greenNormal, alignSelf: 'center' }}
                 textStyle={{ fontSize: 16 }}
+                onPress={() => navigate('DivideChooseFriends')}
               />
             ) : (
               <View
@@ -170,7 +170,7 @@ const DivideListItem = () => {
 
 const styles = StyleSheet.create({
   dmBold: {
-    fontFamily: 'dm-500',
+    fontFamily: 'dm-700',
   },
   dmFont: {
     fontFamily: 'dm',

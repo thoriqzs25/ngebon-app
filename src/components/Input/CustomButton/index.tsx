@@ -6,6 +6,7 @@ const CustomButton = ({
   glow,
   text,
   style,
+  disabled = false,
   onPress,
   iconName,
   iconSize,
@@ -16,6 +17,7 @@ const CustomButton = ({
   glow?: boolean;
   iconName?: string;
   iconSize?: number;
+  disabled?: boolean;
   onPress?: () => void;
   style?: StyleProp<any>;
   iconNameRight?: string;
@@ -23,6 +25,7 @@ const CustomButton = ({
 }) => {
   return (
     <TouchableOpacity
+      disabled={disabled}
       activeOpacity={0.75}
       style={[
         styles.container,

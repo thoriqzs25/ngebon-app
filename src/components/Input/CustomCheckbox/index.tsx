@@ -13,24 +13,27 @@ const CustomCheckbox = ({
   value,
   setValue,
   error = false,
+  onCheckChanged,
 }: {
   style?: StyleProp<any>;
   boxStyle?: StyleProp<any>;
   title?: string;
   value?: boolean;
-  setValue: UseBoolean;
+  setValue?: UseBoolean;
   error?: boolean;
+  onCheckChanged?: (checked: boolean) => void;
 }) => {
   const { value: active, setValue: setActive } = useBoolean(false);
 
   useEffect(() => {
     if (value) setActive.true();
     else setActive.false();
+    onCheckChanged && onCheckChanged(!!value);
   }, [value]);
 
   useEffect(() => {
-    if (active) setValue.true();
-    else setValue.false();
+    if (active) setValue && setValue.true();
+    else setValue && setValue.false();
   }, [active]);
   return (
     <TouchableOpacity

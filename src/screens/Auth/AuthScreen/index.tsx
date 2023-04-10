@@ -114,7 +114,6 @@ const AuthScreen = () => {
   }, [response, token]);
 
   useEffect(() => {
-    console.log('line 111', authRedux.uid);
     if (authRedux.uid) checkUser(authRedux.uid);
   }, []);
 

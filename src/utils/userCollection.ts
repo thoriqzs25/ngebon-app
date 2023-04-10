@@ -10,7 +10,6 @@ export const getUser = async (userId: string) => {
   });
 
   if (user) {
-    console.log('line 12');
     store.dispatch(
       setUser({
         email: user.email,
@@ -23,7 +22,6 @@ export const getUser = async (userId: string) => {
     );
   }
 
-  console.log('line 16');
   return user;
 };
 

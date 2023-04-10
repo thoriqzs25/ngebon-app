@@ -1,6 +1,7 @@
 import ImageView from '@src/components/ImageView';
 import SubPage from '@src/components/SubPage';
 import CustomButton from '@src/components/input/CustomButton';
+import { RootState } from '@src/types/states/root';
 import colours from '@src/utils/colours';
 import { IS_ANDROID } from '@src/utils/deviceDimensions';
 import { db } from 'firbaseConfig';
@@ -9,6 +10,7 @@ import React, { useState } from 'react';
 import { KeyboardAvoidingView, StyleSheet, Text, TextInput, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { moderateScale, moderateVerticalScale } from 'react-native-size-matters';
+import { useSelector } from 'react-redux';
 
 type User = {
   name: string;
@@ -19,29 +21,22 @@ type User = {
 };
 
 const AddFriend = () => {
+  const currUsername = useSelector((state: RootState) => state.user.username);
+
   const [username, setUsername] = useState<string>('');
   const [friend, setFriend] = useState<User | null>(null);
 
   const handleSearch = async () => {
-    console.log('test', username);
     const usersRef = collection(db, 'users');
     const q = query(usersRef, where('username', '==', `${username}`));
     const querySnapshot = await getDocs(q);
-    // .then((friend) => {
-    //   console.log('line 22', friend);
-    //   friend.forEach((doc) => {
-    //     console.log(doc.id, ' => ', doc.data());
-    //   });
-    // });
-    console.log(querySnapshot.docs.length, 'line 28');
+
     if (querySnapshot.docs.length === 1)
       querySnapshot.forEach((doc) => {
         const data = doc.data();
-        console.log('line 40', data.avatar);
         setFriend(data as User);
       });
     else console.log('no user found line 32');
-    // console.log(querySnapshot., 'line 24');
   };
 
   return (
@@ -90,7 +85,8 @@ const AddFriend = () => {
             </View>
 
             <CustomButton
-              text={friend !== null ? 'Add' : 'Search'}
+              disabled={username === currUsername}
+              text={username === currUsername ? `It's You :D` : friend !== null ? 'Add' : 'Search'}
               style={{
                 // paddingVertical: 16,
                 borderRadius: 10,
@@ -110,7 +106,7 @@ const AddFriend = () => {
 
 const styles = StyleSheet.create({
   dmBold: {
-    fontFamily: 'dm-500',
+    fontFamily: 'dm-700',
   },
   dmFont: {
     fontFamily: 'dm',

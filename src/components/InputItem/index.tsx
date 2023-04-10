@@ -66,7 +66,7 @@ export const InputItem = ({
 
 const styles = StyleSheet.create({
   dmBold: {
-    fontFamily: 'dm-500',
+    fontFamily: 'dm-700',
   },
   dmFont: {
     fontFamily: 'dm',
