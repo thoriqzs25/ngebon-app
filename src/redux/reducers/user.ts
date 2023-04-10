@@ -5,6 +5,8 @@ const defaultState = {
   uid: null,
   name: null,
   username: null,
+  avatar: null,
+  payments: null,
 } as UserReducerState;
 
 const userReducer = (prevState = defaultState, action: UserReducerAction) => {
@@ -16,6 +18,13 @@ const userReducer = (prevState = defaultState, action: UserReducerAction) => {
         uid: action.uid,
         name: action.name,
         username: action.username,
+        avatar: action.avatar,
+        payments: action.payments,
+      };
+    case 'SET_AVATAR':
+      return {
+        ...prevState,
+        avatar: action.avatar,
       };
     case 'REMOVE_USER':
       return defaultState;

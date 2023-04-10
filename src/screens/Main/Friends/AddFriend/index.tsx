@@ -37,6 +37,7 @@ const AddFriend = () => {
     if (querySnapshot.docs.length === 1)
       querySnapshot.forEach((doc) => {
         const data = doc.data();
+        console.log('line 40', data.avatar);
         setFriend(data as User);
       });
     else console.log('no user found line 32');
@@ -73,12 +74,14 @@ const AddFriend = () => {
 
             <View style={{ marginVertical: 40 }}>
               <ImageView
-                name='tree-1'
+                name={'tree-1'}
+                remoteAssetFullUri={friend?.avatar}
                 style={{
                   width: moderateScale(100, 2),
                   height: moderateScale(100, 2),
                   alignSelf: 'center',
                   marginBottom: 12,
+                  borderRadius: moderateScale(46, 2),
                 }}
               />
               <Text style={{ fontFamily: 'dm', fontSize: 20, alignSelf: 'center' }}>

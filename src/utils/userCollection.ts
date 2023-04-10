@@ -1,16 +1,26 @@
 import { setUser } from '@src/redux/actions/user';
 import { store } from '@src/redux/store';
+import { UserDocument } from '@src/types/collection/usersCollection';
 import { db } from 'firbaseConfig';
 import { collection, doc, getDoc, getDocs } from 'firebase/firestore';
 
 export const getUser = async (userId: string) => {
   const user = await getDoc(doc(db, 'users', `${userId}`)).then((user) => {
-    return user.data();
+    return user.data() as UserDocument | null;
   });
 
   if (user) {
     console.log('line 12');
-    store.dispatch(setUser({ email: user.email, uid: userId, name: user.name, username: user.username }));
+    store.dispatch(
+      setUser({
+        email: user.email,
+        uid: userId,
+        name: user.name,
+        username: user.username,
+        avatar: user.avatar,
+        payments: user.payments,
+      })
+    );
   }
 
   console.log('line 16');

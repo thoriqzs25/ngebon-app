@@ -3,13 +3,14 @@ import { Image, View, ImageBackground } from 'react-native';
 import colours from '@src/utils/colours';
 import FastImage from 'react-native-fast-image';
 import { imageSource } from '@src/utils/images';
+import * as ImagePicker from 'expo-image-picker';
 
 interface ImageViewIProps {
   name?: string;
   style?: any;
   resizeMode?: 'cover' | 'contain' | 'stretch' | 'center';
   background?: boolean;
-  remoteAssetFullUri?: string;
+  remoteAssetFullUri?: string | null;
 }
 
 const ImageView = ({
@@ -21,7 +22,8 @@ const ImageView = ({
   ...rest
 }: ImageViewIProps) => {
   if (remoteAssetFullUri && remoteAssetFullUri?.length > 0) {
-    return <FastImage style={style} resizeMode={resizeMode || 'cover'} source={{ uri: remoteAssetFullUri }} />;
+    return <Image source={{ uri: remoteAssetFullUri }} resizeMode={resizeMode || 'cover'} style={[style]} />;
+    // return <FastImage style={style} resizeMode={resizeMode || 'cover'} source={{ uri: remoteAssetFullUri }} />;
   }
 
   const source = name && imageSource(name);

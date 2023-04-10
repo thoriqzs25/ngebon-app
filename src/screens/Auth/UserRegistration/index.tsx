@@ -4,11 +4,13 @@ import TextField from '@src/components/input/TextField';
 import { navigate } from '@src/navigation';
 import { userLogin } from '@src/redux/actions/auth';
 import { store } from '@src/redux/store';
+import { FriendDocument } from '@src/types/collection/friendsCollection';
+import { UserDocument } from '@src/types/collection/usersCollection';
 import { RootState } from '@src/types/states/root';
 import colours from '@src/utils/colours';
 import { checkUserRegistered } from '@src/utils/userCollection';
 import { db } from 'firbaseConfig';
-import { addDoc, collection, doc, getDoc, getDocs, serverTimestamp, setDoc } from 'firebase/firestore';
+import { addDoc, collection, doc, getDoc, getDocs, serverTimestamp, setDoc, updateDoc } from 'firebase/firestore';
 import React, { useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -16,19 +18,29 @@ import { useSelector } from 'react-redux';
 
 const UserRegistration = () => {
   const { email, uid } = useSelector((store: RootState) => store.auth);
+  const { avatar } = useSelector((store: RootState) => store.user);
 
   const [name, setName] = useState<string>('');
   const [username, setUsername] = useState<string>('');
 
   const handleNextBtn = async () => {
+    const newUserDoc = {
+      name: name,
+      username: username,
+      email: email,
+      createdAt: serverTimestamp(),
+      avatar: avatar ?? '',
+      payments: [],
+    } as UserDocument;
+    const newFriendDoc = {
+      allFriends: [],
+      ownRequests: [],
+      friendRequests: [],
+    } as FriendDocument;
+
     try {
-      const res = await setDoc(doc(db, 'users', `${uid}`), {
-        name: name,
-        username: username,
-        email: email,
-        createdAt: serverTimestamp(),
-      });
-      console.log('line 27', res);
+      const resUser = await setDoc(doc(db, 'users', `${uid}`), newUserDoc, { merge: true });
+      const resFriend = await setDoc(doc(db, 'friends', `${uid}`), newFriendDoc, { merge: true });
 
       const userExists = await checkUserRegistered(uid as string);
       if (userExists) store.dispatch(userLogin());

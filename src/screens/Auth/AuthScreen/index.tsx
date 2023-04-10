@@ -13,7 +13,7 @@ import {
   UserCredential,
 } from 'firebase/auth';
 import { useEffect, useState } from 'react';
-import { Alert, Text, View } from 'react-native';
+import { Alert, Image, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import * as AuthSession from 'expo-auth-session';
 import { useAuthRequest } from 'expo-auth-session/build/providers/Google';
@@ -23,7 +23,7 @@ import { currentUser, userLogin } from '@src/redux/actions/auth';
 import { collection, getDocs } from 'firebase/firestore';
 import { navigate } from '@src/navigation';
 import { checkUserRegistered, getUser } from '@src/utils/userCollection';
-import { setUser } from '@src/redux/actions/user';
+import { setAvatar, setUser } from '@src/redux/actions/user';
 import { useSelector } from 'react-redux';
 import { RootState } from '@src/types/states/root';
 
@@ -83,9 +83,11 @@ const AuthScreen = () => {
     signInWithCredential(auth, credential)
       .then((userCred) => {
         const user = userCred.user;
-        // store.dispatch(userLogin({ uid: user.uid, email: user.email }));
         setUserInfo(user);
         store.dispatch(currentUser({ email: user.email, uid: user.uid }));
+
+        if (user.photoURL) store.dispatch(setAvatar({ avatar: user.photoURL }));
+
         checkUser(user.uid);
       })
       .catch((err) => {
@@ -128,6 +130,8 @@ const AuthScreen = () => {
           alignItems: 'center',
         }}>
         <Text>{userInfo?.displayName ?? 'nothjing'}</Text>
+        {userInfo?.photoURL && <Image source={{ uri: userInfo?.photoURL }} style={{ width: 120, height: 120 }} />}
+
         <TextField title='email' placeholderText='Masukkan email' setValue={setEmail} />
         <TextField
           title='password'
