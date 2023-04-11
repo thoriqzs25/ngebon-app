@@ -157,7 +157,7 @@ const PaymentPage = ({
   };
 
   const handleBack = () => {
-    navigate('RecordFriend', { recordFriends: [] }, true);
+    navigate('RecordFriend', { prevInputs: [] });
   };
 
   return (
@@ -206,8 +206,7 @@ const PaymentPage = ({
                 style={[styles.button]}
                 text='Next'
                 textStyle={styles.buttonText}
-                onPress={() => console.log('line next 190', inputs)}
-                // onPress={() => navigate('PaymentDetails')}
+                onPress={() => navigate('PaymentDetails')}
               />
             </View>
           </ScrollView>

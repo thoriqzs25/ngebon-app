@@ -63,16 +63,17 @@ const RecordFriend = ({
                   <UserCard
                     key={idx}
                     onPress={() => {
-                      let newRecords = [...prevRecordList, { user: friend, value: '', note: '' }];
+                      let newRecords: Array<{ user: UserDocument; value: string; note: string }> = [];
 
-                      if (prevRecordList.length > 0)
+                      if (!!prevRecordList && prevRecordList.length > 0) {
+                        newRecords = [...prevRecordList, { user: friend, value: '', note: '' }];
                         prevRecordList.map((record, idx) => {
                           if (record.user.username === friend.username) {
                             newRecords = [...prevRecordList];
                             return;
                           }
                         });
-
+                      } else newRecords = [{ user: friend, value: '', note: '' }];
                       navigate('PaymentPage', { prevInputs: newRecords });
                     }}
                     user={friend}
