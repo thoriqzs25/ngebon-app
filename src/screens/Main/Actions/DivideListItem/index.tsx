@@ -1,7 +1,7 @@
 import SubPage from '@src/components/SubPage';
 import TextField from '@src/components/input/TextField';
 import colours from '@src/utils/colours';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Button, KeyboardAvoidingView, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { moderateScale, moderateVerticalScale } from 'react-native-size-matters';
@@ -12,12 +12,20 @@ import { ItemList } from '@src/components/ItemList';
 import { InputItem } from '@src/components/InputItem';
 import { IS_ANDROID } from '@src/utils/deviceDimensions';
 import { navigate } from '@src/navigation';
+import { store } from '@src/redux/store';
+import { setDivideItems } from '@src/redux/actions/divide';
 
 const DivideListItem = () => {
   const [inputs, setInputs] = useState<Array<{ itemName: string; price: string; qty: string; totalPrice: number }>>([]);
   const [itemConfirmation, setItemConfirmation] = useState<Array<number>>([]);
   const [readyToConfirm, setReadyToConfirm] = useState<boolean>(false);
+  const [title, setTitle] = useState<string>('');
 
+  const scrollViewRef = useRef<ScrollView>();
+
+  const handleContentSizeChange = () => {
+    scrollViewRef?.current?.scrollToEnd({ animated: true });
+  };
   const handleAddInput = useCallback(() => {
     setInputs([...inputs, { itemName: '', price: '', qty: '', totalPrice: 0 }]);
   }, [inputs]);
@@ -89,19 +97,28 @@ const DivideListItem = () => {
         keyboardVerticalOffset={IS_ANDROID ? -70 : -80}
         style={{ flex: 1 }}>
         <SubPage>
-          <View style={{ flex: 1, paddingBottom: moderateVerticalScale(160, -1.5) }}>
+          <View style={{ flex: 1, paddingBottom: moderateVerticalScale(40, -1.5) }}>
             <Text
               style={[styles.dmBold, { fontSize: moderateScale(14, 2), color: colours.greenNormal, marginTop: 12 }]}>
               Divide
             </Text>
             <Text style={[styles.dmBold, { fontSize: moderateScale(16, 2), marginVertical: 8 }]}>List Items</Text>
-            <ScrollView style={{ flex: 1, marginBottom: 12 }} showsVerticalScrollIndicator={false}>
-              <TextField
-                titleAlt='Title'
-                setValue={() => null}
-                style={{ marginVertical: 12, marginBottom: 16 }}
-                inputStyle={{ paddingVertical: 4 }}
-              />
+            <ScrollView
+              // @ts-ignore
+              ref={scrollViewRef}
+              // stickyHeaderHiddenOnScroll={true}
+              // stickyHeaderIndices={[0]}
+              // onContentSizeChange={handleContentSizeChange}
+              style={{ flex: 1, marginBottom: 12 }}
+              showsVerticalScrollIndicator={false}>
+              <View style={{ backgroundColor: colours.white }}>
+                <TextField
+                  titleAlt='Title'
+                  setValue={setTitle}
+                  style={{ marginVertical: 12, marginBottom: 16, backgroundColor: colours.white }}
+                  inputStyle={{ paddingVertical: 4 }}
+                />
+              </View>
               {inputs.map((value, index) => {
                 if (itemConfirmation.includes(index))
                   return (
@@ -133,12 +150,31 @@ const DivideListItem = () => {
               })}
             </ScrollView>
             {readyToConfirm && itemConfirmation.length > 0 ? (
-              <CustomButton
-                text='Confirm'
-                style={{ borderRadius: 10, width: '60%', backgroundColor: colours.greenNormal, alignSelf: 'center' }}
-                textStyle={{ fontSize: 16 }}
-                onPress={() => navigate('DivideChooseFriends')}
-              />
+              <View
+                style={{
+                  width: '85%',
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  alignSelf: 'center',
+                }}>
+                <CustomButton
+                  text='Cancel'
+                  style={{ borderRadius: 10, width: '45%', backgroundColor: colours.redNormal, alignSelf: 'center' }}
+                  textStyle={{ fontSize: 16 }}
+                  onPress={() => {
+                    setItemConfirmation([]);
+                  }}
+                />
+                <CustomButton
+                  text='Confirm'
+                  style={{ borderRadius: 10, width: '45%', backgroundColor: colours.greenNormal, alignSelf: 'center' }}
+                  textStyle={{ fontSize: 16 }}
+                  onPress={() => {
+                    store.dispatch(setDivideItems({ title: title, items: inputs }));
+                    navigate('DivideChooseFriends');
+                  }}
+                />
+              </View>
             ) : (
               <View
                 style={{

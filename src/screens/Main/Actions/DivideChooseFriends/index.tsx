@@ -22,9 +22,9 @@ const DivideChooseFriends = () => {
   const [friends, setFriends] = useState<UserDocument[]>([]);
 
   const handleCheck = (index: number, isChecked: boolean) => {
-    if (isChecked) {
+    if (isChecked && !checkedItems.includes(index)) {
       setCheckedItems([...checkedItems, index]);
-    } else {
+    } else if (!isChecked) {
       setCheckedItems(checkedItems.filter((item) => item !== index));
     }
   };
@@ -78,7 +78,11 @@ const DivideChooseFriends = () => {
           <CustomButton
             text='Next'
             style={{ borderRadius: 10, width: '50%', alignSelf: 'center', marginTop: 20 }}
-            onPress={() => navigate('DivideAssign')}
+            onPress={() => {
+              const selectedFriends = checkedItems.map((idx) => friends[idx - 1]);
+              // console.log('line ', checkedItems, selectedFriends);
+              navigate('DivideAssign', { selectedFriends: selectedFriends });
+            }}
           />
         </View>
       </SubPage>

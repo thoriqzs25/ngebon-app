@@ -3,6 +3,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { persistStore, persistReducer, FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER } from 'redux-persist';
 import authReducer from '../reducers/auth';
 import userReducer from '../reducers/user';
+import divideReducer from '../reducers/divide';
 
 const persistConfig = {
   key: 'root',
@@ -20,6 +21,7 @@ const authPersistConfig = {
 const rootReducer = combineReducers({
   auth: persistReducer(authPersistConfig, authReducer),
   user: userReducer,
+  divide: divideReducer,
   // etc: etcReducer
 });
 
