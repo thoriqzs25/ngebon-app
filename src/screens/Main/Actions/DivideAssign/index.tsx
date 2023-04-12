@@ -107,17 +107,19 @@ const DivideAssign = ({ route }: { route: RouteProp<{ params: { selectedFriends:
   const [items, setItems] = useState<Array<AssignItems>>([]);
   // const [active, setActive] = useState<boolean>(false);
 
-  const handleSelectItem = (item: AssignItems, idx: number) => {
+  const handleSelectItem = async (item: AssignItems, idx: number) => {
     const prevItems = [...items];
+
     if (prevItems[idx].userArr.find((item) => item.username === friends[currIdx].user.username) === undefined) {
       prevItems[idx].userArr.push(friends[currIdx].user);
 
       prevItems[idx].userArr.sort((a, b) => a.username.toLowerCase().localeCompare(b.username.toLowerCase()));
-      setItems([...prevItems]);
+      console.log('line 111', prevItems);
+      // setItems(prevItems);
     } else {
       const userArr = prevItems[idx].userArr.filter((user) => user.username !== friends[currIdx].user.username);
       prevItems[idx].userArr = userArr;
-      setItems([...prevItems]);
+      // setItems(prevItems);
     }
   };
 
@@ -125,7 +127,6 @@ const DivideAssign = ({ route }: { route: RouteProp<{ params: { selectedFriends:
     if (route.params) {
       let friendList: AssignFriend[] = [];
       const selectedFriends: UserDocument[] = [...route.params.selectedFriends];
-      selectedFriends.sort((a, b) => a.username.toLowerCase().localeCompare(b.username.toLowerCase()));
       selectedFriends.map((friend, idx) => {
         friendList.push({ user: friend, selectedItem: [] });
       });

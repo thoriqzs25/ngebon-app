@@ -13,7 +13,7 @@ const Main = createStackNavigator<Record<string, any>>();
 
 const MainStackNavigator = () => {
   return (
-    <Main.Navigator initialRouteName='TabNavigator'>
+    <Main.Navigator initialRouteName='DivideListItem'>
       <Main.Screen name={'TabNavigator'} component={TabNavigator} options={{ headerShown: false }} />
 
       {/* Record/Divide */}

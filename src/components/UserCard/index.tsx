@@ -13,24 +13,28 @@ import { UserReducerState } from '@src/types/states/user';
 const UserCard = ({
   onPress,
   withCheckBox,
+  isChecked = false,
   onCheckChanged,
   user,
 }: {
   onPress?: () => void;
   withCheckBox?: boolean;
+  isChecked?: boolean;
   onCheckChanged?: (checked: boolean) => void;
   user: UserDocument | UserReducerState;
 }) => {
-  const [isChecked, setIsChecked] = useState<boolean>(false);
+  // const [isChecked, setIsChecked] = useState<boolean>(false);
 
   const handleCheckChanged = (checked: boolean) => {
-    setIsChecked(checked);
+    // setIsChecked(checked);
+    console.log('line 30', checked);
     onCheckChanged && onCheckChanged(checked);
   };
 
   const handlePress = () => {
     if (withCheckBox) {
-      setIsChecked(!isChecked);
+      // setIsChecked(!isChecked);
+      console.log('line 37', !isChecked);
       onCheckChanged && onCheckChanged(!isChecked);
     }
     onPress && onPress();

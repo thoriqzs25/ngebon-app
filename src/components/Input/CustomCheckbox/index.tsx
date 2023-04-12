@@ -28,12 +28,13 @@ const CustomCheckbox = ({
   useEffect(() => {
     if (value) setActive.true();
     else setActive.false();
-    onCheckChanged && onCheckChanged(!!value);
   }, [value]);
 
   useEffect(() => {
     if (active) setValue && setValue.true();
     else setValue && setValue.false();
+
+    onCheckChanged && onCheckChanged(!!active);
   }, [active]);
   return (
     <TouchableOpacity

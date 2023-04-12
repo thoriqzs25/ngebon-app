@@ -60,7 +60,8 @@ const DivideChooseFriends = () => {
             <UserCard
               onPress={() => null}
               withCheckBox={true}
-              onCheckChanged={(isChecked: boolean) => handleCheck(90, isChecked)}
+              onCheckChanged={(isChecked: boolean) => handleCheck(0, isChecked)}
+              isChecked={checkedItems.includes(0)}
               user={user}
             />
             <Text style={[styles.dmBold, { fontSize: moderateScale(14, 2), marginBottom: 8 }]}>Friends</Text>
@@ -72,6 +73,7 @@ const DivideChooseFriends = () => {
                     key={idx}
                     onPress={() => null}
                     withCheckBox={true}
+                    isChecked={checkedItems.includes(idx + 1)}
                     onCheckChanged={(isChecked: boolean) => handleCheck(idx + 1, isChecked)}
                     user={friend}
                   />
@@ -82,7 +84,14 @@ const DivideChooseFriends = () => {
             text='Next'
             style={{ borderRadius: 10, width: '50%', alignSelf: 'center', marginTop: 20 }}
             onPress={() => {
-              const selectedFriends = checkedItems.map((idx) => friends[idx - 1]);
+              checkedItems.sort((a, b) => a - b);
+              const selectedFriends =
+                // checkedItems.includes(0) && user,
+                checkedItems.map((idx) => {
+                  if (idx === 0) return user;
+                  return friends[idx - 1];
+                });
+
               console.log('line 83', checkedItems);
               // console.log('line 83', checkedItems, selectedFriends);
               navigate('DivideAssign', { selectedFriends: selectedFriends });
