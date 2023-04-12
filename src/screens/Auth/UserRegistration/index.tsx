@@ -9,9 +9,10 @@ import { UserDocument } from '@src/types/collection/usersCollection';
 import { RootState } from '@src/types/states/root';
 import colours from '@src/utils/colours';
 import { checkUserRegistered } from '@src/utils/userCollection';
-import { db } from 'firbaseConfig';
+import { app, db } from 'firbaseConfig';
 import { addDoc, collection, doc, getDoc, getDocs, serverTimestamp, setDoc, updateDoc } from 'firebase/firestore';
-import React, { useState } from 'react';
+import { getDownloadURL, getStorage, ref } from 'firebase/storage';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useSelector } from 'react-redux';
@@ -22,6 +23,7 @@ const UserRegistration = () => {
 
   const [name, setName] = useState<string>('');
   const [username, setUsername] = useState<string>('');
+  const [dummyImg, setDummyImg] = useState<string>('');
 
   const handleNextBtn = async () => {
     const newUserDoc = {
@@ -29,7 +31,7 @@ const UserRegistration = () => {
       username: username,
       email: email,
       createdAt: serverTimestamp(),
-      avatar: avatar ?? '',
+      avatar: avatar ?? dummyImg ?? '',
       payments: [],
     } as UserDocument;
 
@@ -49,6 +51,18 @@ const UserRegistration = () => {
       console.log('line 24 err', e);
     }
   };
+
+  const getDummyImg = async () => {
+    //  const spaceRef = ref(storage, 'images/space.jpg');
+    // const imageRef = spaceRef.parent;
+    const img = await getDownloadURL(ref(getStorage(app), 'images/test.jpg'));
+    console.log('line 46', img);
+    setDummyImg(img);
+  };
+
+  useEffect(() => {
+    getDummyImg();
+  }, []);
 
   return (
     <SafeAreaView style={{ flex: 1, alignItems: 'center', height: '100%' }}>

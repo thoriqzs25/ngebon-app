@@ -6,6 +6,8 @@ import CustomButton from '@src/components/input/CustomButton';
 import { UserDocument } from '@src/types/collection/usersCollection';
 import { RootState } from '@src/types/states/root';
 import colours from '@src/utils/colours';
+import { app, storage } from 'firbaseConfig';
+import { getDownloadURL, getStorage, ref } from 'firebase/storage';
 import React, { useEffect, useState } from 'react';
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
@@ -28,6 +30,7 @@ const AssignCard = ({
 }) => {
   const [priceItem, setPrice] = useState<string>('');
   const [total, setTotal] = useState<string>('');
+  const [dummyImg, setDummyImg] = useState<string>('');
 
   const parseTotalPrice = () => {
     const formattedTotal = 'Rp' + item.totalPrice.toLocaleString('id-ID');
@@ -36,8 +39,19 @@ const AssignCard = ({
     setTotal(formattedTotal);
   };
 
+  const getDummyImg = async () => {
+    //  const spaceRef = ref(storage, 'images/space.jpg');
+    // const imageRef = spaceRef.parent;
+    const img = await getDownloadURL(ref(getStorage(app), 'images/tree_1.webp'));
+    setDummyImg(img);
+  };
+
   useEffect(() => {
     parseTotalPrice();
+  }, []);
+
+  useEffect(() => {
+    getDummyImg();
   }, []);
 
   return (
@@ -79,19 +93,22 @@ const AssignCard = ({
       <View style={{ flexDirection: 'row', marginTop: 4 }}>
         {users &&
           users.map((user, idx) => {
-            if (idx <= 0) {
-              return <Image source={{ uri: user.avatar ?? '' }} style={[styles.listedUserAvatar]} />;
+            let img = dummyImg;
+            if (user.avatar !== '') {
+              img = user?.avatar ?? dummyImg;
             }
-            return (
-              <Image source={{ uri: user.avatar ?? '' }} style={[styles.listedUserAvatar, { marginLeft: -10 }]} />
-              // <ImageView
-              //   key={idx.toString()}
-              //   name={'tree-1'}
-              //   remoteAssetFullUri={user?.avatar ?? ''}
-              //   // style={[styles.userAvatar, { border: `2px solid #29B029` }]}
-              //   style={[styles.listedUserAvatar, { marginLeft: idx > 0 && -10 }]}
-              // />
-            );
+
+            if (idx <= 0) {
+              return (
+                <Image
+                  source={{
+                    uri: img,
+                  }}
+                  style={[styles.listedUserAvatar]}
+                />
+              );
+            }
+            return <Image source={{ uri: img }} style={[styles.listedUserAvatar, { marginLeft: -10 }]} />;
           })}
       </View>
     </View>
@@ -127,7 +144,6 @@ const DivideAssign = ({ route }: { route: RouteProp<{ params: { selectedFriends:
     }
 
     if (prevFriends[currIdx].selectedItem.find((num) => num === idx) === undefined) {
-      console.log('line item', idx, 'user', prevFriends[currIdx]);
       prevFriends[currIdx].selectedItem.push(idx);
 
       prevFriends[currIdx].selectedItem.sort((a, b) => a - b);

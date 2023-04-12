@@ -92,8 +92,6 @@ const DivideChooseFriends = () => {
                   return friends[idx - 1];
                 });
 
-              console.log('line 83', checkedItems);
-              // console.log('line 83', checkedItems, selectedFriends);
               navigate('DivideAssign', { selectedFriends: selectedFriends });
             }}
           />
