@@ -7,7 +7,7 @@ import { UserDocument } from '@src/types/collection/usersCollection';
 import { RootState } from '@src/types/states/root';
 import colours from '@src/utils/colours';
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { moderateScale, moderateVerticalScale } from 'react-native-size-matters';
@@ -79,14 +79,18 @@ const AssignCard = ({
       <View style={{ flexDirection: 'row', marginTop: 4 }}>
         {users &&
           users.map((user, idx) => {
+            if (idx <= 0) {
+              return <Image source={{ uri: user.avatar ?? '' }} style={[styles.listedUserAvatar]} />;
+            }
             return (
-              <ImageView
-                key={idx.toString()}
-                name={'tree-1'}
-                remoteAssetFullUri={user?.avatar ?? ''}
-                // style={[styles.userAvatar, { border: `2px solid #29B029` }]}
-                style={[styles.listedUserAvatar, { marginLeft: idx > 0 && -10 }]}
-              />
+              <Image source={{ uri: user.avatar ?? '' }} style={[styles.listedUserAvatar, { marginLeft: -10 }]} />
+              // <ImageView
+              //   key={idx.toString()}
+              //   name={'tree-1'}
+              //   remoteAssetFullUri={user?.avatar ?? ''}
+              //   // style={[styles.userAvatar, { border: `2px solid #29B029` }]}
+              //   style={[styles.listedUserAvatar, { marginLeft: idx > 0 && -10 }]}
+              // />
             );
           })}
       </View>
@@ -109,17 +113,29 @@ const DivideAssign = ({ route }: { route: RouteProp<{ params: { selectedFriends:
 
   const handleSelectItem = async (item: AssignItems, idx: number) => {
     const prevItems = [...items];
+    const prevFriends = [...friends];
 
     if (prevItems[idx].userArr.find((item) => item.username === friends[currIdx].user.username) === undefined) {
       prevItems[idx].userArr.push(friends[currIdx].user);
 
       prevItems[idx].userArr.sort((a, b) => a.username.toLowerCase().localeCompare(b.username.toLowerCase()));
-      console.log('line 111', prevItems);
-      // setItems(prevItems);
+      setItems(prevItems);
     } else {
       const userArr = prevItems[idx].userArr.filter((user) => user.username !== friends[currIdx].user.username);
       prevItems[idx].userArr = userArr;
-      // setItems(prevItems);
+      setItems(prevItems);
+    }
+
+    if (prevFriends[currIdx].selectedItem.find((num) => num === idx) === undefined) {
+      console.log('line item', idx, 'user', prevFriends[currIdx]);
+      prevFriends[currIdx].selectedItem.push(idx);
+
+      prevFriends[currIdx].selectedItem.sort((a, b) => a - b);
+      setFriends(prevFriends);
+    } else {
+      const selectedItemArr = prevFriends[currIdx].selectedItem.filter((num) => num !== idx);
+      prevFriends[currIdx].selectedItem = selectedItemArr;
+      setFriends(prevFriends);
     }
   };
 
@@ -202,7 +218,7 @@ const DivideAssign = ({ route }: { route: RouteProp<{ params: { selectedFriends:
           <CustomButton
             text='Next'
             style={{ borderRadius: 10, width: '50%', alignSelf: 'center', marginTop: 20 }}
-            onPress={() => console.log(items, 'line 151')}
+            onPress={() => console.log(friends, 'line 151')}
           />
         </View>
       </SubPage>
