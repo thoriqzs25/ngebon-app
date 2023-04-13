@@ -32,7 +32,7 @@ const EditProfileInformation = () => {
 
   const { navigate, goBack, canGoBack } = useNavigation();
 
-  const [image, setImage] = useState<string | null>(null);
+  const [image, setImage] = useState<string | null>(user.avatar ?? '');
   const [username, setUsername] = useState<string>(user.username ?? '');
   const [name, setName] = useState<string>(user.name ?? '');
   const [email, setEmail] = useState<string>(user.email ?? '');
@@ -48,8 +48,6 @@ const EditProfileInformation = () => {
 
     if (!result.canceled) {
       const uri = result.assets[0].uri;
-
-      uploadImage(uri);
 
       setImage(uri);
     }
@@ -83,6 +81,7 @@ const EditProfileInformation = () => {
 
   const handleSave = () => {
     updateUser(name, user.uid!!);
+    uploadImage(image!!);
     if (canGoBack()) goBack();
   };
 
@@ -91,6 +90,7 @@ const EditProfileInformation = () => {
       setUsername(user.username ?? '');
       setName(user.name ?? '');
       setEmail(user.email ?? '');
+      setImage(user.avatar ?? '');
     }
   }, [user]);
 

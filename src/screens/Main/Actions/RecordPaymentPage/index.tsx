@@ -113,7 +113,7 @@ const PaymentCard = ({
   );
 };
 
-const PaymentPage = ({
+const RecordPaymentPage = ({
   route,
 }: {
   route: RouteProp<{ params: { prevInputs: Array<{ user: UserDocument; value: string; note: string }> } }>;
@@ -236,4 +236,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default PaymentPage;
+export default RecordPaymentPage;

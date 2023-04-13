@@ -74,7 +74,7 @@ const RecordFriend = ({
                           }
                         });
                       } else newRecords = [{ user: friend, value: '', note: '' }];
-                      navigate('PaymentPage', { prevInputs: newRecords });
+                      navigate('RecordPaymentPage', { prevInputs: newRecords });
                     }}
                     user={friend}
                   />

@@ -54,7 +54,7 @@ const PaymentReceipient = ({ route }: { route: RouteProp<{ params?: { page?: str
                 return (
                   <UserCard
                     key={idx}
-                    onPress={() => navigate('PaymentDetails', { uname: friend.username })}
+                    onPress={() => navigate('RecordPaymentDetails', { uname: friend.username })}
                     user={friend}
                   />
                 );
