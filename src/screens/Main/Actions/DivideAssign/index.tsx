@@ -101,6 +101,7 @@ const AssignCard = ({
             if (idx <= 0) {
               return (
                 <Image
+                  key={idx.toString()}
                   source={{
                     uri: img,
                   }}

@@ -13,9 +13,8 @@ import {
 } from 'react-native';
 import { Text, TextInput, View } from 'react-native';
 
-const TextField = ({
+const TextFieldAlt = ({
   title,
-  titleAlt,
   autoFocus,
   placeholderText,
   style,
@@ -33,7 +32,6 @@ const TextField = ({
   disable = false,
 }: {
   title?: string;
-  titleAlt?: string;
   autoFocus?: boolean;
   placeholderText?: string;
   style?: StyleProp<any>;
@@ -80,14 +78,12 @@ const TextField = ({
         style={[
           styles.inputContainer,
           {
-            borderColor: error ? colours.redNormal : active ? colours.greenNormal : colours.black,
+            borderColor: error ? colours.redNormal : active ? colours.greenNormal : colours.white,
+
             // backgroundColor: disable ? colours.gray700 : colours.backgroundClickable,
           },
           inputStyle,
         ]}>
-        {titleAlt && (
-          <Text style={[styles.titleAlt, { color: active ? colours.greenNormal : colours.black }]}>{titleAlt}</Text>
-        )}
         <TextInput
           placeholder={placeholderText}
           placeholderTextColor={colours.gray300}
@@ -98,7 +94,7 @@ const TextField = ({
             styles.inputText,
             {
               width: secureInput ? '84%' : '100%',
-              color: disable ? colours.gray300 : colours.black,
+              color: disable ? '#7F8192' : colours.black,
             },
           ]}
           value={value ?? value}
@@ -136,14 +132,6 @@ const styles = StyleSheet.create({
     color: colours.black,
     fontFamily: 'dm-700',
   },
-  titleAlt: {
-    left: 12,
-    top: -10,
-    fontFamily: 'dm',
-    position: 'absolute',
-    paddingHorizontal: 4,
-    backgroundColor: colours.white,
-  },
   inputContainer: {
     fontSize: 16,
     lineHeight: 20,
@@ -156,9 +144,11 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     borderColor: colours.backgroundClickable,
     position: 'relative',
+    backgroundColor: 'rgba(0,0,0,0.06)',
+    paddingVertical: 2,
   },
   inputText: {
-    fontSize: 14,
+    fontSize: 16,
     paddingVertical: 8,
     color: colours.black,
     fontFamily: 'dm',
@@ -174,4 +164,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default TextField;
+export default TextFieldAlt;

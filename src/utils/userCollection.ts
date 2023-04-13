@@ -1,8 +1,10 @@
 import { setUser } from '@src/redux/actions/user';
 import { store } from '@src/redux/store';
 import { UserDocument } from '@src/types/collection/usersCollection';
+import { RootState } from '@src/types/states/root';
 import { db } from 'firbaseConfig';
-import { collection, doc, getDoc, getDocs } from 'firebase/firestore';
+import { collection, doc, getDoc, getDocs, updateDoc } from 'firebase/firestore';
+import { useSelector } from 'react-redux';
 
 export const getUser = async (userId: string) => {
   const user = await getDoc(doc(db, 'users', `${userId}`)).then((user) => {
@@ -23,6 +25,19 @@ export const getUser = async (userId: string) => {
   }
 
   return user;
+};
+
+export const getUserByUsername = async (uname: string) => {
+  const user = await getDocs(collection(db, 'users'));
+
+  user.forEach((doc) => {
+    const data = doc.data();
+    if (data.username === uname) {
+      return data;
+    }
+  });
+  console.log('User with username', uname, 'does not exist');
+  return null;
 };
 
 export const checkUserRegistered = async (userId: string) => {
@@ -50,4 +65,12 @@ export const getAllUsers = async () => {
   });
 
   return usersList;
+};
+
+export const updateUser = async (name: string, uid: string) => {
+  const user = await updateDoc(doc(db, 'users', `${uid}`), {
+    name: name,
+  }).then(async () => {
+    await getUser(uid);
+  });
 };

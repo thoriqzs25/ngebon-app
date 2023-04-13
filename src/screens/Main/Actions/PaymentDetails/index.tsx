@@ -1,13 +1,16 @@
+import { RouteProp } from '@react-navigation/native';
 import ImageView from '@src/components/ImageView';
 import CustomButton from '@src/components/input/CustomButton';
 import CustomCheckbox from '@src/components/input/CustomCheckbox';
 import SubPage from '@src/components/SubPage';
 import UserCard from '@src/components/UserCard';
+import { Payment, UserDocument } from '@src/types/collection/usersCollection';
 import { RootState } from '@src/types/states/root';
 import colours from '@src/utils/colours';
 import { IS_ANDROID } from '@src/utils/deviceDimensions';
 import useBoolean from '@src/utils/useBoolean';
-import React from 'react';
+import { getUser } from '@src/utils/userCollection';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet } from 'react-native';
 import { Text } from 'react-native';
 import { View } from 'react-native';
@@ -20,7 +23,7 @@ const PaymentCard = ({
   type = 'BCA',
   account = '999292123 (Raisa Andriana)',
 }: {
-  type?: 'BCA' | 'GoPay' | 'OVO';
+  type?: 'BCA' | 'GoPay' | 'OVO' | '';
   account?: string;
 }) => {
   const { value: check, setValue: setCheck } = useBoolean(false);
@@ -54,9 +57,24 @@ const PaymentCard = ({
   );
 };
 
-const PaymentDetails = () => {
+const PaymentDetails = ({ route }: { route: RouteProp<{ params?: { uname?: string } }> }) => {
   const { user } = useSelector((state: RootState) => state);
   const { value: required, setValue: setRequired } = useBoolean(false);
+
+  const [userDetail, setUserDetail] = useState<UserDocument>();
+
+  const getUserDetail = async () => {
+    if (route.params) {
+      const user = await getUser(route.params.uname!!);
+      if (user) setUserDetail(user);
+    }
+  };
+
+  useEffect(() => {
+    if (route.params) {
+      getUserDetail();
+    }
+  }, []);
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -80,13 +98,16 @@ const PaymentDetails = () => {
             <Text style={[styles.dmBold, { fontSize: moderateScale(14, 2), marginBottom: 8, marginTop: 4 }]}>
               Pay To
             </Text>
-            <UserCard user={user} />
+            {userDetail && <UserCard user={userDetail} />}
 
             <Text style={[styles.dmBold, { fontSize: moderateScale(15, 2), marginTop: 4 }]}>Payment Method</Text>
             <Text style={[styles.dmFont, { color: colours.gray300, fontSize: moderateScale(10, 2) }]}>
               Select one or more
             </Text>
-            <PaymentCard type='BCA' account='999292123 (Raisa Andriana)' />
+            {userDetail?.payments &&
+              userDetail.payments.map((pm: Payment, idx: number) => {
+                return <PaymentCard key={idx.toString()} type='BCA' account='999292123 (Raisa Andriana)' />;
+              })}
             <PaymentCard type='GoPay' account='081293122134 (Raisa A)' />
             <PaymentCard type='OVO' account='081293122134 (Raisa Andriana)' />
             <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: IS_ANDROID ? 4 : 16 }}>

@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@alessiocancian/react-native-actionsheet": "^3.2.0",
+    "@expo/vector-icons": "^13.0.0",
     "@react-native-async-storage/async-storage": "~1.17.3",
     "@react-navigation/bottom-tabs": "^6.5.7",
     "@react-navigation/native": "^6.1.6",

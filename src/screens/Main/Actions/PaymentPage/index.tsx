@@ -206,7 +206,7 @@ const PaymentPage = ({
                 style={[styles.button]}
                 text='Next'
                 textStyle={styles.buttonText}
-                onPress={() => navigate('PaymentDetails')}
+                onPress={() => navigate('PaymentReceipient', { page: 'Record' })}
               />
             </View>
           </ScrollView>
