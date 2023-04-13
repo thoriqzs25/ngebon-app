@@ -1,5 +1,4 @@
 import { createStackNavigator } from '@react-navigation/stack';
-import RecordPaymentPage from '@src/screens/Main/Actions/RecordPaymentPage';
 import TabNavigator from './TabNavigator';
 import Actions from '@src/screens/Main/Actions';
 import DivideListItem from '@src/screens/Main/Actions/DivideListItem';
@@ -10,6 +9,7 @@ import DivideAssign from '@src/screens/Main/Actions/DivideAssign';
 import AddFriend from '@src/screens/Main/Friends/AddFriend';
 import PaymentReceipient from '@src/screens/Main/Actions/PaymentReceipient';
 import EditProfileInformation from '@src/screens/Main/Profile/EditProfileInformation';
+import RecordPaymentPage from '@src/screens/Main/Actions/RecordPaymentPage';
 
 const Main = createStackNavigator<Record<string, any>>();
 

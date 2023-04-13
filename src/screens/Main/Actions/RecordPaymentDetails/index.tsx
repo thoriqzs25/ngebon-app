@@ -10,7 +10,7 @@ import { RootState } from '@src/types/states/root';
 import colours from '@src/utils/colours';
 import { IS_ANDROID } from '@src/utils/deviceDimensions';
 import useBoolean from '@src/utils/useBoolean';
-import { getUser } from '@src/utils/userCollection';
+import { getUser, getUserByUsername } from '@src/utils/userCollection';
 import React, { useEffect, useState } from 'react';
 import { StyleSheet } from 'react-native';
 import { Text } from 'react-native';
@@ -27,9 +27,14 @@ const RecordPaymentDetails = ({ route }: { route: RouteProp<{ params?: { uname?:
   const [userDetail, setUserDetail] = useState<UserDocument>();
 
   const getUserDetail = async () => {
-    if (route.params) {
-      const user = await getUser(route.params.uname!!);
-      if (user) setUserDetail(user);
+    if (route.params?.uname) {
+      const user = await getUserByUsername(route.params.uname).then((res) => {
+        console.log('line 32', res.data);
+        if (res) {
+          setUserDetail(res.data as UserDocument);
+        }
+        return res;
+      });
     }
   };
 

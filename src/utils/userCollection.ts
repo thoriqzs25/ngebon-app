@@ -3,7 +3,7 @@ import { store } from '@src/redux/store';
 import { UserDocument } from '@src/types/collection/usersCollection';
 import { RootState } from '@src/types/states/root';
 import { db } from 'firbaseConfig';
-import { collection, doc, getDoc, getDocs, updateDoc } from 'firebase/firestore';
+import { collection, doc, getDoc, getDocs, query, updateDoc, where } from 'firebase/firestore';
 import { useSelector } from 'react-redux';
 
 export const getUser = async (userId: string) => {
@@ -28,16 +28,20 @@ export const getUser = async (userId: string) => {
 };
 
 export const getUserByUsername = async (uname: string) => {
-  const user = await getDocs(collection(db, 'users'));
+  const usersRef = collection(db, 'users');
+  const q = query(usersRef, where('username', '==', `${uname}`));
+  const querySnapshot = await getDocs(q);
 
-  user.forEach((doc) => {
-    const data = doc.data();
-    if (data.username === uname) {
-      return data;
-    }
-  });
-  console.log('User with username', uname, 'does not exist');
-  return null;
+  let user = {};
+  let id = '';
+  if (querySnapshot.docs.length === 1) {
+    querySnapshot.forEach((doc) => {
+      id = doc.id;
+      user = doc.data();
+    });
+  } else console.log('no user found line 32');
+
+  return { data: user, id: id };
 };
 
 export const checkUserRegistered = async (userId: string) => {

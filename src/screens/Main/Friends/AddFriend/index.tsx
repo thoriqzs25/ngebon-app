@@ -6,6 +6,7 @@ import { RootState } from '@src/types/states/root';
 import colours from '@src/utils/colours';
 import { IS_ANDROID } from '@src/utils/deviceDimensions';
 import { addNewFriend } from '@src/utils/friendCollection';
+import { getUserByUsername } from '@src/utils/userCollection';
 import { db } from 'firbaseConfig';
 import { collection, getDocs, query, where } from 'firebase/firestore';
 import React, { useState } from 'react';
@@ -22,17 +23,25 @@ const AddFriend = () => {
   const [friendId, setFriendId] = useState<string | null>(null);
 
   const handleSearch = async () => {
-    const usersRef = collection(db, 'users');
-    const q = query(usersRef, where('username', '==', `${username}`));
-    const querySnapshot = await getDocs(q);
+    const data = await getUserByUsername(username).then((res) => {
+      if (res.data) {
+        setFriend(res.data as UserDocument);
+      }
+      if (res.id) {
+        setFriendId(res.id);
+      }
+    });
+    // const usersRef = collection(db, 'users');
+    // const q = query(usersRef, where('username', '==', `${username}`));
+    // const querySnapshot = await getDocs(q);
 
-    if (querySnapshot.docs.length === 1)
-      querySnapshot.forEach((doc) => {
-        const data = doc.data();
-        setFriend(data as UserDocument);
-        setFriendId(doc.id);
-      });
-    else console.log('no user found line 32');
+    // if (querySnapshot.docs.length === 1)
+    //   querySnapshot.forEach((doc) => {
+    //     const data = doc.data();
+    //     setFriend(data as UserDocument);
+    //     setFriendId(doc.id);
+    //   });
+    // else console.log('no user found line 32');
   };
 
   return (
