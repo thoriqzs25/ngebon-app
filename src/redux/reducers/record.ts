@@ -3,7 +3,9 @@ import { RecordReducerAction, RecordReducerState } from '@src/types/states/recor
 
 const defaultState = {
   receipient: null,
-  payments: null,
+  records: null,
+  selectedPayments: null,
+  requireProof: null,
 } as RecordReducerState;
 
 const recordReducer = (prevState = defaultState, action: RecordReducerAction) => {
@@ -25,6 +27,13 @@ const recordReducer = (prevState = defaultState, action: RecordReducerAction) =>
           username: username,
           payments: payments,
         },
+      };
+
+    case 'SET_SELECTED_PAYMENTS':
+      return {
+        ...prevState,
+        selectedPayments: action.payments,
+        requireProof: action.proof,
       };
     default:
       return prevState;

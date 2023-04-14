@@ -12,6 +12,7 @@ import EditProfileInformation from '@src/screens/Main/Profile/EditProfileInforma
 import PaymentDetails from '@src/screens/Main/Profile/PaymentDetails';
 import AddPaymentDetails from '@src/screens/Main/Profile/PaymentDetails/AddPaymentDetails';
 import RecordPaymentAmount from '@src/screens/Main/Actions/RecordPaymentAmount';
+import RecordConfirmation from '@src/screens/Main/Actions/RecordConfirmation';
 
 const Main = createStackNavigator<Record<string, any>>();
 
@@ -28,6 +29,7 @@ const MainStackNavigator = () => {
       <Main.Screen name={'RecordFriend'} component={RecordFriend} options={{ headerShown: false }} />
       <Main.Screen name={'RecordPaymentAmount'} component={RecordPaymentAmount} options={{ headerShown: false }} />
       <Main.Screen name={'RecordPaymentDetails'} component={RecordPaymentDetails} options={{ headerShown: false }} />
+      <Main.Screen name={'RecordConfirmation'} component={RecordConfirmation} options={{ headerShown: false }} />
       <Main.Screen name={'PaymentReceipient'} component={PaymentReceipient} options={{ headerShown: false }} />
 
       {/* Friends */}

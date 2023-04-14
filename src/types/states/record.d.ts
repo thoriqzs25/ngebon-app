@@ -3,6 +3,8 @@ import { Payment, UserDocument } from '../collection/usersCollection';
 export interface RecordReducerState {
   receipient: UserRecord | null;
   records: ItemRecord[] | null;
+  selectedPayments: Payment[] | null;
+  requireProof: boolean | null;
 }
 
 export type ItemRecord = {
@@ -21,4 +23,5 @@ export type UserRecord = {
 
 export type RecordReducerAction =
   | { type: 'SET_RECORDS'; records: ItemRecord[] }
-  | { type: 'SET_RECEIPIENT'; receipient: UserRecord };
+  | { type: 'SET_RECEIPIENT'; receipient: UserRecord }
+  | { type: 'SET_SELECTED_PAYMENTS'; payments: Payment[]; proof: boolean };

@@ -10,3 +10,9 @@ export const setReceipient = ({ receipient }: { receipient: UserRecord }) => ({
   type: 'SET_RECEIPIENT',
   receipient: receipient,
 });
+
+export const setSelectedPayments = ({ payments, proof }: { payments: Payment[]; proof: boolean }) => ({
+  type: 'SET_SELECTED_PAYMENTS',
+  payments: payments,
+  proof: proof,
+});
