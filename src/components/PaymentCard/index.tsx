@@ -9,7 +9,21 @@ import { useEffect, useState } from 'react';
 
 const knownBank = ['BCA', 'BNI', 'DANA', 'GOPAY', 'SHOPEEPAY', 'JAGO', 'JENIUS', 'OVO', 'MANDIRI'];
 
-const PaymentCard = ({ type, name, number }: { type: string; name: string; number: string }) => {
+const PaymentCard = ({
+  type,
+  name,
+  number,
+  withCheckbox = false,
+  isChecked,
+  onCheckChanged,
+}: {
+  type: string;
+  name: string;
+  number: string;
+  withCheckbox?: boolean;
+  isChecked?: boolean;
+  onCheckChanged?: (checked: boolean) => void;
+}) => {
   const { value: check, setValue: setCheck } = useBoolean(false);
   const [img, setImg] = useState<string>();
 
@@ -18,10 +32,17 @@ const PaymentCard = ({ type, name, number }: { type: string; name: string; numbe
     else setImg('OTHER');
   }, [type]);
 
+  const handleCheckChanged = (checked: boolean) => {
+    onCheckChanged && onCheckChanged(checked);
+  };
+  const handlePress = () => {
+    onCheckChanged && onCheckChanged(!isChecked);
+  };
+
   return (
     <TouchableHighlight
       underlayColor={'rgba(41, 176, 41, 0.05)'}
-      onPress={() => setCheck.toggle()}
+      onPress={handlePress}
       style={{ borderColor: 'rgba(41, 176, 41, 0.2)', borderWidth: 1, borderRadius: 12, marginVertical: 6 }}>
       <View
         style={{
@@ -37,15 +58,17 @@ const PaymentCard = ({ type, name, number }: { type: string; name: string; numbe
             style={[styles.dmFont, { fontSize: moderateScale(11, 2), color: colours.gray300 }]}
             numberOfLines={1}>{`(${name})`}</Text>
         </View>
-        <View
-          style={{
-            width: 40,
-            marginLeft: 'auto',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}>
-          <CustomCheckbox value={check} setValue={setCheck} />
-        </View>
+        {withCheckbox && (
+          <View
+            style={{
+              width: 40,
+              marginLeft: 'auto',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}>
+            <CustomCheckbox value={isChecked} onCheckChanged={handleCheckChanged} />
+          </View>
+        )}
       </View>
     </TouchableHighlight>
   );

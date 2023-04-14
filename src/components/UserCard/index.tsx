@@ -23,17 +23,12 @@ const UserCard = ({
   onCheckChanged?: (checked: boolean) => void;
   user: UserDocument | UserReducerState;
 }) => {
-  // const [isChecked, setIsChecked] = useState<boolean>(false);
-
   const handleCheckChanged = (checked: boolean) => {
-    // setIsChecked(checked);
-    console.log('line 30', checked);
     onCheckChanged && onCheckChanged(checked);
   };
 
   const handlePress = () => {
     if (withCheckBox) {
-      // setIsChecked(!isChecked);
       console.log('line 37', !isChecked);
       onCheckChanged && onCheckChanged(!isChecked);
     }

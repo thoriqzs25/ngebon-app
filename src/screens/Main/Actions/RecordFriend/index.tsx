@@ -6,6 +6,7 @@ import SubPage from '@src/components/SubPage';
 import UserCard from '@src/components/UserCard';
 import { navigate } from '@src/navigation';
 import { UserDocument } from '@src/types/collection/usersCollection';
+import { ItemRecord, UserRecord } from '@src/types/states/record';
 import { RootState } from '@src/types/states/root';
 import colours from '@src/utils/colours';
 import { getFriendCollection } from '@src/utils/friendCollection';
@@ -17,15 +18,11 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { moderateScale } from 'react-native-size-matters';
 import { useSelector } from 'react-redux';
 
-const RecordFriend = ({
-  route,
-}: {
-  route: RouteProp<{ params: { prevInputs: Array<{ user: UserDocument; value: string; note: string }> } }>;
-}) => {
+const RecordFriend = ({ route }: { route: RouteProp<{ params: { prevInputs: ItemRecord[] } }> }) => {
   const { user } = useSelector((state: RootState) => state);
 
   const [friends, setFriends] = useState<UserDocument[]>([]);
-  const [prevRecordList, setPrevRecordList] = useState<Array<{ user: UserDocument; value: string; note: string }>>([]);
+  const [prevRecordList, setPrevRecordList] = useState<ItemRecord[]>([]);
 
   const getFriends = async () => {
     const data = await getFriendCollection(user.uid!!);
@@ -63,18 +60,25 @@ const RecordFriend = ({
                   <UserCard
                     key={idx}
                     onPress={() => {
-                      let newRecords: Array<{ user: UserDocument; value: string; note: string }> = [];
+                      let newRecords: ItemRecord[] = [];
+                      const _friend = {
+                        avatar: friend.avatar,
+                        email: friend.email,
+                        name: friend.name,
+                        username: friend.username,
+                        payments: friend.payments,
+                      } as UserRecord;
 
                       if (!!prevRecordList && prevRecordList.length > 0) {
-                        newRecords = [...prevRecordList, { user: friend, value: '', note: '' }];
+                        newRecords = [...prevRecordList, { user: _friend, amount: '', note: '' }];
                         prevRecordList.map((record, idx) => {
                           if (record.user.username === friend.username) {
                             newRecords = [...prevRecordList];
                             return;
                           }
                         });
-                      } else newRecords = [{ user: friend, value: '', note: '' }];
-                      navigate('RecordPaymentPage', { prevInputs: newRecords });
+                      } else newRecords = [{ user: _friend, amount: '', note: '' }];
+                      navigate('RecordPaymentAmount', { prevInputs: newRecords });
                     }}
                     user={friend}
                   />

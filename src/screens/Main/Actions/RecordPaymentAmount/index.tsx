@@ -11,6 +11,9 @@ import CustomButton from '@src/components/input/CustomButton';
 import { navigate } from '@src/navigation';
 import { RouteProp, useNavigation } from '@react-navigation/native';
 import { UserDocument } from '@src/types/collection/usersCollection';
+import { ItemRecord } from '@src/types/states/record';
+import { store } from '@src/redux/store';
+import { setRecords } from '@src/redux/actions/record';
 
 const PaymentCard = ({
   user,
@@ -113,20 +116,16 @@ const PaymentCard = ({
   );
 };
 
-const RecordPaymentPage = ({
-  route,
-}: {
-  route: RouteProp<{ params: { prevInputs: Array<{ user: UserDocument; value: string; note: string }> } }>;
-}) => {
+const RecordPaymentAmount = ({ route }: { route: RouteProp<{ params: { prevInputs: ItemRecord[] } }> }) => {
   // const [recordList, setRecordList] = useState<UserDocument[]>([]);
-  const [inputs, setInputs] = useState<Array<{ user: UserDocument; value: string; note: string }>>([]);
+  const [inputs, setInputs] = useState<ItemRecord[]>([]);
 
   useEffect(() => {
     if (route.params.prevInputs) {
-      const newArr: Array<{ user: UserDocument; value: string; note: string }> = [];
+      const newArr: ItemRecord[] = [];
 
       route.params.prevInputs.map((input, idx) => {
-        newArr.push({ user: input.user, value: input.value ?? '', note: input.note ?? '' });
+        newArr.push({ user: input.user, amount: input.amount ?? '', note: input.note ?? '' });
       });
 
       setInputs(newArr);
@@ -134,10 +133,16 @@ const RecordPaymentPage = ({
     }
   }, []);
 
+  const handleNext = () => {
+    console.log('line 162', inputs);
+    store.dispatch(setRecords({ records: [...inputs] }));
+    navigate('PaymentReceipient', { page: 'Record' });
+  };
+
   const handleAmountChange = useCallback(
     (text: string, index: number) => {
       const newInputs = [...inputs];
-      newInputs[index].value = text;
+      newInputs[index].amount = text;
       setInputs(newInputs);
     },
     [inputs]
@@ -188,7 +193,7 @@ const RecordPaymentPage = ({
                 <PaymentCard
                   key={idx}
                   user={record.user}
-                  value={inputs[idx].value}
+                  value={inputs[idx].amount}
                   note={inputs[idx].note}
                   setNote={(text: string) => handleNoteChange(text, idx)}
                   setValue={(text: string) => handleAmountChange(text, idx)}
@@ -202,12 +207,7 @@ const RecordPaymentPage = ({
                 textStyle={styles.buttonText}
                 onPress={handleAddAnother}
               />
-              <CustomButton
-                style={[styles.button]}
-                text='Next'
-                textStyle={styles.buttonText}
-                onPress={() => navigate('PaymentReceipient', { page: 'Record' })}
-              />
+              <CustomButton style={[styles.button]} text='Next' textStyle={styles.buttonText} onPress={handleNext} />
             </View>
           </ScrollView>
         </View>
@@ -236,4 +236,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default RecordPaymentPage;
+export default RecordPaymentAmount;

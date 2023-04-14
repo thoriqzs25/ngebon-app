@@ -4,6 +4,7 @@ import { persistStore, persistReducer, FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, 
 import authReducer from '../reducers/auth';
 import userReducer from '../reducers/user';
 import divideReducer from '../reducers/divide';
+import recordReducer from '../reducers/record';
 
 const persistConfig = {
   key: 'root',
@@ -22,6 +23,7 @@ const rootReducer = combineReducers({
   auth: persistReducer(authPersistConfig, authReducer),
   user: userReducer,
   divide: divideReducer,
+  record: recordReducer,
   // etc: etcReducer
 });
 

@@ -13,15 +13,31 @@ import { ScrollView } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { moderateScale } from 'react-native-size-matters';
 import { useSelector } from 'react-redux';
+import { UserRecord } from '@src/types/states/record';
+import { setReceipient } from '@src/redux/actions/record';
+import { store } from '@src/redux/store';
 
 const PaymentReceipient = ({ route }: { route: RouteProp<{ params?: { page?: string } }> }) => {
-  const { user } = useSelector((state: RootState) => state);
+  const { user, record } = useSelector((state: RootState) => state);
 
   const [friends, setFriends] = useState<UserDocument[]>([]);
 
   const getFriends = async () => {
     const data = await getFriendCollection(user.uid!!);
     if (data) setFriends(data);
+  };
+
+  const handleSelect = (friend: UserDocument) => {
+    const _friend = {
+      avatar: friend.avatar,
+      email: friend.email,
+      name: friend.name,
+      username: friend.username,
+      payments: friend.payments,
+    } as UserRecord;
+    // console.log('line 38', _friend);
+    store.dispatch(setReceipient({ receipient: _friend }));
+    navigate('RecordPaymentDetails');
   };
 
   useFocusEffect(
@@ -46,18 +62,12 @@ const PaymentReceipient = ({ route }: { route: RouteProp<{ params?: { page?: str
           </Text>
           <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={true}>
             <Text style={[styles.dmBold, { fontSize: moderateScale(14, 2), marginBottom: 8, marginTop: 4 }]}>You</Text>
-            <UserCard onPress={() => null} user={user} />
+            {user && <UserCard onPress={() => handleSelect(user as UserDocument)} user={user} />}
             <Text style={[styles.dmBold, { fontSize: moderateScale(14, 2), marginBottom: 8 }]}>Friends</Text>
             <AddFriendCard onPress={() => navigate('AddFriend')} />
             {friends &&
               friends.map((friend, idx) => {
-                return (
-                  <UserCard
-                    key={idx}
-                    onPress={() => navigate('RecordPaymentDetails', { uname: friend.username })}
-                    user={friend}
-                  />
-                );
+                return <UserCard key={idx} onPress={() => handleSelect(friend)} user={friend} />;
               })}
           </ScrollView>
         </View>

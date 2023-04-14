@@ -109,7 +109,13 @@ const AssignCard = ({
                 />
               );
             }
-            return <Image source={{ uri: img }} style={[styles.listedUserAvatar, { marginLeft: -10 }]} />;
+            return (
+              <Image
+                key={idx.toString()}
+                source={{ uri: img }}
+                style={[styles.listedUserAvatar, { marginLeft: -10 }]}
+              />
+            );
           })}
       </View>
     </View>

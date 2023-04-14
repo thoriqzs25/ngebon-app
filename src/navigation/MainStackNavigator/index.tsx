@@ -9,15 +9,15 @@ import DivideAssign from '@src/screens/Main/Actions/DivideAssign';
 import AddFriend from '@src/screens/Main/Friends/AddFriend';
 import PaymentReceipient from '@src/screens/Main/Actions/PaymentReceipient';
 import EditProfileInformation from '@src/screens/Main/Profile/EditProfileInformation';
-import RecordPaymentPage from '@src/screens/Main/Actions/RecordPaymentPage';
 import PaymentDetails from '@src/screens/Main/Profile/PaymentDetails';
 import AddPaymentDetails from '@src/screens/Main/Profile/PaymentDetails/AddPaymentDetails';
+import RecordPaymentAmount from '@src/screens/Main/Actions/RecordPaymentAmount';
 
 const Main = createStackNavigator<Record<string, any>>();
 
 const MainStackNavigator = () => {
   return (
-    <Main.Navigator initialRouteName='TabNavigator'>
+    <Main.Navigator initialRouteName='RecordFriend'>
       <Main.Screen name={'TabNavigator'} component={TabNavigator} options={{ headerShown: false }} />
 
       {/* Record/Divide */}
@@ -26,7 +26,7 @@ const MainStackNavigator = () => {
       <Main.Screen name={'DivideChooseFriends'} component={DivideChooseFriends} options={{ headerShown: false }} />
       <Main.Screen name={'DivideAssign'} component={DivideAssign} options={{ headerShown: false }} />
       <Main.Screen name={'RecordFriend'} component={RecordFriend} options={{ headerShown: false }} />
-      <Main.Screen name={'RecordPaymentPage'} component={RecordPaymentPage} options={{ headerShown: false }} />
+      <Main.Screen name={'RecordPaymentAmount'} component={RecordPaymentAmount} options={{ headerShown: false }} />
       <Main.Screen name={'RecordPaymentDetails'} component={RecordPaymentDetails} options={{ headerShown: false }} />
       <Main.Screen name={'PaymentReceipient'} component={PaymentReceipient} options={{ headerShown: false }} />
 

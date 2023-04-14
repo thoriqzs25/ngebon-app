@@ -22,12 +22,9 @@ const DivideChooseFriends = () => {
   const [friends, setFriends] = useState<UserDocument[]>([]);
 
   const handleCheck = (index: number, isChecked: boolean) => {
-    console.log('line 25 check!', isChecked, checkedItems.includes(index), checkedItems);
     if (isChecked && !checkedItems.includes(index)) {
-      console.log('line 26', isChecked, index);
       setCheckedItems([...checkedItems, index]);
     } else if (!isChecked) {
-      console.log('line 29', isChecked, index);
       setCheckedItems(checkedItems.filter((item) => item !== index));
     }
   };

@@ -6,6 +6,7 @@ import PaymentCard from '@src/components/PaymentCard';
 import SubPage from '@src/components/SubPage';
 import UserCard from '@src/components/UserCard';
 import { Payment, UserDocument } from '@src/types/collection/usersCollection';
+import { UserRecord } from '@src/types/states/record';
 import { RootState } from '@src/types/states/root';
 import colours from '@src/utils/colours';
 import { IS_ANDROID } from '@src/utils/deviceDimensions';
@@ -20,29 +21,27 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { moderateScale, moderateVerticalScale } from 'react-native-size-matters';
 import { useSelector } from 'react-redux';
 
-const RecordPaymentDetails = ({ route }: { route: RouteProp<{ params?: { uname?: string } }> }) => {
-  const { user } = useSelector((state: RootState) => state);
+const RecordPaymentDetails = () => {
+  const { receipient } = useSelector((state: RootState) => state.record);
+
   const { value: required, setValue: setRequired } = useBoolean(false);
 
-  const [userDetail, setUserDetail] = useState<UserDocument>();
+  const [userDetail, setUserDetail] = useState<UserRecord>();
+  const [checkedItems, setCheckedItems] = useState<Array<number>>([]);
 
-  const getUserDetail = async () => {
-    if (route.params?.uname) {
-      const user = await getUserByUsername(route.params.uname).then((res) => {
-        console.log('line 32', res.data);
-        if (res) {
-          setUserDetail(res.data as UserDocument);
-        }
-        return res;
-      });
+  const handleCheck = (index: number, isChecked: boolean) => {
+    if (isChecked && !checkedItems.includes(index)) {
+      setCheckedItems([...checkedItems, index]);
+    } else if (!isChecked) {
+      setCheckedItems(checkedItems.filter((item) => item !== index));
     }
   };
 
   useEffect(() => {
-    if (route.params) {
-      getUserDetail();
+    if (receipient) {
+      setUserDetail(receipient);
     }
-  }, []);
+  }, [receipient]);
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -62,7 +61,7 @@ const RecordPaymentDetails = ({ route }: { route: RouteProp<{ params?: { uname?:
             contentInsetAdjustmentBehavior='automatic'
             style={{ flex: 1, width: '100%' }}
             contentContainerStyle={{ paddingBottom: moderateVerticalScale(160, -1.5) }}
-            showsVerticalScrollIndicator={true}>
+            showsVerticalScrollIndicator={false}>
             <Text style={[styles.dmBold, { fontSize: moderateScale(14, 2), marginBottom: 8, marginTop: 4 }]}>
               Pay To
             </Text>
@@ -74,10 +73,18 @@ const RecordPaymentDetails = ({ route }: { route: RouteProp<{ params?: { uname?:
             </Text>
             {userDetail?.payments &&
               userDetail.payments.map((pm: Payment, idx: number) => {
-                return <PaymentCard key={idx.toString()} type='BCA' account='999292123 (Raisa Andriana)' />;
+                return (
+                  <PaymentCard
+                    key={idx.toString()}
+                    type={pm.bankName}
+                    withCheckbox={true}
+                    isChecked={checkedItems.includes(idx)}
+                    onCheckChanged={(isChecked: boolean) => handleCheck(idx, isChecked)}
+                    number={pm.number}
+                    name={pm.name}
+                  />
+                );
               })}
-            <PaymentCard type='GoPay' account='081293122134 (Raisa A)' />
-            <PaymentCard type='OVO' account='081293122134 (Raisa Andriana)' />
             <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: IS_ANDROID ? 4 : 16 }}>
               <Text style={[styles.dmFont, { fontSize: moderateScale(14, 2) }]}>Require Proof</Text>
               <Switch
@@ -103,6 +110,7 @@ const RecordPaymentDetails = ({ route }: { route: RouteProp<{ params?: { uname?:
                 alignSelf: 'center',
                 marginTop: IS_ANDROID ? 8 : 20,
               }}
+              onPress={() => console.log('line 123', checkedItems)}
             />
           </ScrollView>
         </View>
