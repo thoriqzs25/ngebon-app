@@ -22,6 +22,20 @@ export const imageSource = (name: string) => {
       return require('@src/assets/images/OVO.webp');
     case 'bca':
       return require('@src/assets/images/BCA.webp');
+    case 'bni':
+      return require('@src/assets/images/BNI.webp');
+    case 'dana':
+      return require('@src/assets/images/DANA.webp');
+    case 'shopeepay':
+      return require('@src/assets/images/SHOPEEPAY.webp');
+    case 'jago':
+      return require('@src/assets/images/JAGO.webp');
+    case 'jenius':
+      return require('@src/assets/images/JENIUS.webp');
+    case 'mandiri':
+      return require('@src/assets/images/MANDIRI.webp');
+    case 'other':
+      return require('@src/assets/images/OTHER.webp');
     case 'regis_pana_1':
       return require('@src/assets/images/regis_pana_1.webp');
     case 'regis_pana_2':

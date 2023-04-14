@@ -139,7 +139,7 @@ const Profile = () => {
                 <Text style={styles.actionText}>Edit Profile Information</Text>
               </View>
             </TouchableOpacity>
-            <TouchableOpacity activeOpacity={0.75}>
+            <TouchableOpacity activeOpacity={0.75} onPress={() => navigate('PaymentDetails')}>
               <View style={styles.action}>
                 <Ionicons name='card-outline' size={20} />
                 <Text style={styles.actionText}>Payment Details</Text>

@@ -10,6 +10,8 @@ import AddFriend from '@src/screens/Main/Friends/AddFriend';
 import PaymentReceipient from '@src/screens/Main/Actions/PaymentReceipient';
 import EditProfileInformation from '@src/screens/Main/Profile/EditProfileInformation';
 import RecordPaymentPage from '@src/screens/Main/Actions/RecordPaymentPage';
+import PaymentDetails from '@src/screens/Main/Profile/PaymentDetails';
+import AddPaymentDetails from '@src/screens/Main/Profile/PaymentDetails/AddPaymentDetails';
 
 const Main = createStackNavigator<Record<string, any>>();
 
@@ -37,6 +39,8 @@ const MainStackNavigator = () => {
         component={EditProfileInformation}
         options={{ headerShown: false }}
       />
+      <Main.Screen name={'PaymentDetails'} component={PaymentDetails} options={{ headerShown: false }} />
+      <Main.Screen name={'AddPaymentDetails'} component={AddPaymentDetails} options={{ headerShown: false }} />
     </Main.Navigator>
   );
 };

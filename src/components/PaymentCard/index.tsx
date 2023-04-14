@@ -5,15 +5,18 @@ import ImageView from '../ImageView';
 import { moderateScale } from 'react-native-size-matters';
 import colours from '@src/utils/colours';
 import CustomCheckbox from '../input/CustomCheckbox';
+import { useEffect, useState } from 'react';
 
-const PaymentCard = ({
-  type = 'BCA',
-  account = '999292123 (Raisa Andriana)',
-}: {
-  type?: 'BCA' | 'GoPay' | 'OVO' | '';
-  account?: string;
-}) => {
+const knownBank = ['BCA', 'BNI', 'DANA', 'GOPAY', 'SHOPEEPAY', 'JAGO', 'JENIUS', 'OVO', 'MANDIRI'];
+
+const PaymentCard = ({ type, name, number }: { type: string; name: string; number: string }) => {
   const { value: check, setValue: setCheck } = useBoolean(false);
+  const [img, setImg] = useState<string>();
+
+  useEffect(() => {
+    if (knownBank.includes(type)) setImg(type);
+    else setImg('OTHER');
+  }, [type]);
 
   return (
     <TouchableHighlight
@@ -24,11 +27,15 @@ const PaymentCard = ({
         style={{
           padding: 14,
           flexDirection: 'row',
+          alignItems: 'center',
         }}>
-        <ImageView name={type?.toLowerCase()} style={{ width: moderateScale(49, 2), height: moderateScale(35, 2) }} />
+        <ImageView name={img?.toLowerCase()} style={{ width: moderateScale(49, 2), height: moderateScale(35, 2) }} />
         <View style={{ marginLeft: 12, justifyContent: 'center' }}>
           <Text style={[styles.dmFont, { fontSize: moderateScale(13, 2) }]}>{type}</Text>
-          <Text style={[styles.dmFont, { fontSize: moderateScale(11, 2), color: colours.gray300 }]}>{account}</Text>
+          <Text style={[styles.dmFont, { fontSize: moderateScale(11, 2), color: colours.gray300 }]}>{number}</Text>
+          <Text
+            style={[styles.dmFont, { fontSize: moderateScale(11, 2), color: colours.gray300 }]}
+            numberOfLines={1}>{`(${name})`}</Text>
         </View>
         <View
           style={{

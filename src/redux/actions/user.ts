@@ -29,6 +29,11 @@ export const setAvatar = ({ avatar }: { avatar: string }) => ({
   avatar: avatar,
 });
 
+export const setPayments = ({ payments }: { payments: Payment[] }) => ({
+  type: 'SET_PAYMENTS',
+  payments: payments,
+});
+
 export const removeUser = () => ({
   type: 'REMOVE_USER',
 });

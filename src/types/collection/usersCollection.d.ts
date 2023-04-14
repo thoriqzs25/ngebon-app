@@ -10,6 +10,7 @@ export type UserDocument = {
 };
 
 export type Payment = {
+  bankName: string;
   name: string;
   number: string;
 };

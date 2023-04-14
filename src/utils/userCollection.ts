@@ -1,6 +1,6 @@
 import { setUser } from '@src/redux/actions/user';
 import { store } from '@src/redux/store';
-import { UserDocument } from '@src/types/collection/usersCollection';
+import { Payment, UserDocument } from '@src/types/collection/usersCollection';
 import { RootState } from '@src/types/states/root';
 import { db } from 'firbaseConfig';
 import { collection, doc, getDoc, getDocs, query, updateDoc, where } from 'firebase/firestore';
@@ -76,5 +76,11 @@ export const updateUser = async (name: string, uid: string) => {
     name: name,
   }).then(async () => {
     await getUser(uid);
+  });
+};
+
+export const addPayment = async (payments: Payment[], uid: string) => {
+  const user = await updateDoc(doc(db, 'users', `${uid}`), {
+    payments: [...payments],
   });
 };

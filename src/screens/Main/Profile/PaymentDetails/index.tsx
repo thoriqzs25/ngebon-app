@@ -1,15 +1,24 @@
+import PaymentCard from '@src/components/PaymentCard';
 import SubPage from '@src/components/SubPage';
+import CustomButton from '@src/components/input/CustomButton';
+import { navigate } from '@src/navigation';
+import { Payment } from '@src/types/collection/usersCollection';
+import { RootState } from '@src/types/states/root';
 import colours from '@src/utils/colours';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
+import { ScrollView } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { moderateScale } from 'react-native-size-matters';
+import { moderateScale, moderateVerticalScale } from 'react-native-size-matters';
+import { useSelector } from 'react-redux';
 
 const PaymentDetails = () => {
+  const { payments } = useSelector((state: RootState) => state.user);
+
   return (
-    <SafeAreaView>
+    <SafeAreaView style={{ flex: 1 }}>
       <SubPage>
-        <View>
+        <View style={{ flex: 1, paddingBottom: moderateVerticalScale(40, -1.5) }}>
           <Text
             style={[
               styles.dmBold,
@@ -17,6 +26,25 @@ const PaymentDetails = () => {
             ]}>
             Payment Details
           </Text>
+          <ScrollView style={{ flex: 1 }}>
+            {payments &&
+              payments.map((payment: Payment, idx: number) => {
+                return (
+                  <PaymentCard
+                    key={idx.toString()}
+                    type={payment.bankName}
+                    name={payment.name}
+                    number={payment.number}
+                  />
+                );
+              })}
+          </ScrollView>
+          <CustomButton
+            style={[styles.button]}
+            text='+ Add More'
+            textStyle={styles.buttonText}
+            onPress={() => navigate('AddPaymentDetails')}
+          />
         </View>
       </SubPage>
     </SafeAreaView>
@@ -29,6 +57,16 @@ const styles = StyleSheet.create({
   },
   dmFont: {
     fontFamily: 'dm',
+  },
+  button: {
+    width: 160,
+    marginTop: 12,
+    borderRadius: 12,
+    alignSelf: 'center',
+  },
+  buttonText: {
+    fontFamily: 'dm',
+    fontSize: moderateScale(11, 2),
   },
 });
 export default PaymentDetails;

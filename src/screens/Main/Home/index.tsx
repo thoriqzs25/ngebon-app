@@ -23,11 +23,7 @@ import { setUser } from '@src/redux/actions/user';
 
 const Home = () => {
   const { auth, user } = useSelector((state: RootState) => state);
-  // const actionSheetRef = useRef<ActionSheet>();
 
-  // const showActionSheet = () => {
-  //   if (actionSheetRef.current) actionSheetRef.current.show();
-  // };
   useEffect(() => {
     if (user?.name === undefined) {
       getUser(auth.uid as string);

@@ -26,6 +26,11 @@ const userReducer = (prevState = defaultState, action: UserReducerAction) => {
         ...prevState,
         avatar: action.avatar,
       };
+    case 'SET_PAYMENTS':
+      return {
+        ...prevState,
+        payments: action.payments,
+      };
     case 'REMOVE_USER':
       return defaultState;
     default:

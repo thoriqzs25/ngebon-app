@@ -19,4 +19,5 @@ export type UserReducerAction =
       payments?: Payment[] | [];
     }
   | { type: 'SET_AVATAR'; avatar: string }
+  | { type: 'SET_PAYMENTS'; payments: Payment[] }
   | { type: 'REMOVE_USER' };
