@@ -1,3 +1,4 @@
+import { ItemDebtors } from '@src/types/collection/debtsCollection';
 import { UserDebtsDocument } from '@src/types/collection/users_debtsCollection';
 import { db } from 'firbaseConfig';
 import { collection, doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
@@ -47,4 +48,32 @@ export const writeUserDebt = async (
 
   await updateDoc(doc(db, 'users_debts', receipientUname), receipientPayload);
   await updateDoc(doc(db, 'users_debts', debtorUname), debtorPayload);
+};
+
+export const writeUserDebtDivide = async (
+  receipientUname: string,
+  debtId: string,
+  debtors: ItemDebtors[],
+  prevListReceivables: string[],
+  prevTotalAmountReceivables: number
+) => {
+  const receipientPayload = {
+    receivables: prevListReceivables,
+    totalReceivable: prevTotalAmountReceivables.toString(),
+  } as UserDebtsDocument;
+
+  await updateDoc(doc(db, 'users_debts', receipientUname), receipientPayload);
+
+  debtors.map(async (d) => {
+    const debtorRef = await getUserDebtsByUsername(d.username);
+    const totalDebt =
+      debtorRef !== undefined ? parseInt(debtorRef?.totalDebt) + parseInt(d.totalAmount) : parseInt(d.totalAmount);
+
+    const debtorPayload = {
+      debts: debtorRef !== undefined ? [debtId, ...debtorRef?.debts] : [debtId],
+      totalDebt: totalDebt.toString(),
+    } as UserDebtsDocument;
+
+    await updateDoc(doc(db, 'users_debts', d.username), debtorPayload);
+  });
 };

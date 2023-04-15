@@ -11,7 +11,7 @@ import { Payment, UserDocument } from '@src/types/collection/usersCollection';
 import { AssignFriend, ItemDivide } from '@src/types/states/divide';
 import { ItemRecord, UserRecord } from '@src/types/states/record';
 import { RootState } from '@src/types/states/root';
-import { createRecordDebt } from '@src/utils/collections/debtCollection';
+import { createDivideDebt, createRecordDebt } from '@src/utils/collections/debtCollection';
 import colours from '@src/utils/colours';
 import { IS_ANDROID } from '@src/utils/deviceDimensions';
 import useBoolean from '@src/utils/useBoolean';
@@ -27,7 +27,7 @@ import { useSelector } from 'react-redux';
 const ActionsConfirmation = ({ route }: { route: RouteProp<{ params: { page: string } }> }) => {
   const { receipient, selectedPayments, records, requireProof } = useSelector((state: RootState) => state.record);
   const { assignedFriends: af, items: divide } = useSelector((state: RootState) => state.divide);
-  const { record } = useSelector((state: RootState) => state);
+  const { record, divide: divideRedux } = useSelector((state: RootState) => state);
 
   const [userDetail, setUserDetail] = useState<UserRecord>();
   const [payments, setPayments] = useState<Payment[]>([]);
@@ -66,7 +66,8 @@ const ActionsConfirmation = ({ route }: { route: RouteProp<{ params: { page: str
   }, [af]);
 
   const handleConfirm = () => {
-    createRecordDebt(record);
+    if (route.params.page === 'Record') createRecordDebt(record);
+    if (route.params.page === 'Divide') createDivideDebt(divideRedux, record);
     console.log('line 53 record successfully written!');
   };
 

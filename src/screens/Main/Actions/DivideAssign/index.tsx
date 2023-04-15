@@ -166,7 +166,7 @@ const DivideAssign = ({ route }: { route: RouteProp<{ params: { selectedFriends:
     items.map((item, idx) => {
       const payload = {
         ...item.item,
-        pricePerUser: item.item.totalPrice / item.userArr.length,
+        pricePerUser: Math.ceil(item.item.totalPrice / item.userArr.length),
       } as ItemDivide;
       _items.push(payload);
     });

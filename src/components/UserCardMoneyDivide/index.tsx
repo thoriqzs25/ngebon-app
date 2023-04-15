@@ -27,7 +27,7 @@ const UserCardMoneyDivide = ({
   useEffect(() => {
     let total = 0;
     selectedItem.map((num) => {
-      total += Math.ceil(items[num].pricePerUser!!);
+      total += items[num].pricePerUser!!;
     });
 
     setTotalAmount(total);
