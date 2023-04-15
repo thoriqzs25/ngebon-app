@@ -134,7 +134,6 @@ const RecordPaymentAmount = ({ route }: { route: RouteProp<{ params: { prevInput
   }, []);
 
   const handleNext = () => {
-    console.log('line 162', inputs);
     store.dispatch(setRecords({ records: [...inputs] }));
     navigate('PaymentReceipient', { page: 'Record' });
   };
@@ -167,7 +166,7 @@ const RecordPaymentAmount = ({ route }: { route: RouteProp<{ params: { prevInput
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      <SubPage customGoBack={handleBack}>
+      <SubPage customGoBack={handleBack} title={'cancel'}>
         <View style={{ flex: 1, alignItems: 'center' }}>
           <Text
             style={[

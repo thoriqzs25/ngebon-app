@@ -8,6 +8,7 @@ import { FriendDocument } from '@src/types/collection/friendsCollection';
 import { UserDocument } from '@src/types/collection/usersCollection';
 import { RootState } from '@src/types/states/root';
 import { checkUserRegistered } from '@src/utils/collections/userCollection';
+import { createEmptyDocument } from '@src/utils/collections/user_debtCollection';
 import colours from '@src/utils/colours';
 import { app, db } from 'firbaseConfig';
 import { addDoc, collection, doc, getDoc, getDocs, serverTimestamp, setDoc, updateDoc } from 'firebase/firestore';
@@ -44,6 +45,7 @@ const UserRegistration = () => {
     try {
       const resUser = await setDoc(doc(db, 'users', `${uid}`), newUserDoc, { merge: true });
       const resFriend = await setDoc(doc(db, 'friends', `${uid}`), newFriendDoc, { merge: true });
+      await createEmptyDocument(username);
 
       const userExists = await checkUserRegistered(uid as string);
       if (userExists) store.dispatch(userLogin());

@@ -47,7 +47,7 @@ const UserCardMoney = ({
             {amount ? `Rp${amount}` : 'Loading'}
           </Text>
           <Text style={[styles.dmFont, { color: colours.gray300, fontSize: moderateScale(8, 2), textAlign: 'right' }]}>
-            Note: {note ? note : ''}
+            {note ? `Note: ${note}` : ''}
           </Text>
         </View>
       </View>

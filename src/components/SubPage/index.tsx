@@ -48,7 +48,7 @@ const SubPage = ({
               </View>
             </View>
           ) : (
-            <Text style={styles.title}>{title}</Text>
+            <Text style={styles.title}>{title ?? ''}</Text>
           )}
         </TouchableOpacity>
       </View>
@@ -72,10 +72,10 @@ const styles = StyleSheet.create({
   },
   textContainer: {},
   title: {
-    fontSize: 16,
+    fontSize: 20,
     lineHeight: 20,
-    color: colours.white,
-    fontFamily: 'dm',
+    color: colours.greenNormal,
+    fontFamily: 'dm-500',
   },
   subTitleContainer: {
     alignItems: 'center',

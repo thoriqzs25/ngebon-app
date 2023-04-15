@@ -9,6 +9,7 @@ import UserCardMoney from '@src/components/UserCardMoney';
 import { Payment, UserDocument } from '@src/types/collection/usersCollection';
 import { ItemRecord, UserRecord } from '@src/types/states/record';
 import { RootState } from '@src/types/states/root';
+import { createRecordDebt } from '@src/utils/collections/debtCollection';
 import colours from '@src/utils/colours';
 import { IS_ANDROID } from '@src/utils/deviceDimensions';
 import useBoolean from '@src/utils/useBoolean';
@@ -47,6 +48,11 @@ const RecordConfirmation = () => {
     }
   }, [records]);
 
+  const handleConfirm = () => {
+    createRecordDebt(record);
+    console.log('line 53 record successfully written!');
+  };
+
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <SubPage>
@@ -78,8 +84,7 @@ const RecordConfirmation = () => {
               payments.map((pm: Payment, idx: number) => {
                 return <PaymentCard key={idx.toString()} type={pm.bankName} number={pm.number} name={pm.name} />;
               })}
-            <View
-              style={{ flexDirection: 'row', alignItems: 'center', marginTop: 4, backgroundColor: colours.blueNormal }}>
+            <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 4 }}>
               <Text style={[styles.dmFont, { fontSize: moderateScale(10, 2) }]}>
                 {requireProof ? '*Proof required' : '*Proof is not required'}
               </Text>
@@ -93,7 +98,7 @@ const RecordConfirmation = () => {
                 alignSelf: 'center',
                 marginTop: IS_ANDROID ? 8 : 20,
               }}
-              onPress={() => console.log('line 87', record)}
+              onPress={handleConfirm}
             />
           </ScrollView>
         </View>
