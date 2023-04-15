@@ -5,6 +5,7 @@ import { RootState } from '@src/types/states/root';
 import { getDebtById, getReceivableById } from '@src/utils/collections/debtCollection';
 import { getUserDebtsByUsername } from '@src/utils/collections/user_debtCollection';
 import colours from '@src/utils/colours';
+import { IS_ANDROID } from '@src/utils/deviceDimensions';
 import { globalStyle } from '@src/utils/globalStyles';
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
@@ -25,6 +26,8 @@ const Records = () => {
   const [subTab, setSubTab] = useState<'On Going' | 'History'>('On Going');
   const [userDebts, setUserDebts] = useState<DebtReceivable[]>([]);
   const [userReceivables, setUserReceivables] = useState<DebtReceivable[]>([]);
+  const [totalDebts, setTotalDebts] = useState<string>('');
+  const [totalReceivables, setTotalReceivables] = useState<string>('');
 
   const getUserDebt = async () => {
     const data = await getUserDebtsByUsername(username!!);
@@ -48,6 +51,8 @@ const Records = () => {
         })
       );
 
+    setTotalDebts(data?.totalDebt ?? '0');
+    setTotalReceivables(data?.totalReceivable ?? '0');
     setUserDebts(_debts);
     setUserReceivables(_receivables);
   };
@@ -59,11 +64,9 @@ const Records = () => {
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <ScrollView
-        // stickyHeaderIndices={[0]}
-        // style={{ flex: 1 }}
         contentContainerStyle={{ paddingBottom: moderateVerticalScale(120, -1.5) }}
         contentInsetAdjustmentBehavior='automatic'>
-        <View style={[globalStyle.paddingHorizontal]}>
+        <View style={[globalStyle.paddingHorizontal, IS_ANDROID && globalStyle.paddingTop]}>
           <Text style={[styles.pageTitle, { marginBottom: 20 }]}>Records</Text>
           <View
             style={{
@@ -122,7 +125,10 @@ const Records = () => {
                 styles.amount,
                 { color: tab === 'Debt' ? colours.redNormal : colours.greenNormal },
               ]}>
-              Rp300.000
+              Rp
+              {tab === 'Debt'
+                ? parseInt(totalDebts).toLocaleString('id-ID')
+                : parseInt(totalReceivables).toLocaleString('id-ID')}
             </Text>
           </View>
           <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 12 }}>
