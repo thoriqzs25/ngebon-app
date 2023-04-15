@@ -1,3 +1,5 @@
+import { UserDocument } from '../collection/usersCollection';
+
 export interface DivideReducerState {
   title: string | null;
   items: ItemDivide[] | null;
@@ -8,6 +10,7 @@ export type ItemDivide = {
   itemName: string;
   price: string;
   qty: string;
+  pricePerUser?: number;
   totalPrice: number;
 };
 

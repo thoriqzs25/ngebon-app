@@ -116,7 +116,7 @@ const ActionsConfirmation = ({ route }: { route: RouteProp<{ params: { page: str
               })}
             <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 4 }}>
               <Text style={[styles.dmFont, { fontSize: moderateScale(10, 2) }]}>
-                {requireProof ? '*Proof required' : '*Proof is not required'}
+                {requireProof ? '*Proof required' : '*No proof required'}
               </Text>
             </View>
             <CustomButton

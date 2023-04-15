@@ -83,6 +83,11 @@ const DivideListItem = () => {
     setItemConfirmation(arr);
   };
 
+  const handleConfirm = () => {
+    store.dispatch(setDivideItems({ title: title, items: inputs }));
+    navigate('DivideChooseFriends');
+  };
+
   useEffect(() => {
     setReadyToConfirm(inputs.length === itemConfirmation.length);
     // if () {
@@ -169,10 +174,7 @@ const DivideListItem = () => {
                   text='Confirm'
                   style={{ borderRadius: 10, width: '45%', backgroundColor: colours.greenNormal, alignSelf: 'center' }}
                   textStyle={{ fontSize: 16 }}
-                  onPress={() => {
-                    store.dispatch(setDivideItems({ title: title, items: inputs }));
-                    navigate('DivideChooseFriends');
-                  }}
+                  onPress={handleConfirm}
                 />
               </View>
             ) : (

@@ -4,10 +4,10 @@ import SubPage from '@src/components/SubPage';
 import UserCard from '@src/components/UserCard';
 import CustomButton from '@src/components/input/CustomButton';
 import { navigate } from '@src/navigation';
-import { setAssignedFriends } from '@src/redux/actions/divide';
+import { setAssignedFriends, setDivideItems } from '@src/redux/actions/divide';
 import { store } from '@src/redux/store';
 import { UserDocument } from '@src/types/collection/usersCollection';
-import { AssignFriend, AssignItems } from '@src/types/states/divide';
+import { AssignFriend, AssignItems, ItemDivide } from '@src/types/states/divide';
 import { RootState } from '@src/types/states/root';
 import colours from '@src/utils/colours';
 import { app, storage } from 'firbaseConfig';
@@ -44,8 +44,6 @@ const AssignCard = ({
   };
 
   const getDummyImg = async () => {
-    //  const spaceRef = ref(storage, 'images/space.jpg');
-    // const imageRef = spaceRef.parent;
     const img = await getDownloadURL(ref(getStorage(app), 'images/tree_1.webp'));
     setDummyImg(img);
   };
@@ -143,7 +141,7 @@ const DivideAssign = ({ route }: { route: RouteProp<{ params: { selectedFriends:
     if (prevItems[idx].userArr.find((item) => item.username === friends[currIdx].user.username) === undefined) {
       prevItems[idx].userArr.push(friends[currIdx].user);
 
-      prevItems[idx].userArr.sort((a, b) => a.username.toLowerCase().localeCompare(b.username.toLowerCase()));
+      // prevItems[idx].userArr.sort((a, b) => a.username.toLowerCase().localeCompare(b.username.toLowerCase()));
       setItems(prevItems);
     } else {
       const userArr = prevItems[idx].userArr.filter((user) => user.username !== friends[currIdx].user.username);
@@ -154,7 +152,7 @@ const DivideAssign = ({ route }: { route: RouteProp<{ params: { selectedFriends:
     if (prevFriends[currIdx].selectedItem.find((num) => num === idx) === undefined) {
       prevFriends[currIdx].selectedItem.push(idx);
 
-      prevFriends[currIdx].selectedItem.sort((a, b) => a - b);
+      // prevFriends[currIdx].selectedItem.sort((a, b) => a - b);
       setFriends(prevFriends);
     } else {
       const selectedItemArr = prevFriends[currIdx].selectedItem.filter((num) => num !== idx);
@@ -164,6 +162,16 @@ const DivideAssign = ({ route }: { route: RouteProp<{ params: { selectedFriends:
   };
 
   const handleNext = () => {
+    let _items: ItemDivide[] = [];
+    items.map((item, idx) => {
+      const payload = {
+        ...item.item,
+        pricePerUser: item.item.totalPrice / item.userArr.length,
+      } as ItemDivide;
+      _items.push(payload);
+    });
+
+    store.dispatch(setDivideItems({ title: divide.title, items: _items }));
     store.dispatch(setAssignedFriends({ friends: friends }));
     navigate('PaymentReceipient', { page: 'Divide' });
   };
@@ -173,7 +181,15 @@ const DivideAssign = ({ route }: { route: RouteProp<{ params: { selectedFriends:
       let friendList: AssignFriend[] = [];
       const selectedFriends: UserDocument[] = [...route.params.selectedFriends];
       selectedFriends.map((friend, idx) => {
-        friendList.push({ user: friend, selectedItem: [] });
+        const user = friend;
+        const _user = {
+          avatar: user.avatar,
+          email: user.email,
+          name: user.name,
+          username: user.username,
+          payments: user.payments,
+        } as UserDocument;
+        friendList.push({ user: _user, selectedItem: [] });
       });
       setFriends(friendList);
     }

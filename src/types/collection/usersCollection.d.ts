@@ -2,7 +2,6 @@ import { FieldValue } from 'firebase/firestore';
 
 export type UserDocument = {
   avatar?: string;
-  createdAt?: FieldValue;
   email: string;
   name: string;
   username: string;
