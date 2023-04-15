@@ -16,6 +16,7 @@ import Profile from '@src/screens/Main/Profile';
 import AddFriend from '@src/screens/Main/Friends/AddFriend';
 import Actions from '@src/screens/Main/Actions';
 import Friends from '@src/screens/Main/Friends';
+import Records from '@src/screens/Main/Records';
 // import ChatStackNavigator from './ChatStack';
 // import HomeStackNavigator from './HomeStack';
 // import ProfileStackNavigator from './HomeStack/ProfileStack';
@@ -70,7 +71,7 @@ const TabNavigator = () => {
       />
       <Tab.Screen
         name='Records'
-        component={HomeTest}
+        component={Records}
         // component={ChatStackNavigator}
         options={({ navigation, route }) => {
           const isFocused = navigation.isFocused();

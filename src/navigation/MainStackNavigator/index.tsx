@@ -18,8 +18,10 @@ const Main = createStackNavigator<Record<string, any>>();
 
 const MainStackNavigator = () => {
   return (
-    <Main.Navigator initialRouteName='Actions'>
+    <Main.Navigator initialRouteName='TabNavigator'>
       <Main.Screen name={'TabNavigator'} component={TabNavigator} options={{ headerShown: false }} />
+
+      {/* Records */}
 
       {/* Record/Divide */}
       <Main.Screen name={'Actions'} component={Actions} options={{ headerShown: false }} />

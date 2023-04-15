@@ -59,9 +59,9 @@ const Home = () => {
           {/* <CustomButton text='Click me!' onPress={showActionSheet} /> */}
           <View style={{ marginTop: 20 }}>
             <Text style={{ fontFamily: 'dm-500', fontSize: moderateScale(16, 2) }}>Recent</Text>
-            <TransactionCard type='Incoming' />
-            <TransactionCard type='Outcoming' />
-            <TransactionCard type='Incoming' />
+            <TransactionCard name={'Thoriq'} amount='37500' />
+            <TransactionCard name={'Thoriq'} amount='37500' />
+            <TransactionCard name={'Thoriq'} amount='37500' />
           </View>
         </View>
       </ScrollView>

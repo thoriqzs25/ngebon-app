@@ -1,9 +1,10 @@
 import { RecordReducerState } from '@src/types/states/record';
 import { DebtDocument, ItemDebtors } from '@src/types/collection/debtsCollection';
-import { collection, doc, setDoc } from 'firebase/firestore';
+import { collection, doc, getDoc, setDoc } from 'firebase/firestore';
 import { db } from 'firbaseConfig';
 import { getUserDebtsByUsername, writeUserDebt, writeUserDebtDivide } from './user_debtCollection';
 import { DivideReducerState, ItemDivide } from '@src/types/states/divide';
+import { UserDebtsDocument } from '@src/types/collection/users_debtsCollection';
 
 export const createRecordDebt = async (recordRedux: RecordReducerState) => {
   const receipientUser = await getUserDebtsByUsername(recordRedux.receipient?.username!!);
@@ -94,4 +95,66 @@ export const createDivideDebt = async (divideRedux: DivideReducerState, recordRe
       totalAmountForReceivables
     );
   });
+};
+
+export const getDebtById = async (debtId: string, username: string) => {
+  const debtType = debtId.split('_')[0];
+
+  const data = (await getDoc(doc(db, 'debts', `${debtId}`)).then((res) => {
+    return res.data();
+  })) as DebtDocument;
+
+  if (debtType === 'record') {
+    const _debts = data.recordDebt;
+
+    return {
+      totalAmount: _debts?.totalAmount,
+      username: data.receipient?.username,
+    } as { totalAmount: string; username: string };
+  }
+
+  if (debtType === 'divide') {
+    const _debts = data.divideDebt;
+    let _totalAmount: string = '';
+
+    _debts?.debtors.map((dts) => {
+      if (dts.username === username) _totalAmount = dts.totalAmount;
+    });
+
+    return {
+      totalAmount: _totalAmount,
+      username: data.receipient?.username,
+    } as { totalAmount: string; username: string };
+  }
+};
+
+export const getReceivableById = async (debtId: string, username: string) => {
+  const debtType = debtId.split('_')[0];
+
+  const data = (await getDoc(doc(db, 'debts', `${debtId}`)).then((res) => {
+    return res.data();
+  })) as DebtDocument;
+
+  if (debtType === 'record') {
+    const _debts = data.recordDebt;
+
+    return [
+      {
+        totalAmount: _debts?.totalAmount,
+        username: _debts?.username,
+      },
+    ] as { totalAmount: string; username: string }[];
+  }
+
+  if (debtType === 'divide') {
+    const _debts = data.divideDebt;
+    // let _totalAmount: string = '';
+    let _receivables: { totalAmount: string; username: string }[] = [];
+
+    _debts?.debtors.map((dts) => {
+      _receivables.push({ totalAmount: dts.totalAmount, username: dts.username });
+    });
+
+    return _receivables as { totalAmount: string; username: string }[];
+  }
 };

@@ -183,7 +183,7 @@ const styles = StyleSheet.create({
   },
   page: {
     color: colours.greenNormal,
-    fontFamily: 'dm-500',
+    fontFamily: 'dm-700',
     fontSize: 24,
     marginBottom: 60,
   },

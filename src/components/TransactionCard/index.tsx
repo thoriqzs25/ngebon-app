@@ -8,28 +8,36 @@ import { moderateScale } from 'react-native-size-matters';
 import TextTicker from 'react-native-text-ticker';
 import CustomButton from '../input/CustomButton';
 
-const TransactionCard = ({ type = 'Incoming' }: { type?: 'Incoming' | 'Outcoming' }) => {
+const TransactionCard = ({
+  name,
+  amount,
+  type = 'Receivables',
+}: {
+  name: string;
+  amount: string;
+  type?: 'Receivables' | 'Debt';
+}) => {
   return (
     <View style={styles.container}>
-      {type === 'Incoming' ? <IcGreenCircleArrow /> : <IcRedCircleArrow />}
+      {type === 'Receivables' ? <IcGreenCircleArrow /> : <IcRedCircleArrow />}
       <View
         style={{
           marginLeft: 8,
           height: '100%',
-          justifyContent: 'center',
-          gap: 4,
-
+          paddingVertical: 6,
+          justifyContent: 'space-between',
           width: '58%',
         }}>
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-          <Text style={[styles.detailsText, { color: type === 'Incoming' ? colours.greenNormal : colours.redNormal }]}>
-            {type === 'Incoming' ? 'Receivables' : 'Debt'}
+          <Text
+            style={[styles.detailsText, { color: type === 'Receivables' ? colours.greenNormal : colours.redNormal }]}>
+            {type === 'Receivables' ? 'Receivables' : 'Debt'}
           </Text>
           <Text style={[styles.detailsText, { color: 'rgba(0, 0, 0, 0.6)' }]}>
-            {type === 'Incoming' ? ` | March 13 - 02:35 pm` : ` | March 11 - 08:19 pm`}
+            {type === 'Receivables' ? ` | March 13 - 02:35 pm` : ` | March 11 - 08:19 pm`}
           </Text>
         </View>
-        <View style={{}}>
+        <View>
           <TextTicker
             style={{ fontFamily: 'dm', fontSize: moderateScale(12, 2) }}
             duration={5000}
@@ -38,38 +46,34 @@ const TransactionCard = ({ type = 'Incoming' }: { type?: 'Incoming' | 'Outcoming
             // @ts-ignore
             scroll={'toLeft'}
             repeatSpacer={30}>
-            {type === 'Incoming' ? 'Confirm Hamish’s Payment' : 'Payment requested by Zalina Arga'}
+            {type === 'Receivables' ? `Confirm ${name}’s Payment` : `Payment requested by ${name}`}
           </TextTicker>
         </View>
-        {type === 'Incoming' ? (
-          <CustomButton
-            text='Confirm'
-            style={{ paddingVertical: 2, width: 80 }}
-            textStyle={{ fontSize: moderateScale(8, 2) }}
-          />
+        {type === 'Receivables' ? (
+          <CustomButton text='Confirm' style={[styles.actionButton]} textStyle={{ fontSize: moderateScale(8, 2) }} />
         ) : (
-          <View style={{ flexDirection: 'row', gap: 8 }}>
+          <View style={{ flexDirection: 'row' }}>
             <CustomButton
               text='Accept'
-              style={{ paddingVertical: 2, width: 80 }}
+              style={[styles.actionButton, { marginRight: 4 }]}
               textStyle={{ fontSize: moderateScale(8, 2) }}
             />
             <CustomButton
               text='Decline'
-              style={{ paddingVertical: 2, width: 80, backgroundColor: colours.redNormal }}
+              style={[styles.actionButton, { backgroundColor: colours.redNormal }]}
               textStyle={{ fontSize: moderateScale(8, 2) }}
             />
           </View>
         )}
       </View>
-      <View style={{ marginLeft: 'auto' }}>
+      <View style={{ marginLeft: 'auto', paddingBottom: 4 }}>
         <Text
           style={{
-            color: type === 'Incoming' ? colours.greenNormal : colours.redNormal,
+            color: type === 'Receivables' ? colours.greenNormal : colours.redNormal,
             fontFamily: 'dm-500',
             fontSize: moderateScale(12, 2),
           }}>
-          {type === 'Incoming' ? 'Rp253.000' : 'Rp160.000'}
+          Rp{parseInt(amount).toLocaleString('id-ID')}
         </Text>
       </View>
     </View>
@@ -78,11 +82,12 @@ const TransactionCard = ({ type = 'Incoming' }: { type?: 'Incoming' | 'Outcoming
 
 const styles = StyleSheet.create({
   container: {
-    height: 84,
+    height: 76,
     width: '100%',
     borderWidth: 1,
     borderRadius: 12,
-    paddingVertical: 4,
+    marginBottom: 8,
+    // paddingVertical: 2,
     alignItems: 'center',
     flexDirection: 'row',
     paddingHorizontal: 12,
@@ -92,6 +97,10 @@ const styles = StyleSheet.create({
   detailsText: {
     fontFamily: 'dm',
     fontSize: moderateScale(8, 3),
+  },
+  actionButton: {
+    paddingVertical: 0,
+    width: 80,
   },
 });
 
