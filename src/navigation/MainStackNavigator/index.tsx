@@ -11,14 +11,14 @@ import EditProfileInformation from '@src/screens/Main/Profile/EditProfileInforma
 import PaymentDetails from '@src/screens/Main/Profile/PaymentDetails';
 import AddPaymentDetails from '@src/screens/Main/Profile/PaymentDetails/AddPaymentDetails';
 import RecordPaymentAmount from '@src/screens/Main/Actions/RecordPaymentAmount';
-import RecordConfirmation from '@src/screens/Main/Actions/RecordConfirmation';
 import ActionsPaymentDetails from '@src/screens/Main/Actions/ActionsPaymentDetails';
+import ActionsConfirmation from '@src/screens/Main/Actions/ActionsConfirmation';
 
 const Main = createStackNavigator<Record<string, any>>();
 
 const MainStackNavigator = () => {
   return (
-    <Main.Navigator initialRouteName='RecordFriend'>
+    <Main.Navigator initialRouteName='Actions'>
       <Main.Screen name={'TabNavigator'} component={TabNavigator} options={{ headerShown: false }} />
 
       {/* Record/Divide */}
@@ -29,7 +29,7 @@ const MainStackNavigator = () => {
       <Main.Screen name={'RecordFriend'} component={RecordFriend} options={{ headerShown: false }} />
       <Main.Screen name={'RecordPaymentAmount'} component={RecordPaymentAmount} options={{ headerShown: false }} />
       <Main.Screen name={'ActionsPaymentDetails'} component={ActionsPaymentDetails} options={{ headerShown: false }} />
-      <Main.Screen name={'RecordConfirmation'} component={RecordConfirmation} options={{ headerShown: false }} />
+      <Main.Screen name={'ActionsConfirmation'} component={ActionsConfirmation} options={{ headerShown: false }} />
       <Main.Screen name={'PaymentReceipient'} component={PaymentReceipient} options={{ headerShown: false }} />
 
       {/* Friends */}

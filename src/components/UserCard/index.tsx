@@ -29,7 +29,6 @@ const UserCard = ({
 
   const handlePress = () => {
     if (withCheckBox) {
-      console.log('line 37', !isChecked);
       onCheckChanged && onCheckChanged(!isChecked);
     }
     onPress && onPress();

@@ -44,7 +44,9 @@ export const ItemList = ({
       <View style={[styles.box]}>
         <Text style={styles.boxTitle}>Item {idx}</Text>
         <View style={{ marginLeft: 4, flex: 1 }}>
-          <Text style={{ fontFamily: 'dm-500' }}>{name}</Text>
+          <Text numberOfLines={1} style={{ fontFamily: 'dm-500' }}>
+            {name}
+          </Text>
           <Text style={{ fontFamily: 'dm', color: 'rgba(0, 0, 0, 0.35)' }}>{priceItem ?? ''}</Text>
         </View>
 

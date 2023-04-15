@@ -64,7 +64,9 @@ const AssignCard = ({
         <View style={styles.box}>
           <Text style={styles.boxTitle}>Item {idx + 1}</Text>
           <View style={{ marginLeft: 4, flex: 1 }}>
-            <Text style={{ fontFamily: 'dm-500' }}>{item.itemName}</Text>
+            <Text style={{ fontFamily: 'dm-500' }} numberOfLines={1}>
+              {item.itemName}
+            </Text>
             <Text style={{ fontFamily: 'dm', color: 'rgba(0, 0, 0, 0.35)' }}>{priceItem ?? ''}</Text>
           </View>
           <Text style={{ marginRight: 4, flex: 1, textAlign: 'center', fontFamily: 'dm-500' }}>x{item.qty}</Text>

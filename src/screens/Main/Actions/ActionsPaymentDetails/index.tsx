@@ -46,10 +46,10 @@ const ActionsPaymentDetails = ({ route }: { route: RouteProp<{ params: { page: s
       selectedPayments.push(userDetail!!.payments[num]);
     });
 
-    if (route.params.page === 'Record') {
-      store.dispatch(setSelectedPayments({ payments: selectedPayments, proof: required }));
-      navigate('RecordConfirmation');
-    }
+    // if (route.params.page === 'Record') {
+    store.dispatch(setSelectedPayments({ payments: selectedPayments, proof: required }));
+    navigate('ActionsConfirmation', { page: route.params.page });
+    // }
   };
 
   useEffect(() => {

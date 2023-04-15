@@ -44,6 +44,7 @@ export const InputItem = ({
           style={[styles.input, styles.boxInputPrice, { flex: 4 }]}
           placeholder={'Price'}
           value={price}
+          keyboardType='numeric'
           onChangeText={(text) => setPrice(text)}
         />
         <Text style={{ marginRight: 4, fontFamily: 'dm-500' }}>X</Text>
@@ -51,6 +52,7 @@ export const InputItem = ({
           value={qty}
           style={[styles.input, styles.boxInputPrice, { flex: 2 }]}
           placeholder={'Qty'}
+          keyboardType='numeric'
           onChangeText={(text) => setQty(text)}
         />
         <Text style={{ marginRight: 4, fontFamily: 'dm-500' }}>=</Text>
