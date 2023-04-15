@@ -3,6 +3,7 @@ import { DivideReducerAction, DivideReducerState } from '@src/types/states/divid
 const defaultState = {
   title: null,
   items: null,
+  assignedFriends: null,
 } as DivideReducerState;
 
 const divideReducer = (prevState = defaultState, action: DivideReducerAction) => {
@@ -12,6 +13,11 @@ const divideReducer = (prevState = defaultState, action: DivideReducerAction) =>
         ...prevState,
         title: action.title ?? null,
         items: action.items ?? null,
+      };
+    case 'SET_ASSIGNED_FRIENDS':
+      return {
+        ...prevState,
+        assignedFriends: action.friends,
       };
     default:
       return prevState;

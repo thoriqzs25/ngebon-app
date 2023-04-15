@@ -7,7 +7,7 @@ import { navigate } from '@src/navigation';
 import { UserDocument } from '@src/types/collection/usersCollection';
 import { RootState } from '@src/types/states/root';
 import colours from '@src/utils/colours';
-import { getFriendCollection } from '@src/utils/friendCollection';
+import { getFriendCollection } from '@src/utils/collections/friendCollection';
 import React, { useCallback, useEffect, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';

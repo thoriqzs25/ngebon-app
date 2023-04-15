@@ -14,7 +14,6 @@ import { RootState } from '@src/types/states/root';
 import colours from '@src/utils/colours';
 import { IS_ANDROID } from '@src/utils/deviceDimensions';
 import useBoolean from '@src/utils/useBoolean';
-import { getUser, getUserByUsername } from '@src/utils/userCollection';
 import React, { useEffect, useState } from 'react';
 import { StyleSheet } from 'react-native';
 import { Text } from 'react-native';
@@ -24,7 +23,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { moderateScale, moderateVerticalScale } from 'react-native-size-matters';
 import { useSelector } from 'react-redux';
 
-const RecordPaymentDetails = () => {
+const ActionsPaymentDetails = ({ route }: { route: RouteProp<{ params: { page: string } }> }) => {
   const { receipient } = useSelector((state: RootState) => state.record);
 
   const { value: required, setValue: setRequired } = useBoolean(false);
@@ -47,8 +46,10 @@ const RecordPaymentDetails = () => {
       selectedPayments.push(userDetail!!.payments[num]);
     });
 
-    store.dispatch(setSelectedPayments({ payments: selectedPayments, proof: required }));
-    navigate('RecordConfirmation');
+    if (route.params.page === 'Record') {
+      store.dispatch(setSelectedPayments({ payments: selectedPayments, proof: required }));
+      navigate('RecordConfirmation');
+    }
   };
 
   useEffect(() => {
@@ -66,7 +67,7 @@ const RecordPaymentDetails = () => {
               styles.dmBold,
               { fontSize: moderateScale(14, 2), color: colours.greenNormal, marginTop: 12, width: '100%' },
             ]}>
-            Record
+            {route.params.page ?? ''}
           </Text>
           <Text style={[styles.dmBold, { fontSize: moderateScale(16, 2), marginVertical: 8, width: '100%' }]}>
             Payment Details
@@ -150,4 +151,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default RecordPaymentDetails;
+export default ActionsPaymentDetails;

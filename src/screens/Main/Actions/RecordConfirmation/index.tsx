@@ -12,7 +12,6 @@ import { RootState } from '@src/types/states/root';
 import colours from '@src/utils/colours';
 import { IS_ANDROID } from '@src/utils/deviceDimensions';
 import useBoolean from '@src/utils/useBoolean';
-import { getUser, getUserByUsername } from '@src/utils/userCollection';
 import React, { useEffect, useState } from 'react';
 import { StyleSheet } from 'react-native';
 import { Text } from 'react-native';
@@ -79,7 +78,8 @@ const RecordConfirmation = () => {
               payments.map((pm: Payment, idx: number) => {
                 return <PaymentCard key={idx.toString()} type={pm.bankName} number={pm.number} name={pm.name} />;
               })}
-            <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 4 }}>
+            <View
+              style={{ flexDirection: 'row', alignItems: 'center', marginTop: 4, backgroundColor: colours.blueNormal }}>
               <Text style={[styles.dmFont, { fontSize: moderateScale(10, 2) }]}>
                 {requireProof ? '*Proof required' : '*Proof is not required'}
               </Text>

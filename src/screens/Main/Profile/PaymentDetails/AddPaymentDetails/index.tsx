@@ -13,7 +13,7 @@ import CustomDropdown from '@src/components/input/CustomDropdown';
 import { useSelector } from 'react-redux';
 import { RootState } from '@src/types/states/root';
 import { Payment } from '@src/types/collection/usersCollection';
-import { addPayment } from '@src/utils/userCollection';
+import { addPayment } from '@src/utils/collections/userCollection';
 import { store } from '@src/redux/store';
 import { setPayments } from '@src/redux/actions/user';
 import { useNavigation } from '@react-navigation/native';

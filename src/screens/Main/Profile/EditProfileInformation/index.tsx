@@ -23,7 +23,7 @@ import SubPage from '@src/components/SubPage';
 import TextField from '@src/components/input/TextField';
 import TextFieldAlt from '@src/components/input/TextFieldAlt';
 import { navigate } from '@src/navigation';
-import { updateUser } from '@src/utils/userCollection';
+import { updateUser } from '@src/utils/collections/userCollection';
 import { useNavigation } from '@react-navigation/native';
 
 const EditProfileInformation = () => {

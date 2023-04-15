@@ -9,7 +9,7 @@ import { UserDocument } from '@src/types/collection/usersCollection';
 import { ItemRecord, UserRecord } from '@src/types/states/record';
 import { RootState } from '@src/types/states/root';
 import colours from '@src/utils/colours';
-import { getFriendCollection } from '@src/utils/friendCollection';
+import { getFriendCollection } from '@src/utils/collections/friendCollection';
 import React, { useCallback, useEffect, useState } from 'react';
 import { StyleSheet, Text, TouchableOpacity, TouchableHighlight } from 'react-native';
 import { View } from 'react-native';

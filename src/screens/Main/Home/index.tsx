@@ -17,7 +17,7 @@ import { RootState } from '@src/types/states/root';
 import { IS_ANDROID } from '@src/utils/deviceDimensions';
 import IcRecord from '@src/assets/svg/IcRecord';
 import IcDivide from '@src/assets/svg/IcDivide';
-import { getUser } from '@src/utils/userCollection';
+import { getUser } from '@src/utils/collections/userCollection';
 import { store } from '@src/redux/store';
 import { setUser } from '@src/redux/actions/user';
 

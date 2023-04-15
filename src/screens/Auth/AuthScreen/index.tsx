@@ -22,10 +22,10 @@ import { store } from '@src/redux/store';
 import { currentUser, userLogin } from '@src/redux/actions/auth';
 import { collection, getDocs } from 'firebase/firestore';
 import { navigate } from '@src/navigation';
-import { checkUserRegistered, getUser } from '@src/utils/userCollection';
 import { setAvatar, setUser } from '@src/redux/actions/user';
 import { useSelector } from 'react-redux';
 import { RootState } from '@src/types/states/root';
+import { checkUserRegistered } from '@src/utils/collections/userCollection';
 
 const AuthScreen = () => {
   const authRedux = useSelector((state: RootState) => state.auth);

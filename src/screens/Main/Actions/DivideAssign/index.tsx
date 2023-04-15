@@ -3,7 +3,11 @@ import ImageView from '@src/components/ImageView';
 import SubPage from '@src/components/SubPage';
 import UserCard from '@src/components/UserCard';
 import CustomButton from '@src/components/input/CustomButton';
+import { navigate } from '@src/navigation';
+import { setAssignedFriends } from '@src/redux/actions/divide';
+import { store } from '@src/redux/store';
 import { UserDocument } from '@src/types/collection/usersCollection';
+import { AssignFriend, AssignItems } from '@src/types/states/divide';
 import { RootState } from '@src/types/states/root';
 import colours from '@src/utils/colours';
 import { app, storage } from 'firbaseConfig';
@@ -121,18 +125,13 @@ const AssignCard = ({
     </View>
   );
 };
-type AssignFriend = { user: UserDocument; selectedItem: number[] };
-type AssignItems = {
-  item: { itemName: string; price: string; qty: string; totalPrice: number };
-  userArr: UserDocument[];
-};
 
 const DivideAssign = ({ route }: { route: RouteProp<{ params: { selectedFriends: UserDocument[] } }> }) => {
   const { divide } = useSelector((state: RootState) => state);
 
   const [currIdx, setCurrIdx] = useState<number>(0);
-  const [friends, setFriends] = useState<Array<AssignFriend>>([]);
-  const [items, setItems] = useState<Array<AssignItems>>([]);
+  const [friends, setFriends] = useState<AssignFriend[]>([]);
+  const [items, setItems] = useState<AssignItems[]>([]);
   // const [active, setActive] = useState<boolean>(false);
 
   const handleSelectItem = async (item: AssignItems, idx: number) => {
@@ -160,6 +159,11 @@ const DivideAssign = ({ route }: { route: RouteProp<{ params: { selectedFriends:
       prevFriends[currIdx].selectedItem = selectedItemArr;
       setFriends(prevFriends);
     }
+  };
+
+  const handleNext = () => {
+    store.dispatch(setAssignedFriends({ friends: friends }));
+    navigate('PaymentReceipient', { page: 'Divide' });
   };
 
   useEffect(() => {
@@ -241,7 +245,7 @@ const DivideAssign = ({ route }: { route: RouteProp<{ params: { selectedFriends:
           <CustomButton
             text='Next'
             style={{ borderRadius: 10, width: '50%', alignSelf: 'center', marginTop: 20 }}
-            onPress={() => console.log(friends, 'line 151')}
+            onPress={handleNext}
           />
         </View>
       </SubPage>
