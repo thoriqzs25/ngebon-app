@@ -2,7 +2,7 @@ import colours from '@utils/colours';
 import { StyleProp, StyleSheet, Text, View } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useEffect } from 'react';
-import useBoolean from '@src/utils/useBoolean';
+import useBoolean from '@src/utils/hooks/useBoolean';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { UseBoolean } from '@src/types/UseBoolean';
 

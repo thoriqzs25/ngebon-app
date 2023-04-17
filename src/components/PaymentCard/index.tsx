@@ -1,4 +1,4 @@
-import useBoolean from '@src/utils/useBoolean';
+import useBoolean from '@src/utils/hooks/useBoolean';
 import { StyleSheet, Text, View } from 'react-native';
 import { TouchableHighlight } from 'react-native-gesture-handler';
 import ImageView from '../ImageView';

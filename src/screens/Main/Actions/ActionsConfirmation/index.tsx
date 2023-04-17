@@ -7,6 +7,7 @@ import SubPage from '@src/components/SubPage';
 import UserCard from '@src/components/UserCard';
 import UserCardMoney from '@src/components/UserCardMoney';
 import UserCardMoneyDivide from '@src/components/UserCardMoneyDivide';
+import { navigate } from '@src/navigation';
 import { Payment, UserDocument } from '@src/types/collection/usersCollection';
 import { AssignFriend, ItemDivide } from '@src/types/states/divide';
 import { ItemRecord, UserRecord } from '@src/types/states/record';
@@ -14,7 +15,7 @@ import { RootState } from '@src/types/states/root';
 import { createDivideDebt, createRecordDebt } from '@src/utils/collections/debtCollection';
 import colours from '@src/utils/colours';
 import { IS_ANDROID } from '@src/utils/deviceDimensions';
-import useBoolean from '@src/utils/useBoolean';
+import useBoolean from '@src/utils/hooks/useBoolean';
 import React, { useEffect, useState } from 'react';
 import { StyleSheet } from 'react-native';
 import { Text } from 'react-native';
@@ -69,6 +70,7 @@ const ActionsConfirmation = ({ route }: { route: RouteProp<{ params: { page: str
     if (route.params.page === 'Record') createRecordDebt(record);
     if (route.params.page === 'Divide') createDivideDebt(divideRedux, record);
     console.log('line 53 record successfully written!');
+    navigate('Home');
   };
 
   return (

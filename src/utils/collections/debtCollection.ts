@@ -1,6 +1,6 @@
 import { RecordReducerState } from '@src/types/states/record';
-import { DebtDocument, ItemDebtors } from '@src/types/collection/debtsCollection';
-import { collection, doc, getDoc, setDoc } from 'firebase/firestore';
+import { DebtDocument, DebtReceivableType, ItemDebtors } from '@src/types/collection/debtsCollection';
+import { Timestamp, collection, doc, getDoc, serverTimestamp, setDoc } from 'firebase/firestore';
 import { db } from 'firbaseConfig';
 import { getUserDebtsByUsername, writeUserDebt, writeUserDebtDivide } from './user_debtCollection';
 import { DivideReducerState, ItemDivide } from '@src/types/states/divide';
@@ -23,6 +23,7 @@ export const createRecordDebt = async (recordRedux: RecordReducerState) => {
         note: note,
       },
       receipient: recordRedux.receipient,
+      createdAt: serverTimestamp(),
     } as DebtDocument;
 
     const collectionRef = collection(db, 'debts');
@@ -78,6 +79,7 @@ export const createDivideDebt = async (divideRedux: DivideReducerState, recordRe
       debtors: _debtors,
     },
     receipient: recordRedux.receipient,
+    createdAt: serverTimestamp(),
   } as DebtDocument;
 
   const collectionRef = collection(db, 'debts');
@@ -98,19 +100,24 @@ export const createDivideDebt = async (divideRedux: DivideReducerState, recordRe
 };
 
 export const getDebtById = async (debtId: string, username: string) => {
+  type ReturnDebt = { totalAmount: string; username: string; createdAt: Date; type: string };
+
   const debtType = debtId.split('_')[0];
 
   const data = (await getDoc(doc(db, 'debts', `${debtId}`)).then((res) => {
     return res.data();
   })) as DebtDocument;
 
+  const date = data.createdAt as Timestamp;
   if (debtType === 'record') {
     const _debts = data.recordDebt;
 
     return {
       totalAmount: _debts?.totalAmount,
       username: data.receipient?.username,
-    } as { totalAmount: string; username: string };
+      createdAt: date.toDate(),
+      type: 'Debt',
+    } as ReturnDebt;
   }
 
   if (debtType === 'divide') {
@@ -124,17 +131,21 @@ export const getDebtById = async (debtId: string, username: string) => {
     return {
       totalAmount: _totalAmount,
       username: data.receipient?.username,
-    } as { totalAmount: string; username: string };
+      createdAt: date.toDate(),
+      type: 'Debt',
+    } as ReturnDebt;
   }
 };
 
 export const getReceivableById = async (debtId: string, username: string) => {
+  type ReturnReceivable = { totalAmount: string; username: string; createdAt: Date; type: string };
   const debtType = debtId.split('_')[0];
 
   const data = (await getDoc(doc(db, 'debts', `${debtId}`)).then((res) => {
     return res.data();
   })) as DebtDocument;
 
+  const date = data.createdAt as Timestamp;
   if (debtType === 'record') {
     const _debts = data.recordDebt;
 
@@ -142,19 +153,56 @@ export const getReceivableById = async (debtId: string, username: string) => {
       {
         totalAmount: _debts?.totalAmount,
         username: _debts?.username,
+        createdAt: date.toDate(),
+        type: 'Receivable',
       },
-    ] as { totalAmount: string; username: string }[];
+    ] as ReturnReceivable[];
   }
 
   if (debtType === 'divide') {
     const _debts = data.divideDebt;
     // let _totalAmount: string = '';
-    let _receivables: { totalAmount: string; username: string }[] = [];
+    let _receivables: ReturnReceivable[] = [];
 
     _debts?.debtors.map((dts) => {
-      _receivables.push({ totalAmount: dts.totalAmount, username: dts.username });
+      _receivables.push({
+        totalAmount: dts.totalAmount,
+        username: dts.username,
+        createdAt: date.toDate(),
+        type: 'Receivable',
+      });
     });
 
-    return _receivables as { totalAmount: string; username: string }[];
+    return _receivables as ReturnReceivable[];
   }
+};
+
+export const getAllUserDebtReceivable = async (username: string) => {
+  const data = await getUserDebtsByUsername(username!!);
+
+  let _debts: Array<DebtReceivableType> = [];
+  let _receivables: Array<DebtReceivableType> = [];
+
+  if (data?.debts)
+    await Promise.all(
+      data?.debts.map(async (debt, idx) => {
+        const data = await getDebtById(debt, username!!);
+        if (data) _debts.push(data);
+      })
+    );
+
+  if (data?.receivables)
+    await Promise.all(
+      data?.receivables.map(async (rec, idx) => {
+        const data = await getReceivableById(rec, username!!);
+        if (data) _receivables = [...data, ..._receivables];
+      })
+    );
+
+  return {
+    totalDebt: data?.totalDebt,
+    debts: _debts,
+    totalReceivable: data?.totalReceivable,
+    receivables: _receivables,
+  };
 };

@@ -7,19 +7,32 @@ import { View } from 'react-native';
 import { moderateScale } from 'react-native-size-matters';
 import TextTicker from 'react-native-text-ticker';
 import CustomButton from '../input/CustomButton';
+import { useEffect, useState } from 'react';
+import moment from 'moment';
 
 const TransactionCard = ({
   name,
   amount,
-  type = 'Receivables',
+  type = 'Receivable',
+  date,
 }: {
   name: string;
   amount: string;
-  type?: 'Receivables' | 'Debt';
+  type?: 'Receivable' | 'Debt' | string;
+  date: Date;
 }) => {
+  const [formattedDate, setFormattedDate] = useState<string>('');
+
+  useEffect(() => {
+    if (date) {
+      const formattedDate = moment(date).format('MMMM DD - hh:mm A');
+      setFormattedDate(formattedDate);
+    }
+  }, [date]);
+
   return (
     <View style={styles.container}>
-      {type === 'Receivables' ? <IcGreenCircleArrow /> : <IcRedCircleArrow />}
+      {type === 'Receivable' ? <IcGreenCircleArrow /> : <IcRedCircleArrow />}
       <View
         style={{
           marginLeft: 8,
@@ -30,12 +43,10 @@ const TransactionCard = ({
         }}>
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
           <Text
-            style={[styles.detailsText, { color: type === 'Receivables' ? colours.greenNormal : colours.redNormal }]}>
-            {type === 'Receivables' ? 'Receivables' : 'Debt'}
+            style={[styles.detailsText, { color: type === 'Receivable' ? colours.greenNormal : colours.redNormal }]}>
+            {type === 'Receivable' ? 'Receivable' : 'Debt'}
           </Text>
-          <Text style={[styles.detailsText, { color: 'rgba(0, 0, 0, 0.6)' }]}>
-            {type === 'Receivables' ? ` | March 13 - 02:35 pm` : ` | March 11 - 08:19 pm`}
-          </Text>
+          <Text style={[styles.detailsText, { color: 'rgba(0, 0, 0, 0.6)' }]}> | 2{formattedDate}</Text>
         </View>
         <View>
           <TextTicker
@@ -46,10 +57,10 @@ const TransactionCard = ({
             // @ts-ignore
             scroll={'toLeft'}
             repeatSpacer={30}>
-            {type === 'Receivables' ? `Confirm ${name}’s Payment` : `Payment requested by ${name}`}
+            {type === 'Receivable' ? `Confirm ${name}’s Payment` : `Payment requested by ${name}`}
           </TextTicker>
         </View>
-        {type === 'Receivables' ? (
+        {type === 'Receivable' ? (
           <CustomButton text='Confirm' style={[styles.actionButton]} textStyle={{ fontSize: moderateScale(8, 2) }} />
         ) : (
           <View style={{ flexDirection: 'row' }}>
@@ -69,11 +80,11 @@ const TransactionCard = ({
       <View style={{ marginLeft: 'auto', paddingBottom: 4 }}>
         <Text
           style={{
-            color: type === 'Receivables' ? colours.greenNormal : colours.redNormal,
+            color: type === 'Receivable' ? colours.greenNormal : colours.redNormal,
             fontFamily: 'dm-500',
             fontSize: moderateScale(12, 2),
           }}>
-          Rp{parseInt(amount).toLocaleString('id-ID')}
+          Rp{amount.replace(/\B(?=(\d{3})+(?!\d))/g, '.')}
         </Text>
       </View>
     </View>

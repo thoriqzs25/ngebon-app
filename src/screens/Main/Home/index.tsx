@@ -11,7 +11,7 @@ import TransactionCard from '@src/components/TransactionCard';
 import { ScrollView } from 'react-native-gesture-handler';
 import CustomButton from '@src/components/input/CustomButton';
 import ActionSheet, { ActionSheetCustom } from '@alessiocancian/react-native-actionsheet';
-import { useCallback, useEffect, useMemo, useRef } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '@src/types/states/root';
 import { IS_ANDROID } from '@src/utils/deviceDimensions';
@@ -20,15 +20,26 @@ import IcDivide from '@src/assets/svg/IcDivide';
 import { getUser } from '@src/utils/collections/userCollection';
 import { store } from '@src/redux/store';
 import { setUser } from '@src/redux/actions/user';
+import useGetAllDebtReceivable from '@src/utils/hooks/useGetAllDebtReceivable';
+import { DebtReceivableType } from '@src/types/collection/debtsCollection';
 
 const Home = () => {
   const { auth, user } = useSelector((state: RootState) => state);
+
+  const [userDebts, totalDebts, userReceivables, totalReceivables] = useGetAllDebtReceivable(user.username!!);
+  const [_sorted, setSorted] = useState<DebtReceivableType[]>([]);
 
   useEffect(() => {
     if (user?.name === undefined) {
       getUser(auth.uid as string);
     }
   }, []);
+
+  useEffect(() => {
+    const mixed: DebtReceivableType[] = [...userDebts, ...userReceivables];
+    const sorted: DebtReceivableType[] = mixed.sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime());
+    setSorted(sorted);
+  }, [userDebts, userReceivables]);
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -55,13 +66,24 @@ const Home = () => {
             }}
           />
 
-          <GreenSection />
-          {/* <CustomButton text='Click me!' onPress={showActionSheet} /> */}
+          <GreenSection
+            totalDebts={totalDebts.replace(/\B(?=(\d{3})+(?!\d))/g, '.')}
+            totalReceivables={totalReceivables.replace(/\B(?=(\d{3})+(?!\d))/g, '.')}
+          />
           <View style={{ marginTop: 20 }}>
             <Text style={{ fontFamily: 'dm-500', fontSize: moderateScale(16, 2) }}>Recent</Text>
-            <TransactionCard name={'Thoriq'} amount='37500' />
-            <TransactionCard name={'Thoriq'} amount='37500' />
-            <TransactionCard name={'Thoriq'} amount='37500' />
+            {_sorted &&
+              _sorted.map((val, idx) => {
+                return (
+                  <TransactionCard
+                    key={idx.toString()}
+                    name={'Thoriq'}
+                    amount='37500'
+                    date={new Date('2023-04-12T00:33:34.985Z')}
+                    type={val.type}
+                  />
+                );
+              })}
           </View>
         </View>
       </ScrollView>

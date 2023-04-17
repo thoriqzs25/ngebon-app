@@ -1,5 +1,5 @@
 import Ionicons from '@expo/vector-icons/Ionicons';
-import useBoolean from '@src/utils/useBoolean';
+import useBoolean from '@src/utils/hooks/useBoolean';
 import { navigate } from '@src/navigation';
 import colours from '@src/utils/colours';
 import { useEffect, useRef, useState } from 'react';

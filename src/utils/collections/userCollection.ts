@@ -84,3 +84,14 @@ export const addPayment = async (payments: Payment[], uid: string) => {
     payments: [...payments],
   });
 };
+
+export const checkUsernameRegistered = async (username: string) => {
+  let isExists = false;
+  const data = await getDocs(collection(db, 'users')).then((user) => {
+    user.forEach((_user) => {
+      const cred = _user.data() as UserDocument;
+      if (cred.username === username) isExists = true;
+    });
+  });
+  return isExists;
+};

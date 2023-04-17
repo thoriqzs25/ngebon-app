@@ -7,7 +7,7 @@ import { store } from '@src/redux/store';
 import { FriendDocument } from '@src/types/collection/friendsCollection';
 import { UserDocument } from '@src/types/collection/usersCollection';
 import { RootState } from '@src/types/states/root';
-import { checkUserRegistered } from '@src/utils/collections/userCollection';
+import { checkUserRegistered, checkUsernameRegistered } from '@src/utils/collections/userCollection';
 import { createEmptyDocument } from '@src/utils/collections/user_debtCollection';
 import colours from '@src/utils/colours';
 import { app, db } from 'firbaseConfig';
@@ -43,6 +43,9 @@ const UserRegistration = () => {
     } as FriendDocument;
 
     try {
+      const isExists = await checkUsernameRegistered(username);
+      if (isExists) return;
+
       const resUser = await setDoc(doc(db, 'users', `${uid}`), newUserDoc, { merge: true });
       const resFriend = await setDoc(doc(db, 'friends', `${uid}`), newFriendDoc, { merge: true });
       await createEmptyDocument(username);

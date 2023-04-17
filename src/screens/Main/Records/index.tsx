@@ -1,65 +1,35 @@
+import { RouteProp, useFocusEffect } from '@react-navigation/native';
 import TransactionCard from '@src/components/TransactionCard';
 import CustomButton from '@src/components/input/CustomButton';
+import { DebtReceivableType } from '@src/types/collection/debtsCollection';
 import { UserDebtsDocument } from '@src/types/collection/users_debtsCollection';
 import { RootState } from '@src/types/states/root';
-import { getDebtById, getReceivableById } from '@src/utils/collections/debtCollection';
+import { getAllUserDebtReceivable, getDebtById, getReceivableById } from '@src/utils/collections/debtCollection';
 import { getUserDebtsByUsername } from '@src/utils/collections/user_debtCollection';
 import colours from '@src/utils/colours';
 import { IS_ANDROID } from '@src/utils/deviceDimensions';
 import { globalStyle } from '@src/utils/globalStyles';
-import React, { useEffect, useState } from 'react';
+import useGetAllDebtReceivable from '@src/utils/hooks/useGetAllDebtReceivable';
+import React, { useCallback, useEffect, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { moderateScale, moderateVerticalScale } from 'react-native-size-matters';
 import { useSelector } from 'react-redux';
 
-type DebtReceivable = {
-  totalAmount: string;
-  username: string;
-};
-
-const Records = () => {
+const Records = ({ route }: { route: RouteProp<{ params: { tab?: 'Debts' | 'Receivables' } }> }) => {
   const { username } = useSelector((state: RootState) => state.user);
 
-  const [tab, setTab] = useState<'Debt' | 'Receivables'>('Debt');
+  const [tab, setTab] = useState<'Debts' | 'Receivables'>(route?.params?.tab ?? 'Debts');
   const [subTab, setSubTab] = useState<'On Going' | 'History'>('On Going');
-  const [userDebts, setUserDebts] = useState<DebtReceivable[]>([]);
-  const [userReceivables, setUserReceivables] = useState<DebtReceivable[]>([]);
-  const [totalDebts, setTotalDebts] = useState<string>('');
-  const [totalReceivables, setTotalReceivables] = useState<string>('');
 
-  const getUserDebt = async () => {
-    const data = await getUserDebtsByUsername(username!!);
+  const [userDebts, totalDebts, userReceivables, totalReceivables] = useGetAllDebtReceivable(username!!);
 
-    let _debts: Array<DebtReceivable> = [];
-    let _receivables: Array<DebtReceivable> = [];
-
-    if (data?.debts)
-      await Promise.all(
-        data?.debts.map(async (debt, idx) => {
-          const data = await getDebtById(debt, username!!);
-          if (data) _debts.push(data);
-        })
-      );
-
-    if (data?.receivables)
-      await Promise.all(
-        data?.receivables.map(async (rec, idx) => {
-          const data = await getReceivableById(rec, username!!);
-          if (data) _receivables = [...data, ..._receivables];
-        })
-      );
-
-    setTotalDebts(data?.totalDebt ?? '0');
-    setTotalReceivables(data?.totalReceivable ?? '0');
-    setUserDebts(_debts);
-    setUserReceivables(_receivables);
-  };
-
-  useEffect(() => {
-    getUserDebt();
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      if (route?.params?.tab) setTab(route?.params?.tab);
+    }, [route?.params?.tab])
+  );
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -78,16 +48,16 @@ const Records = () => {
               justifyContent: 'space-between',
             }}>
             <CustomButton
-              text='Debt'
-              style={[styles.button, { backgroundColor: tab === 'Debt' ? colours.greenNormal : colours.white }]}
-              textStyle={[styles.textButton, { color: tab === 'Debt' ? colours.white : colours.greenNormal }]}
-              onPress={() => setTab('Debt')}
+              text='Debts'
+              style={[styles.button, { backgroundColor: tab === 'Debts' ? colours.greenNormal : colours.white }]}
+              textStyle={[styles.textButton, { color: tab === 'Debts' ? colours.white : colours.greenNormal }]}
+              onPress={() => setTab('Debts')}
             />
             <View style={styles.seperator} />
             <CustomButton
               text='Receivables'
-              style={[styles.button, { backgroundColor: tab !== 'Debt' ? colours.greenNormal : colours.white }]}
-              textStyle={[styles.textButton, { color: tab !== 'Debt' ? colours.white : colours.greenNormal }]}
+              style={[styles.button, { backgroundColor: tab !== 'Debts' ? colours.greenNormal : colours.white }]}
+              textStyle={[styles.textButton, { color: tab !== 'Debts' ? colours.white : colours.greenNormal }]}
               onPress={() => setTab('Receivables')}
             />
           </View>
@@ -115,20 +85,20 @@ const Records = () => {
               style={[
                 styles.dmBold,
                 styles.title,
-                { color: tab === 'Debt' ? colours.redNormal : colours.greenNormal },
+                { color: tab === 'Debts' ? colours.redNormal : colours.greenNormal },
               ]}>
-              {tab === 'Debt' ? 'You Owe' : 'Amount Owed to You'}
+              {tab === 'Debts' ? 'You Owe' : 'Amount Owed to You'}
             </Text>
             <Text
               style={[
                 styles.dmBold,
                 styles.amount,
-                { color: tab === 'Debt' ? colours.redNormal : colours.greenNormal },
+                { color: tab === 'Debts' ? colours.redNormal : colours.greenNormal },
               ]}>
               Rp
-              {tab === 'Debt'
-                ? parseInt(totalDebts).toLocaleString('id-ID')
-                : parseInt(totalReceivables).toLocaleString('id-ID')}
+              {tab === 'Debts'
+                ? totalDebts.replace(/\B(?=(\d{3})+(?!\d))/g, '.')
+                : totalReceivables.replace(/\B(?=(\d{3})+(?!\d))/g, '.')}
             </Text>
           </View>
           <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 12 }}>
@@ -146,11 +116,17 @@ const Records = () => {
           </View>
 
           <View style={{}}>
-            {tab === 'Debt' &&
+            {tab === 'Debts' &&
               userDebts &&
               userDebts?.map((debt, idx) => {
                 return (
-                  <TransactionCard key={idx.toString()} name={debt.username} amount={debt.totalAmount} type='Debt' />
+                  <TransactionCard
+                    key={idx.toString()}
+                    name={debt.username}
+                    amount={debt.totalAmount}
+                    date={debt.createdAt}
+                    type='Debt'
+                  />
                 );
               })}
             {tab === 'Receivables' &&
@@ -161,7 +137,8 @@ const Records = () => {
                     key={idx.toString()}
                     name={rec.username}
                     amount={rec.totalAmount}
-                    type='Receivables'
+                    date={rec.createdAt}
+                    type='Receivable'
                   />
                 );
               })}

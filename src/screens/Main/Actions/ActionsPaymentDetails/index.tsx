@@ -13,7 +13,7 @@ import { UserRecord } from '@src/types/states/record';
 import { RootState } from '@src/types/states/root';
 import colours from '@src/utils/colours';
 import { IS_ANDROID } from '@src/utils/deviceDimensions';
-import useBoolean from '@src/utils/useBoolean';
+import useBoolean from '@src/utils/hooks/useBoolean';
 import React, { useEffect, useState } from 'react';
 import { StyleSheet } from 'react-native';
 import { Text } from 'react-native';
