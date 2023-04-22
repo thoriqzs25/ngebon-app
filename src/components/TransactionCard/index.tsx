@@ -15,22 +15,28 @@ const TransactionCard = ({
   amount,
   type = 'Receivable',
   date,
-  status = 'requesting',
-}: {
+  status,
+}: // status = 'requesting',
+{
   name: string;
   amount: string;
   type?: 'Receivable' | 'Debt' | string;
   date: Date;
-  status?: string;
+  status: string;
 }) => {
   const [formattedDate, setFormattedDate] = useState<string>('');
 
   useEffect(() => {
     if (date) {
-      const formattedDate = moment(date).format('MMMM DD - hh:mm A');
+      const formattedDate = moment(date).format('MMMM DD  - hh:mm A');
       setFormattedDate(formattedDate);
     }
   }, [date]);
+
+  const handleAccept = async () => {};
+  const handleDecline = async () => {};
+  const handleConfirm = async () => {};
+  const handleConfirmPayment = async () => {};
 
   return (
     <View style={styles.container}>
@@ -48,7 +54,7 @@ const TransactionCard = ({
             style={[styles.detailsText, { color: type === 'Receivable' ? colours.greenNormal : colours.redNormal }]}>
             {type === 'Receivable' ? 'Receivable' : 'Debt'}
           </Text>
-          <Text style={[styles.detailsText, { color: 'rgba(0, 0, 0, 0.6)' }]}> | 2{formattedDate}</Text>
+          <Text style={[styles.detailsText, { color: 'rgba(0, 0, 0, 0.6)' }]}> | {formattedDate}</Text>
         </View>
         <View>
           <TextTicker

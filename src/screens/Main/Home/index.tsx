@@ -77,10 +77,11 @@ const Home = () => {
                 return (
                   <TransactionCard
                     key={idx.toString()}
-                    name={'Thoriq'}
-                    amount='37500'
-                    date={new Date('2023-04-12T00:33:34.985Z')}
+                    name={val.username}
+                    amount={val.totalAmount}
+                    date={val.createdAt}
                     type={val.type}
+                    status={val.status}
                   />
                 );
               })}

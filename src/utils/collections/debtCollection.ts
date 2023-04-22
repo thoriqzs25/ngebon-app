@@ -5,7 +5,7 @@ import {
   ItemDebtors,
   RecordDebtDocument,
 } from '@src/types/collection/debtsCollection';
-import { Timestamp, collection, doc, getDoc, serverTimestamp, setDoc } from 'firebase/firestore';
+import { Timestamp, collection, doc, getDoc, serverTimestamp, setDoc, updateDoc } from 'firebase/firestore';
 import { db } from 'firbaseConfig';
 import { getUserDebtsByUsername, writeUserDebt, writeUserDebtDivide } from './user_debtCollection';
 import { DivideReducerState, ItemDivide } from '@src/types/states/divide';
@@ -109,7 +109,7 @@ export const createDivideDebt = async (divideRedux: DivideReducerState, recordRe
 };
 
 export const getDebtById = async (debtId: string, username: string) => {
-  type ReturnDebt = { totalAmount: string; username: string; createdAt: Date; type: string };
+  type ReturnDebt = { totalAmount: string; username: string; createdAt: Date; type: string; status: string };
 
   const debtType = debtId.split('_')[0];
 
@@ -126,15 +126,20 @@ export const getDebtById = async (debtId: string, username: string) => {
       username: data.receipient?.username,
       createdAt: date.toDate(),
       type: 'Debt',
+      status: _debts?.status,
     } as ReturnDebt;
   }
 
   if (debtType === 'divide') {
     const _debts = data.divideDebt;
     let _totalAmount: string = '';
+    let _status: string = '';
 
     _debts?.debtors.map((dts) => {
-      if (dts.username === username) _totalAmount = dts.totalAmount;
+      if (dts.username === username) {
+        _totalAmount = dts.totalAmount;
+        _status = dts.status;
+      }
     });
 
     return {
@@ -142,12 +147,13 @@ export const getDebtById = async (debtId: string, username: string) => {
       username: data.receipient?.username,
       createdAt: date.toDate(),
       type: 'Debt',
+      status: _status,
     } as ReturnDebt;
   }
 };
 
 export const getReceivableById = async (debtId: string, username: string) => {
-  type ReturnReceivable = { totalAmount: string; username: string; createdAt: Date; type: string };
+  type ReturnReceivable = { totalAmount: string; username: string; createdAt: Date; type: string; status: string };
   const debtType = debtId.split('_')[0];
 
   const data = (await getDoc(doc(db, 'debts', `${debtId}`)).then((res) => {
@@ -164,6 +170,7 @@ export const getReceivableById = async (debtId: string, username: string) => {
         username: _debts?.username,
         createdAt: date.toDate(),
         type: 'Receivable',
+        status: _debts?.status,
       },
     ] as ReturnReceivable[];
   }
@@ -179,6 +186,7 @@ export const getReceivableById = async (debtId: string, username: string) => {
         username: dts.username,
         createdAt: date.toDate(),
         type: 'Receivable',
+        status: dts?.status,
       });
     });
 
