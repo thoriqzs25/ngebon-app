@@ -15,11 +15,13 @@ const TransactionCard = ({
   amount,
   type = 'Receivable',
   date,
+  status = 'requesting',
 }: {
   name: string;
   amount: string;
   type?: 'Receivable' | 'Debt' | string;
   date: Date;
+  status?: string;
 }) => {
   const [formattedDate, setFormattedDate] = useState<string>('');
 
@@ -60,9 +62,24 @@ const TransactionCard = ({
             {type === 'Receivable' ? `Confirm ${name}’s Payment` : `Payment requested by ${name}`}
           </TextTicker>
         </View>
-        {type === 'Receivable' ? (
+
+        {status === 'requesting' && type === 'Receivable' && (
+          <Text style={[styles.statusText, styles.orange]}>Waiting Confirmation</Text>
+        )}
+        {status === 'waiting' && type === 'Receivable' && (
+          <Text style={[styles.statusText, styles.orange]}>Waiting Payment</Text>
+        )}
+        {status === 'confirming' && type === 'Receivable' && (
           <CustomButton text='Confirm' style={[styles.actionButton]} textStyle={{ fontSize: moderateScale(8, 2) }} />
-        ) : (
+        )}
+        {status === 'confirmed' && type === 'Receivable' && (
+          <Text style={[styles.statusText, styles.red]}>Declined</Text>
+        )}
+        {status === 'declined' && type === 'Receivable' && (
+          <Text style={[styles.statusText, styles.gray]}>Confirmed</Text>
+        )}
+
+        {status === 'requesting' && type === 'Debt' && (
           <View style={{ flexDirection: 'row' }}>
             <CustomButton
               text='Accept'
@@ -76,6 +93,18 @@ const TransactionCard = ({
             />
           </View>
         )}
+        {status === 'waiting' && type === 'Debt' && (
+          <CustomButton
+            text='Confirm Payment'
+            style={[styles.actionButton]}
+            textStyle={{ fontSize: moderateScale(8, 2) }}
+          />
+        )}
+        {status === 'confirming' && type === 'Debt' && (
+          <Text style={[styles.statusText, styles.orange]}>Pending Confirmation</Text>
+        )}
+        {status === 'confirmed' && type === 'Debt' && <Text style={[styles.statusText, styles.gray]}>Confirmed</Text>}
+        {status === 'declined' && type === 'Debt' && <Text style={[styles.statusText, styles.gray]}>Confirmed</Text>}
       </View>
       <View style={{ marginLeft: 'auto', paddingBottom: 4 }}>
         <Text
@@ -112,6 +141,19 @@ const styles = StyleSheet.create({
   actionButton: {
     paddingVertical: 0,
     width: 80,
+  },
+  statusText: {
+    fontFamily: 'dm',
+    fontSize: moderateScale(8, 3),
+  },
+  orange: {
+    color: '#E18519',
+  },
+  gray: {
+    color: 'rgba(0,0,0,0.6)',
+  },
+  red: {
+    color: colours.redNormal,
   },
 });
 

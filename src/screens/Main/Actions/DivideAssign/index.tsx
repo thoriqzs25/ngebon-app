@@ -173,6 +173,11 @@ const DivideAssign = ({ route }: { route: RouteProp<{ params: { selectedFriends:
 
     store.dispatch(setDivideItems({ title: divide.title, items: _items }));
     store.dispatch(setAssignedFriends({ friends: friends }));
+
+    setFriends([]);
+    setItems([]);
+    setCurrIdx(0);
+
     navigate('PaymentReceipient', { page: 'Divide' });
   };
 

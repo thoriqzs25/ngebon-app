@@ -1,5 +1,10 @@
-import { RecordReducerState } from '@src/types/states/record';
-import { DebtDocument, DebtReceivableType, ItemDebtors } from '@src/types/collection/debtsCollection';
+import { ItemRecord, RecordReducerState } from '@src/types/states/record';
+import {
+  DebtDocument,
+  DebtReceivableType,
+  ItemDebtors,
+  RecordDebtDocument,
+} from '@src/types/collection/debtsCollection';
 import { Timestamp, collection, doc, getDoc, serverTimestamp, setDoc } from 'firebase/firestore';
 import { db } from 'firbaseConfig';
 import { getUserDebtsByUsername, writeUserDebt, writeUserDebtDivide } from './user_debtCollection';
@@ -16,12 +21,15 @@ export const createRecordDebt = async (recordRedux: RecordReducerState) => {
     const { user, amount, note } = r;
     const _amount: string = amount.replace('.', '');
 
+    const recordDoc = {
+      username: user.username,
+      totalAmount: _amount,
+      note: note,
+      status: 'requesting',
+    } as RecordDebtDocument;
+
     const payload = {
-      recordDebt: {
-        username: user.username,
-        totalAmount: _amount,
-        note: note,
-      },
+      recordDebt: recordDoc,
       receipient: recordRedux.receipient,
       createdAt: serverTimestamp(),
     } as DebtDocument;
@@ -69,6 +77,7 @@ export const createDivideDebt = async (divideRedux: DivideReducerState, recordRe
       username: fr.user.username,
       totalAmount: _totalPrice.toString(),
       items: _items,
+      status: 'requesting',
     } as ItemDebtors;
 
     _debtors.push(itemDebtors);

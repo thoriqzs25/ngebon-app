@@ -126,6 +126,7 @@ const Records = ({ route }: { route: RouteProp<{ params: { tab?: 'Debts' | 'Rece
                     amount={debt.totalAmount}
                     date={debt.createdAt}
                     type='Debt'
+                    status={debt.status}
                   />
                 );
               })}
@@ -139,6 +140,7 @@ const Records = ({ route }: { route: RouteProp<{ params: { tab?: 'Debts' | 'Rece
                     amount={rec.totalAmount}
                     date={rec.createdAt}
                     type='Receivable'
+                    status={rec.status}
                   />
                 );
               })}

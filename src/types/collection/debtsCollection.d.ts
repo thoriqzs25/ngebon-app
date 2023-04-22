@@ -13,6 +13,7 @@ export type RecordDebtDocument = {
   username: string;
   totalAmount: string;
   note: string;
+  status: string; //requesting | waiting | declined | confirming | confirmed
 };
 
 export type DivideDebtDocument = {
@@ -23,6 +24,7 @@ export type ItemDebtors = {
   username: string;
   totalAmount: string;
   items: ItemDivide[];
+  status: string;
 };
 
 export type DebtReceivableType = {
@@ -30,4 +32,5 @@ export type DebtReceivableType = {
   username: string;
   createdAt: Date;
   type: string;
+  status?: string;
 };

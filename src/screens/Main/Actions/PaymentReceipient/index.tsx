@@ -37,6 +37,8 @@ const PaymentReceipient = ({ route }: { route: RouteProp<{ params?: { page?: str
     } as UserRecord;
 
     store.dispatch(setReceipient({ receipient: _friend }));
+    setFriends([]);
+
     navigate('ActionsPaymentDetails', { page: route?.params?.page });
   };
 
