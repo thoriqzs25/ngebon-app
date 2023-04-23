@@ -33,4 +33,5 @@ export type DebtReceivableType = {
   createdAt: Date;
   type: string;
   status: string;
+  debtId: string;
 };

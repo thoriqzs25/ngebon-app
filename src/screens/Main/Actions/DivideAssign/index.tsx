@@ -44,7 +44,7 @@ const AssignCard = ({
   };
 
   const getDummyImg = async () => {
-    const img = await getDownloadURL(ref(getStorage(app), 'images/tree_1.webp'));
+    const img = await getDownloadURL(ref(storage, 'images/tree_1.webp'));
     setDummyImg(img);
   };
 

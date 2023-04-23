@@ -5,11 +5,13 @@ import {
   ItemDebtors,
   RecordDebtDocument,
 } from '@src/types/collection/debtsCollection';
-import { Timestamp, collection, doc, getDoc, serverTimestamp, setDoc, updateDoc } from 'firebase/firestore';
+import { Timestamp, collection, doc, getDoc, orderBy, serverTimestamp, setDoc, updateDoc } from 'firebase/firestore';
 import { db } from 'firbaseConfig';
 import { getUserDebtsByUsername, writeUserDebt, writeUserDebtDivide } from './user_debtCollection';
 import { DivideReducerState, ItemDivide } from '@src/types/states/divide';
 import { UserDebtsDocument } from '@src/types/collection/users_debtsCollection';
+import { ref } from 'firebase/storage';
+import { storage } from 'firbaseConfig';
 
 export const createRecordDebt = async (recordRedux: RecordReducerState) => {
   const receipientUser = await getUserDebtsByUsername(recordRedux.receipient?.username!!);
@@ -109,7 +111,14 @@ export const createDivideDebt = async (divideRedux: DivideReducerState, recordRe
 };
 
 export const getDebtById = async (debtId: string, username: string) => {
-  type ReturnDebt = { totalAmount: string; username: string; createdAt: Date; type: string; status: string };
+  type ReturnDebt = {
+    totalAmount: string;
+    username: string;
+    createdAt: Date;
+    type: string;
+    status: string;
+    debtId: string;
+  };
 
   const debtType = debtId.split('_')[0];
 
@@ -127,6 +136,7 @@ export const getDebtById = async (debtId: string, username: string) => {
       createdAt: date.toDate(),
       type: 'Debt',
       status: _debts?.status,
+      debtId: debtId,
     } as ReturnDebt;
   }
 
@@ -148,12 +158,20 @@ export const getDebtById = async (debtId: string, username: string) => {
       createdAt: date.toDate(),
       type: 'Debt',
       status: _status,
+      debtId: debtId,
     } as ReturnDebt;
   }
 };
 
 export const getReceivableById = async (debtId: string, username: string) => {
-  type ReturnReceivable = { totalAmount: string; username: string; createdAt: Date; type: string; status: string };
+  type ReturnReceivable = {
+    totalAmount: string;
+    username: string;
+    createdAt: Date;
+    type: string;
+    status: string;
+    debtId: string;
+  };
   const debtType = debtId.split('_')[0];
 
   const data = (await getDoc(doc(db, 'debts', `${debtId}`)).then((res) => {
@@ -171,6 +189,7 @@ export const getReceivableById = async (debtId: string, username: string) => {
         createdAt: date.toDate(),
         type: 'Receivable',
         status: _debts?.status,
+        debtId: debtId,
       },
     ] as ReturnReceivable[];
   }
@@ -187,6 +206,7 @@ export const getReceivableById = async (debtId: string, username: string) => {
         createdAt: date.toDate(),
         type: 'Receivable',
         status: dts?.status,
+        debtId: debtId,
       });
     });
 
@@ -222,4 +242,44 @@ export const getAllUserDebtReceivable = async (username: string) => {
     totalReceivable: data?.totalReceivable,
     receivables: _receivables,
   };
+};
+
+export const acceptRequest = async (debtId: string, username: string) => {
+  const _types = debtId.split('_')[0];
+
+  if (_types === 'record') {
+    await updateDoc(doc(db, 'debts', `${debtId}`), {
+      'recordDebt.status': 'waiting',
+    });
+  }
+
+  if (_types === 'divide') {
+    await updateDivideStatus(debtId, username);
+    // orderBy
+    // const debtDocRef = ref(storage, 'divideDebt/debtors')
+    // order
+
+    // await updateDoc(doc(db, 'debts', `${debtId}`), {
+    //   'divideDebt.'
+    // })
+  }
+};
+
+const updateDivideStatus = async (debtId: string, username: string) => {
+  const debtDoc = (await getDoc(doc(db, 'debts', `${debtId}`)).then((res) => res.data())) as DebtDocument;
+  // const debtorObj = debtDoc.divideDebt?.debtors.find((debtor) => debtor.username === username);
+
+  // if (debtorObj && debtorObj.status) {
+  //   debtorObj.status = 'waiting';
+  // }
+  debtDoc.divideDebt?.debtors.map((debtor) => {
+    if (debtor.username === username) debtor.status = 'waiting';
+  });
+
+  const _debtors = debtDoc.divideDebt?.debtors;
+  const _newDebtors = _debtors ? [..._debtors] : [];
+
+  await updateDoc(doc(db, 'debts', `${debtId}`), {
+    'divideDebt.debtors': _newDebtors,
+  });
 };

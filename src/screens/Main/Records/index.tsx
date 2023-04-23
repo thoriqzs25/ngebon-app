@@ -119,30 +119,12 @@ const Records = ({ route }: { route: RouteProp<{ params: { tab?: 'Debts' | 'Rece
             {tab === 'Debts' &&
               userDebts &&
               userDebts?.map((debt, idx) => {
-                return (
-                  <TransactionCard
-                    key={idx.toString()}
-                    name={debt.username}
-                    amount={debt.totalAmount}
-                    date={debt.createdAt}
-                    type='Debt'
-                    status={debt.status}
-                  />
-                );
+                return <TransactionCard key={idx.toString()} item={debt} />;
               })}
             {tab === 'Receivables' &&
               userReceivables &&
               userReceivables?.map((rec, idx) => {
-                return (
-                  <TransactionCard
-                    key={idx.toString()}
-                    name={rec.username}
-                    amount={rec.totalAmount}
-                    date={rec.createdAt}
-                    type='Receivable'
-                    status={rec.status}
-                  />
-                );
+                return <TransactionCard key={idx.toString()} item={rec} />;
               })}
           </View>
         </View>

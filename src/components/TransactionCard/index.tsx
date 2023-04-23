@@ -9,38 +9,48 @@ import TextTicker from 'react-native-text-ticker';
 import CustomButton from '../input/CustomButton';
 import { useEffect, useState } from 'react';
 import moment from 'moment';
+import { acceptRequest } from '@src/utils/collections/debtCollection';
+import { DebtReceivableType } from '@src/types/collection/debtsCollection';
+import { useSelector } from 'react-redux';
+import { RootState } from '@src/types/states/root';
 
 const TransactionCard = ({
-  name,
-  amount,
-  type = 'Receivable',
-  date,
-  status,
+  // name,
+  // amount,
+  // type = 'Receivable',
+  // date,
+  // status,
+  item,
 }: // status = 'requesting',
 {
-  name: string;
-  amount: string;
-  type?: 'Receivable' | 'Debt' | string;
-  date: Date;
-  status: string;
+  // name: string;
+  // amount: string;
+  // type?: 'Receivable' | 'Debt' | string;
+  // date: Date;
+  // status: string;
+  item: DebtReceivableType;
 }) => {
+  const { username } = useSelector((state: RootState) => state.user);
+
   const [formattedDate, setFormattedDate] = useState<string>('');
 
   useEffect(() => {
-    if (date) {
-      const formattedDate = moment(date).format('MMMM DD  - hh:mm A');
+    if (item.createdAt) {
+      const formattedDate = moment(item.createdAt).format('MMMM DD  - hh:mm A');
       setFormattedDate(formattedDate);
     }
-  }, [date]);
+  }, [item.createdAt]);
 
-  const handleAccept = async () => {};
+  const handleAccept = async () => {
+    await acceptRequest(item.debtId, username!!);
+  };
   const handleDecline = async () => {};
   const handleConfirm = async () => {};
   const handleConfirmPayment = async () => {};
 
   return (
     <View style={styles.container}>
-      {type === 'Receivable' ? <IcGreenCircleArrow /> : <IcRedCircleArrow />}
+      {item.type === 'Receivable' ? <IcGreenCircleArrow /> : <IcRedCircleArrow />}
       <View
         style={{
           marginLeft: 8,
@@ -51,8 +61,11 @@ const TransactionCard = ({
         }}>
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
           <Text
-            style={[styles.detailsText, { color: type === 'Receivable' ? colours.greenNormal : colours.redNormal }]}>
-            {type === 'Receivable' ? 'Receivable' : 'Debt'}
+            style={[
+              styles.detailsText,
+              { color: item.type === 'Receivable' ? colours.greenNormal : colours.redNormal },
+            ]}>
+            {item.type === 'Receivable' ? 'Receivable' : 'Debt'}
           </Text>
           <Text style={[styles.detailsText, { color: 'rgba(0, 0, 0, 0.6)' }]}> | {formattedDate}</Text>
         </View>
@@ -65,32 +78,35 @@ const TransactionCard = ({
             // @ts-ignore
             scroll={'toLeft'}
             repeatSpacer={30}>
-            {type === 'Receivable' ? `Confirm ${name}’s Payment` : `Payment requested by ${name}`}
+            {item.type === 'Receivable'
+              ? `Confirm ${item.username}’s Payment`
+              : `Payment requested by ${item.username}`}
           </TextTicker>
         </View>
 
-        {status === 'requesting' && type === 'Receivable' && (
+        {item.status === 'requesting' && item.type === 'Receivable' && (
           <Text style={[styles.statusText, styles.orange]}>Waiting Confirmation</Text>
         )}
-        {status === 'waiting' && type === 'Receivable' && (
+        {item.status === 'waiting' && item.type === 'Receivable' && (
           <Text style={[styles.statusText, styles.orange]}>Waiting Payment</Text>
         )}
-        {status === 'confirming' && type === 'Receivable' && (
+        {item.status === 'confirming' && item.type === 'Receivable' && (
           <CustomButton text='Confirm' style={[styles.actionButton]} textStyle={{ fontSize: moderateScale(8, 2) }} />
         )}
-        {status === 'confirmed' && type === 'Receivable' && (
+        {item.status === 'confirmed' && item.type === 'Receivable' && (
           <Text style={[styles.statusText, styles.red]}>Declined</Text>
         )}
-        {status === 'declined' && type === 'Receivable' && (
+        {item.status === 'declined' && item.type === 'Receivable' && (
           <Text style={[styles.statusText, styles.gray]}>Confirmed</Text>
         )}
 
-        {status === 'requesting' && type === 'Debt' && (
+        {item.status === 'requesting' && item.type === 'Debt' && (
           <View style={{ flexDirection: 'row' }}>
             <CustomButton
               text='Accept'
               style={[styles.actionButton, { marginRight: 4 }]}
               textStyle={{ fontSize: moderateScale(8, 2) }}
+              onPress={handleAccept}
             />
             <CustomButton
               text='Decline'
@@ -99,27 +115,31 @@ const TransactionCard = ({
             />
           </View>
         )}
-        {status === 'waiting' && type === 'Debt' && (
+        {item.status === 'waiting' && item.type === 'Debt' && (
           <CustomButton
             text='Confirm Payment'
             style={[styles.actionButton]}
             textStyle={{ fontSize: moderateScale(8, 2) }}
           />
         )}
-        {status === 'confirming' && type === 'Debt' && (
+        {item.status === 'confirming' && item.type === 'Debt' && (
           <Text style={[styles.statusText, styles.orange]}>Pending Confirmation</Text>
         )}
-        {status === 'confirmed' && type === 'Debt' && <Text style={[styles.statusText, styles.gray]}>Confirmed</Text>}
-        {status === 'declined' && type === 'Debt' && <Text style={[styles.statusText, styles.gray]}>Confirmed</Text>}
+        {item.status === 'confirmed' && item.type === 'Debt' && (
+          <Text style={[styles.statusText, styles.gray]}>Confirmed</Text>
+        )}
+        {item.status === 'declined' && item.type === 'Debt' && (
+          <Text style={[styles.statusText, styles.gray]}>Confirmed</Text>
+        )}
       </View>
       <View style={{ marginLeft: 'auto', paddingBottom: 4 }}>
         <Text
           style={{
-            color: type === 'Receivable' ? colours.greenNormal : colours.redNormal,
+            color: item.type === 'Receivable' ? colours.greenNormal : colours.redNormal,
             fontFamily: 'dm-500',
             fontSize: moderateScale(12, 2),
           }}>
-          Rp{amount.replace(/\B(?=(\d{3})+(?!\d))/g, '.')}
+          Rp{item.totalAmount.replace(/\B(?=(\d{3})+(?!\d))/g, '.')}
         </Text>
       </View>
     </View>
@@ -146,7 +166,9 @@ const styles = StyleSheet.create({
   },
   actionButton: {
     paddingVertical: 0,
-    width: 80,
+    // width: 80,
+    minWidth: 80,
+    maxWidth: 120,
   },
   statusText: {
     fontFamily: 'dm',

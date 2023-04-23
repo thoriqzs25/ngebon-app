@@ -74,16 +74,7 @@ const Home = () => {
             <Text style={{ fontFamily: 'dm-500', fontSize: moderateScale(16, 2) }}>Recent</Text>
             {_sorted &&
               _sorted.map((val, idx) => {
-                return (
-                  <TransactionCard
-                    key={idx.toString()}
-                    name={val.username}
-                    amount={val.totalAmount}
-                    date={val.createdAt}
-                    type={val.type}
-                    status={val.status}
-                  />
-                );
+                return <TransactionCard key={idx.toString()} item={val} />;
               })}
           </View>
         </View>

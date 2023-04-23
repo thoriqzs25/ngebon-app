@@ -10,7 +10,7 @@ import { RootState } from '@src/types/states/root';
 import { checkUserRegistered, checkUsernameRegistered } from '@src/utils/collections/userCollection';
 import { createEmptyDocument } from '@src/utils/collections/user_debtCollection';
 import colours from '@src/utils/colours';
-import { app, db } from 'firbaseConfig';
+import { app, db, storage } from 'firbaseConfig';
 import { addDoc, collection, doc, getDoc, getDocs, serverTimestamp, setDoc, updateDoc } from 'firebase/firestore';
 import { getDownloadURL, getStorage, ref } from 'firebase/storage';
 import React, { useEffect, useState } from 'react';
@@ -60,7 +60,7 @@ const UserRegistration = () => {
   const getDummyImg = async () => {
     //  const spaceRef = ref(storage, 'images/space.jpg');
     // const imageRef = spaceRef.parent;
-    const img = await getDownloadURL(ref(getStorage(app), 'images/test.jpg'));
+    const img = await getDownloadURL(ref(storage, 'images/test.jpg'));
     console.log('line 46', img);
     setDummyImg(img);
   };
