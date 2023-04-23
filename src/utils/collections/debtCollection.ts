@@ -244,36 +244,39 @@ export const getAllUserDebtReceivable = async (username: string) => {
   };
 };
 
-export const acceptRequest = async (debtId: string, username: string) => {
+// export const acceptRequest = async (debtId: string, username: string) => {
+//   const _types = debtId.split('_')[0];
+
+//   if (_types === 'record') {
+//     await updateDoc(doc(db, 'debts', `${debtId}`), {
+//       'recordDebt.status': 'waiting',
+//     });
+//   }
+
+//   if (_types === 'divide') {
+//     await updateDivideStatus(debtId, username, 'waiting');
+//   }
+// };
+
+export const updateStatus = async (debtId: string, username: string, status: string) => {
   const _types = debtId.split('_')[0];
 
   if (_types === 'record') {
     await updateDoc(doc(db, 'debts', `${debtId}`), {
-      'recordDebt.status': 'waiting',
+      'recordDebt.status': status,
     });
   }
 
   if (_types === 'divide') {
-    await updateDivideStatus(debtId, username);
-    // orderBy
-    // const debtDocRef = ref(storage, 'divideDebt/debtors')
-    // order
-
-    // await updateDoc(doc(db, 'debts', `${debtId}`), {
-    //   'divideDebt.'
-    // })
+    await updateDivideStatus(debtId, username, status);
   }
 };
 
-const updateDivideStatus = async (debtId: string, username: string) => {
+const updateDivideStatus = async (debtId: string, username: string, status: string) => {
   const debtDoc = (await getDoc(doc(db, 'debts', `${debtId}`)).then((res) => res.data())) as DebtDocument;
-  // const debtorObj = debtDoc.divideDebt?.debtors.find((debtor) => debtor.username === username);
 
-  // if (debtorObj && debtorObj.status) {
-  //   debtorObj.status = 'waiting';
-  // }
   debtDoc.divideDebt?.debtors.map((debtor) => {
-    if (debtor.username === username) debtor.status = 'waiting';
+    if (debtor.username === username) debtor.status = status;
   });
 
   const _debtors = debtDoc.divideDebt?.debtors;

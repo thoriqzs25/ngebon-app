@@ -9,27 +9,12 @@ import TextTicker from 'react-native-text-ticker';
 import CustomButton from '../input/CustomButton';
 import { useEffect, useState } from 'react';
 import moment from 'moment';
-import { acceptRequest } from '@src/utils/collections/debtCollection';
+import { updateStatus } from '@src/utils/collections/debtCollection';
 import { DebtReceivableType } from '@src/types/collection/debtsCollection';
 import { useSelector } from 'react-redux';
 import { RootState } from '@src/types/states/root';
 
-const TransactionCard = ({
-  // name,
-  // amount,
-  // type = 'Receivable',
-  // date,
-  // status,
-  item,
-}: // status = 'requesting',
-{
-  // name: string;
-  // amount: string;
-  // type?: 'Receivable' | 'Debt' | string;
-  // date: Date;
-  // status: string;
-  item: DebtReceivableType;
-}) => {
+const TransactionCard = ({ item }: { item: DebtReceivableType }) => {
   const { username } = useSelector((state: RootState) => state.user);
 
   const [formattedDate, setFormattedDate] = useState<string>('');
@@ -42,11 +27,17 @@ const TransactionCard = ({
   }, [item.createdAt]);
 
   const handleAccept = async () => {
-    await acceptRequest(item.debtId, username!!);
+    await updateStatus(item.debtId, username!!, 'waiting');
   };
-  const handleDecline = async () => {};
-  const handleConfirm = async () => {};
-  const handleConfirmPayment = async () => {};
+  const handleDecline = async () => {
+    await updateStatus(item.debtId, username!!, 'declined');
+  };
+  const handleConfirm = async () => {
+    await updateStatus(item.debtId, username!!, 'confirmed');
+  };
+  const handleConfirmPayment = async () => {
+    await updateStatus(item.debtId, username!!, 'confirming');
+  };
 
   return (
     <View style={styles.container}>
@@ -91,13 +82,18 @@ const TransactionCard = ({
           <Text style={[styles.statusText, styles.orange]}>Waiting Payment</Text>
         )}
         {item.status === 'confirming' && item.type === 'Receivable' && (
-          <CustomButton text='Confirm' style={[styles.actionButton]} textStyle={{ fontSize: moderateScale(8, 2) }} />
+          <CustomButton
+            text='Confirm'
+            style={[styles.actionButton]}
+            textStyle={{ fontSize: moderateScale(8, 2) }}
+            onPress={handleConfirm}
+          />
         )}
         {item.status === 'confirmed' && item.type === 'Receivable' && (
-          <Text style={[styles.statusText, styles.red]}>Declined</Text>
+          <Text style={[styles.statusText, styles.gray]}>Confirmed</Text>
         )}
         {item.status === 'declined' && item.type === 'Receivable' && (
-          <Text style={[styles.statusText, styles.gray]}>Confirmed</Text>
+          <Text style={[styles.statusText, styles.red]}>Declined</Text>
         )}
 
         {item.status === 'requesting' && item.type === 'Debt' && (
@@ -112,6 +108,7 @@ const TransactionCard = ({
               text='Decline'
               style={[styles.actionButton, { backgroundColor: colours.redNormal }]}
               textStyle={{ fontSize: moderateScale(8, 2) }}
+              onPress={handleDecline}
             />
           </View>
         )}
@@ -120,6 +117,7 @@ const TransactionCard = ({
             text='Confirm Payment'
             style={[styles.actionButton]}
             textStyle={{ fontSize: moderateScale(8, 2) }}
+            onPress={handleConfirmPayment}
           />
         )}
         {item.status === 'confirming' && item.type === 'Debt' && (
@@ -129,7 +127,7 @@ const TransactionCard = ({
           <Text style={[styles.statusText, styles.gray]}>Confirmed</Text>
         )}
         {item.status === 'declined' && item.type === 'Debt' && (
-          <Text style={[styles.statusText, styles.gray]}>Confirmed</Text>
+          <Text style={[styles.statusText, styles.red]}>Declined</Text>
         )}
       </View>
       <View style={{ marginLeft: 'auto', paddingBottom: 4 }}>
