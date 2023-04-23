@@ -4,7 +4,11 @@ import CustomButton from '@src/components/input/CustomButton';
 import { DebtReceivableType } from '@src/types/collection/debtsCollection';
 import { UserDebtsDocument } from '@src/types/collection/users_debtsCollection';
 import { RootState } from '@src/types/states/root';
-import { getAllUserDebtReceivable, getDebtById, getReceivableById } from '@src/utils/collections/debtCollection';
+import {
+  getAllUserDebtReceivable,
+  getDebtByIdReturnDebt,
+  getReceivableByIdReturnReceivable,
+} from '@src/utils/collections/debtCollection';
 import { getUserDebtsByUsername } from '@src/utils/collections/user_debtCollection';
 import colours from '@src/utils/colours';
 import { IS_ANDROID } from '@src/utils/deviceDimensions';

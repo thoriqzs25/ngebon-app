@@ -29,6 +29,28 @@ const RecordFriend = ({ route }: { route: RouteProp<{ params: { prevInputs: Item
     if (data) setFriends(data);
   };
 
+  const handleSelect = (friend: UserDocument) => {
+    let newRecords: ItemRecord[] = [];
+    const _friend = {
+      avatar: friend.avatar,
+      email: friend.email,
+      name: friend.name,
+      username: friend.username,
+      payments: friend.payments,
+    } as UserRecord;
+
+    if (!!prevRecordList && prevRecordList.length > 0) {
+      newRecords = [...prevRecordList, { user: _friend, amount: '', note: '' }];
+      prevRecordList.map((record, idx) => {
+        if (record.user.username === friend.username) {
+          newRecords = [...prevRecordList];
+          return;
+        }
+      });
+    } else newRecords = [{ user: _friend, amount: '', note: '' }];
+    navigate('RecordPaymentAmount', { prevInputs: newRecords });
+  };
+
   useFocusEffect(
     useCallback(() => {
       getFriends();
@@ -51,38 +73,12 @@ const RecordFriend = ({ route }: { route: RouteProp<{ params: { prevInputs: Item
           <Text style={[styles.dmBold, { fontSize: moderateScale(16, 2), marginVertical: 8 }]}>Choose a Person</Text>
           <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={true}>
             <Text style={[styles.dmBold, { fontSize: moderateScale(14, 2), marginBottom: 8, marginTop: 4 }]}>You</Text>
-            <UserCard onPress={() => null} user={user} />
+            <UserCard user={user} onPress={() => handleSelect(user as UserDocument)} />
             <Text style={[styles.dmBold, { fontSize: moderateScale(14, 2), marginBottom: 8 }]}>Friends</Text>
             <AddFriendCard onPress={() => navigate('AddFriend')} />
             {friends &&
               friends.map((friend, idx) => {
-                return (
-                  <UserCard
-                    key={idx}
-                    onPress={() => {
-                      let newRecords: ItemRecord[] = [];
-                      const _friend = {
-                        avatar: friend.avatar,
-                        email: friend.email,
-                        name: friend.name,
-                        username: friend.username,
-                        payments: friend.payments,
-                      } as UserRecord;
-
-                      if (!!prevRecordList && prevRecordList.length > 0) {
-                        newRecords = [...prevRecordList, { user: _friend, amount: '', note: '' }];
-                        prevRecordList.map((record, idx) => {
-                          if (record.user.username === friend.username) {
-                            newRecords = [...prevRecordList];
-                            return;
-                          }
-                        });
-                      } else newRecords = [{ user: _friend, amount: '', note: '' }];
-                      navigate('RecordPaymentAmount', { prevInputs: newRecords });
-                    }}
-                    user={friend}
-                  />
-                );
+                return <UserCard key={idx} onPress={() => handleSelect(friend)} user={friend} />;
               })}
           </ScrollView>
         </View>

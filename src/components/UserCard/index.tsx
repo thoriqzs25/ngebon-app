@@ -1,7 +1,7 @@
 import { navigate } from '@src/navigation';
 import colours from '@src/utils/colours';
 import React, { useState } from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleProp, StyleSheet } from 'react-native';
 import { Text, View } from 'react-native';
 import { TouchableHighlight } from 'react-native-gesture-handler';
 import { moderateScale } from 'react-native-size-matters';
@@ -16,12 +16,14 @@ const UserCard = ({
   isChecked = false,
   onCheckChanged,
   user,
+  style,
 }: {
   onPress?: () => void;
   withCheckBox?: boolean;
   isChecked?: boolean;
   onCheckChanged?: (checked: boolean) => void;
   user: UserDocument | UserReducerState;
+  style?: StyleProp<any>;
 }) => {
   const handleCheckChanged = (checked: boolean) => {
     onCheckChanged && onCheckChanged(checked);
@@ -38,7 +40,7 @@ const UserCard = ({
     <TouchableHighlight
       underlayColor={'rgba(41, 176, 41, 0.1)'}
       onPress={handlePress}
-      style={{ padding: 4, borderRadius: 12, marginBottom: 8 }}>
+      style={[style && style, { padding: 4, borderRadius: 12, marginBottom: 8 }]}>
       <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center' }}>
         <ImageView
           name='tree-1'

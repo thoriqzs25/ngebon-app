@@ -1,5 +1,7 @@
 import { ItemRecord, RecordReducerState } from '@src/types/states/record';
 import {
+  DebtData,
+  DebtDoc,
   DebtDocument,
   DebtReceivableType,
   ItemDebtors,
@@ -110,7 +112,7 @@ export const createDivideDebt = async (divideRedux: DivideReducerState, recordRe
   });
 };
 
-export const getDebtById = async (debtId: string, username: string) => {
+export const getDebtByIdReturnDebt = async (debtId: string, username: string) => {
   type ReturnDebt = {
     totalAmount: string;
     username: string;
@@ -163,7 +165,7 @@ export const getDebtById = async (debtId: string, username: string) => {
   }
 };
 
-export const getReceivableById = async (debtId: string, username: string) => {
+export const getReceivableByIdReturnReceivable = async (debtId: string, username: string) => {
   type ReturnReceivable = {
     totalAmount: string;
     username: string;
@@ -223,7 +225,7 @@ export const getAllUserDebtReceivable = async (username: string) => {
   if (data?.debts)
     await Promise.all(
       data?.debts.map(async (debt, idx) => {
-        const data = await getDebtById(debt, username!!);
+        const data = await getDebtByIdReturnDebt(debt, username!!);
         if (data) _debts.push(data);
       })
     );
@@ -231,7 +233,7 @@ export const getAllUserDebtReceivable = async (username: string) => {
   if (data?.receivables)
     await Promise.all(
       data?.receivables.map(async (rec, idx) => {
-        const data = await getReceivableById(rec, username!!);
+        const data = await getReceivableByIdReturnReceivable(rec, username!!);
         if (data) _receivables = [...data, ..._receivables];
       })
     );
@@ -282,4 +284,48 @@ const updateDivideStatus = async (debtId: string, username: string, status: stri
   await updateDoc(doc(db, 'debts', `${debtId}`), {
     'divideDebt.debtors': _newDebtors,
   });
+};
+
+export const getDebtByIdReturnData = async (id: string, username: string) => {
+  const type = id.split('_')[0];
+  let data: DebtData;
+
+  const res = (await getDoc(doc(db, 'debts', `${id}`)).then((res) => res.data())) as DebtDocument;
+
+  const date = res.createdAt as Timestamp;
+  if (type === 'record') {
+    data = {
+      createdAt: date.toDate(),
+      receipient: res.receipient,
+      totalAmount: res.recordDebt?.totalAmount ?? '0',
+      username: username,
+      status: res.recordDebt?.status ?? '',
+      notes: res.recordDebt?.note ?? '',
+    };
+    return data;
+  }
+
+  if (type === 'divide') {
+    let _totalAmount: string = '';
+    let _items: ItemDivide[] = [];
+    let _status: string = '';
+
+    res.divideDebt?.debtors.map((dbt) => {
+      if (dbt.username === username) {
+        _totalAmount = dbt.totalAmount;
+        _items = [...dbt.items];
+        _status = dbt.status;
+      }
+    });
+
+    data = {
+      createdAt: date.toDate(),
+      receipient: res.receipient,
+      totalAmount: _totalAmount,
+      username: username,
+      status: _status,
+      items: _items,
+    };
+    return data;
+  }
 };

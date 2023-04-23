@@ -13,6 +13,7 @@ import AddPaymentDetails from '@src/screens/Main/Profile/PaymentDetails/AddPayme
 import RecordPaymentAmount from '@src/screens/Main/Actions/RecordPaymentAmount';
 import ActionsPaymentDetails from '@src/screens/Main/Actions/ActionsPaymentDetails';
 import ActionsConfirmation from '@src/screens/Main/Actions/ActionsConfirmation';
+import DebtDetails from '@src/screens/Main/Records/DebtDetails';
 
 const Main = createStackNavigator<Record<string, any>>();
 
@@ -22,6 +23,7 @@ const MainStackNavigator = () => {
       <Main.Screen name={'TabNavigator'} component={TabNavigator} options={{ headerShown: false }} />
 
       {/* Records */}
+      <Main.Screen name={'DebtDetails'} component={DebtDetails} options={{ headerShown: false }} />
 
       {/* Record/Divide */}
       <Main.Screen name={'Actions'} component={Actions} options={{ headerShown: false }} />

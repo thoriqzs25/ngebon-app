@@ -13,6 +13,8 @@ import { updateStatus } from '@src/utils/collections/debtCollection';
 import { DebtReceivableType } from '@src/types/collection/debtsCollection';
 import { useSelector } from 'react-redux';
 import { RootState } from '@src/types/states/root';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+import { navigate } from '@src/navigation';
 
 const TransactionCard = ({ item }: { item: DebtReceivableType }) => {
   const { username } = useSelector((state: RootState) => state.user);
@@ -45,7 +47,17 @@ const TransactionCard = ({ item }: { item: DebtReceivableType }) => {
 
   return (
     <View style={styles.container}>
-      {item.type === 'Receivable' ? <IcGreenCircleArrow /> : <IcRedCircleArrow />}
+      <TouchableOpacity
+        activeOpacity={0.5}
+        onPress={() =>
+          navigate('DebtDetails', {
+            debtId: item.debtId,
+            isDebtOrReceivable: item.type,
+            username: item.type === 'Receivable' ? item.username : username,
+          })
+        }>
+        {item.type === 'Receivable' ? <IcGreenCircleArrow /> : <IcRedCircleArrow />}
+      </TouchableOpacity>
       <View
         style={{
           marginLeft: 8,

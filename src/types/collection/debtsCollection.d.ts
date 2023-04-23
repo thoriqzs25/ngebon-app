@@ -35,3 +35,18 @@ export type DebtReceivableType = {
   status: string;
   debtId: string;
 };
+
+type DebtDoc = {
+  type: string;
+  data: DebtData;
+};
+
+export type DebtData = {
+  createdAt: Date;
+  username: string;
+  totalAmount: string;
+  items?: ItemDivide[];
+  notes?: string;
+  receipient: UserDocument;
+  status: string;
+};
