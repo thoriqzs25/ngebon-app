@@ -8,7 +8,7 @@ import { globalStyle } from '@src/utils/globalStyles';
 import { moderateScale, moderateVerticalScale } from 'react-native-size-matters';
 import GreenSection from './GreenSection';
 import TransactionCard from '@src/components/TransactionCard';
-import { ScrollView } from 'react-native-gesture-handler';
+import { RefreshControl, ScrollView } from 'react-native-gesture-handler';
 import CustomButton from '@src/components/input/CustomButton';
 import ActionSheet, { ActionSheetCustom } from '@alessiocancian/react-native-actionsheet';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
@@ -26,8 +26,17 @@ import { DebtReceivableType } from '@src/types/collection/debtsCollection';
 const Home = () => {
   const { auth, user } = useSelector((state: RootState) => state);
 
-  const [userDebts, totalDebts, userReceivables, totalReceivables] = useGetAllDebtReceivable(user.username!!);
+  const [userDebts, totalDebts, userReceivables, totalReceivables, getData] = useGetAllDebtReceivable(user.username!!);
   const [_sorted, setSorted] = useState<DebtReceivableType[]>([]);
+  const [refreshing, setRefreshing] = useState<boolean>(false);
+
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    getData();
+    setTimeout(() => {
+      setRefreshing(false);
+    }, 2000);
+  }, []);
 
   useEffect(() => {
     if (user?.name === undefined) {
@@ -46,7 +55,8 @@ const Home = () => {
       <ScrollView
         stickyHeaderIndices={[0]}
         contentInsetAdjustmentBehavior='automatic'
-        contentContainerStyle={{ paddingBottom: moderateVerticalScale(160, -1.5) }}>
+        contentContainerStyle={{ paddingBottom: moderateVerticalScale(160, -1.5) }}
+        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} enabled={true} />}>
         <HomeHeader />
         <View style={[globalStyle.paddingHorizontal, { paddingTop: 14 }]}>
           <Text style={styles.name}>
@@ -74,7 +84,9 @@ const Home = () => {
             <Text style={{ fontFamily: 'dm-500', fontSize: moderateScale(16, 2) }}>Recent</Text>
             {_sorted &&
               _sorted.map((val, idx) => {
-                return <TransactionCard key={idx.toString()} item={val} />;
+                const { status } = val;
+                if (status !== 'confirmed' && status !== 'declined')
+                  return <TransactionCard key={idx.toString()} item={val} />;
               })}
           </View>
         </View>

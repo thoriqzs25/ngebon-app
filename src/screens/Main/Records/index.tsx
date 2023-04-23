@@ -12,7 +12,7 @@ import { globalStyle } from '@src/utils/globalStyles';
 import useGetAllDebtReceivable from '@src/utils/hooks/useGetAllDebtReceivable';
 import React, { useCallback, useEffect, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
+import { RefreshControl, ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { moderateScale, moderateVerticalScale } from 'react-native-size-matters';
 import { useSelector } from 'react-redux';
@@ -22,8 +22,17 @@ const Records = ({ route }: { route: RouteProp<{ params: { tab?: 'Debts' | 'Rece
 
   const [tab, setTab] = useState<'Debts' | 'Receivables'>(route?.params?.tab ?? 'Debts');
   const [subTab, setSubTab] = useState<'On Going' | 'History'>('On Going');
+  const [refreshing, setRefreshing] = useState<boolean>(false);
 
-  const [userDebts, totalDebts, userReceivables, totalReceivables] = useGetAllDebtReceivable(username!!);
+  const [userDebts, totalDebts, userReceivables, totalReceivables, getData] = useGetAllDebtReceivable(username!!);
+
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    getData();
+    setTimeout(() => {
+      setRefreshing(false);
+    }, 2000);
+  }, []);
 
   useFocusEffect(
     useCallback(() => {
@@ -35,7 +44,9 @@ const Records = ({ route }: { route: RouteProp<{ params: { tab?: 'Debts' | 'Rece
     <SafeAreaView style={{ flex: 1 }}>
       <ScrollView
         contentContainerStyle={{ paddingBottom: moderateVerticalScale(120, -1.5) }}
-        contentInsetAdjustmentBehavior='automatic'>
+        contentInsetAdjustmentBehavior='automatic'
+        style={{ flex: 1 }}
+        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} enabled={true} />}>
         <View style={[globalStyle.paddingHorizontal, IS_ANDROID && globalStyle.paddingTop]}>
           <Text style={[styles.pageTitle, { marginBottom: 20 }]}>Records</Text>
           <View
@@ -133,7 +144,13 @@ const Records = ({ route }: { route: RouteProp<{ params: { tab?: 'Debts' | 'Rece
               userReceivables?.map((rec, idx) => {
                 const { status, debtId } = rec;
 
-                return <TransactionCard key={idx.toString()} item={rec} />;
+                if (subTab === 'History') {
+                  if (status === 'declined' || status === 'confirmed')
+                    return <TransactionCard key={idx.toString()} item={rec} />;
+                } else {
+                  if (status === 'requesting' || status === 'waiting' || status === 'confirming')
+                    return <TransactionCard key={idx.toString()} item={rec} />;
+                }
               })}
           </View>
         </View>

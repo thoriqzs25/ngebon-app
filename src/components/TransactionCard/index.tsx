@@ -27,16 +27,20 @@ const TransactionCard = ({ item }: { item: DebtReceivableType }) => {
   }, [item.createdAt]);
 
   const handleAccept = async () => {
-    await updateStatus(item.debtId, username!!, 'waiting');
+    if (item.type === 'Receivable') await updateStatus(item.debtId, item.username!!, 'waiting');
+    else await updateStatus(item.debtId, username!!, 'waiting');
   };
   const handleDecline = async () => {
-    await updateStatus(item.debtId, username!!, 'declined');
+    if (item.type === 'Receivable') await updateStatus(item.debtId, item.username!!, 'declined');
+    else await updateStatus(item.debtId, username!!, 'declined');
   };
   const handleConfirm = async () => {
-    await updateStatus(item.debtId, username!!, 'confirmed');
+    if (item.type === 'Receivable') await updateStatus(item.debtId, item.username!!, 'confirmed');
+    else await updateStatus(item.debtId, username!!, 'confirmed');
   };
   const handleConfirmPayment = async () => {
-    await updateStatus(item.debtId, username!!, 'confirming');
+    if (item.type === 'Receivable') await updateStatus(item.debtId, item.username!!, 'confirming');
+    else await updateStatus(item.debtId, username!!, 'confirming');
   };
 
   return (

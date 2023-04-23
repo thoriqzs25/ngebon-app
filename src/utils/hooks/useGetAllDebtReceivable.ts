@@ -12,8 +12,8 @@ const useGetAllDebtReceivable = (username: string) => {
   const getData = async () => {
     const data = await getAllUserDebtReceivable(username);
 
-    setTotalDebts(data?.totalDebt ?? '0');
-    setTotalReceivables(data?.totalReceivable ?? '0');
+    setTotalDebts(data.totalDebt);
+    setTotalReceivables(data.totalReceivable);
     setUserDebts(data.debts);
     setUserReceivables(data.receivables);
   };
@@ -24,11 +24,12 @@ const useGetAllDebtReceivable = (username: string) => {
     }, [])
   );
 
-  return [debts, totalDebts, receivables, totalReceivables] as [
+  return [debts, totalDebts, receivables, totalReceivables, getData] as [
     DebtReceivableType[],
     string,
     DebtReceivableType[],
-    string
+    string,
+    () => void
   ];
 };
 

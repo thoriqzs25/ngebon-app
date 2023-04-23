@@ -236,27 +236,24 @@ export const getAllUserDebtReceivable = async (username: string) => {
       })
     );
 
+  // NEED TO FIND ANOTHER APPROACH
+  let _finishedTotalDebt: number = 0;
+  let _finishedTotalReceivable: number = 0;
+  _debts.map((d) => {
+    if (d.status === 'confirmed' || d.status === 'declined') _finishedTotalDebt += parseInt(d.totalAmount);
+  });
+  _receivables.map((d) => {
+    if (d.status === 'confirmed' || d.status === 'declined') _finishedTotalReceivable += parseInt(d.totalAmount);
+  });
+  // ^^^
+
   return {
-    totalDebt: data?.totalDebt,
+    totalDebt: (parseInt(data?.totalDebt ?? '0') - _finishedTotalDebt).toString(),
     debts: _debts,
-    totalReceivable: data?.totalReceivable,
+    totalReceivable: (parseInt(data?.totalReceivable ?? '0') - _finishedTotalReceivable).toString(),
     receivables: _receivables,
   };
 };
-
-// export const acceptRequest = async (debtId: string, username: string) => {
-//   const _types = debtId.split('_')[0];
-
-//   if (_types === 'record') {
-//     await updateDoc(doc(db, 'debts', `${debtId}`), {
-//       'recordDebt.status': 'waiting',
-//     });
-//   }
-
-//   if (_types === 'divide') {
-//     await updateDivideStatus(debtId, username, 'waiting');
-//   }
-// };
 
 export const updateStatus = async (debtId: string, username: string, status: string) => {
   const _types = debtId.split('_')[0];
