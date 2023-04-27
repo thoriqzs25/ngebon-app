@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "454004759004-if37fqse9j813lcthn2r54ae17mpjfc8.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ngebon",
+            "certificate_hash": "523053189e4cf0ca8a04cb5eda9403135475a1a0"
+          }
+        },
+        {
           "client_id": "454004759004-q7v66u112c27agpp1k006u7h0emh00m2.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
@@ -29,6 +37,9 @@
       "api_key": [
         {
           "current_key": "AIzaSyDWPvVazyfSJsm4Nfsz0PvBTakMvGptmPE"
+        },
+        {
+          "current_key": "AIzaSyBBiW34fmwuLl0B-LKnUL25hUh_efRO670"
         }
       ],
       "services": {
@@ -39,10 +50,57 @@
               "client_type": 3
             },
             {
-              "client_id": "454004759004-ig5hqa984es3beoams3ir4lhp8ks273j.apps.googleusercontent.com",
+              "client_id": "454004759004-e3b2k71pavhu3o37ts0ffcbpmm94k0th.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.ngebon"
+                "bundle_id": "ngebon.app.com"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:454004759004:android:f7ad358ba4c2411eb6d719",
+        "android_client_info": {
+          "package_name": "ngebon.app.com"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "454004759004-u235okt4rtgq8el89t65drfude5srpcv.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "ngebon.app.com",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "454004759004-0apkv1ci2e0pv0ugrp87o6bnpp9q15j5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDWPvVazyfSJsm4Nfsz0PvBTakMvGptmPE"
+        },
+        {
+          "current_key": "AIzaSyBBiW34fmwuLl0B-LKnUL25hUh_efRO670"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "454004759004-0apkv1ci2e0pv0ugrp87o6bnpp9q15j5.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "454004759004-e3b2k71pavhu3o37ts0ffcbpmm94k0th.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "ngebon.app.com"
               }
             }
           ]

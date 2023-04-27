@@ -3,17 +3,19 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>454004759004-ig5hqa984es3beoams3ir4lhp8ks273j.apps.googleusercontent.com</string>
+	<string>454004759004-e3b2k71pavhu3o37ts0ffcbpmm94k0th.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.454004759004-ig5hqa984es3beoams3ir4lhp8ks273j</string>
+	<string>com.googleusercontent.apps.454004759004-e3b2k71pavhu3o37ts0ffcbpmm94k0th</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>454004759004-if37fqse9j813lcthn2r54ae17mpjfc8.apps.googleusercontent.com</string>
 	<key>API_KEY</key>
-	<string>AIzaSyCug-RDRbB0rei5qkKpJThZaAF0CpDxNvw</string>
+	<string>AIzaSyBB0Yo_sUB-belm_BuIQ-KkSw72pAFJJSQ</string>
 	<key>GCM_SENDER_ID</key>
 	<string>454004759004</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.ngebon</string>
+	<string>ngebon.app.com</string>
 	<key>PROJECT_ID</key>
 	<string>ngebon-app</string>
 	<key>STORAGE_BUCKET</key>
@@ -29,6 +31,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:454004759004:ios:4d6dfd9e2253d9cbb6d719</string>
+	<string>1:454004759004:ios:00afd5af7807337eb6d719</string>
 </dict>
 </plist>

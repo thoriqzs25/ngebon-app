@@ -32,7 +32,7 @@ const Home = () => {
 
   const onRefresh = useCallback(() => {
     setRefreshing(true);
-    getData();
+    getData(user.username ?? '');
     setTimeout(() => {
       setRefreshing(false);
     }, 2000);

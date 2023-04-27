@@ -9,8 +9,8 @@ const useGetAllDebtReceivable = (username: string) => {
   const [totalDebts, setTotalDebts] = useState<string>('');
   const [totalReceivables, setTotalReceivables] = useState<string>('');
 
-  const getData = async () => {
-    const data = await getAllUserDebtReceivable(username);
+  const getData = async (uname?: string) => {
+    const data = await getAllUserDebtReceivable(!!uname ? uname : username);
 
     setTotalDebts(data.totalDebt);
     setTotalReceivables(data.totalReceivable);
@@ -29,7 +29,7 @@ const useGetAllDebtReceivable = (username: string) => {
     string,
     DebtReceivableType[],
     string,
-    () => void
+    (uname?: string) => void
   ];
 };
 

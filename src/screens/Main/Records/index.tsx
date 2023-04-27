@@ -32,7 +32,7 @@ const Records = ({ route }: { route: RouteProp<{ params: { tab?: 'Debts' | 'Rece
 
   const onRefresh = useCallback(() => {
     setRefreshing(true);
-    getData();
+    getData(username ?? '');
     setTimeout(() => {
       setRefreshing(false);
     }, 2000);

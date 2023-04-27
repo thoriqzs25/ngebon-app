@@ -38,12 +38,12 @@ const AuthScreen = () => {
 
   const [request, response, promptAsync] = Google.useAuthRequest(
     {
-      androidClientId: '454004759004-if37fqse9j813lcthn2r54ae17mpjfc8.apps.googleusercontent.com',
-      iosClientId: '454004759004-ig5hqa984es3beoams3ir4lhp8ks273j.apps.googleusercontent.com',
+      androidClientId: '454004759004-u235okt4rtgq8el89t65drfude5srpcv.apps.googleusercontent.com',
+      iosClientId: '454004759004-e3b2k71pavhu3o37ts0ffcbpmm94k0th.apps.googleusercontent.com',
       expoClientId: '454004759004-c3l2um169nb33n1mnd1l8peikers2vm0.apps.googleusercontent.com',
     },
     {
-      scheme: 'ngebonapp',
+      scheme: 'ngebon.app.com',
     }
   );
 
