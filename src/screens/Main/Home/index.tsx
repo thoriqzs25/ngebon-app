@@ -22,6 +22,7 @@ import { store } from '@src/redux/store';
 import { setUser } from '@src/redux/actions/user';
 import useGetAllDebtReceivable from '@src/utils/hooks/useGetAllDebtReceivable';
 import { DebtReceivableType } from '@src/types/collection/debtsCollection';
+import { useFocusEffect } from '@react-navigation/native';
 
 const Home = () => {
   const { auth, user } = useSelector((state: RootState) => state);
@@ -39,11 +40,13 @@ const Home = () => {
     }, 2000);
   }, []);
 
-  useEffect(() => {
-    if (user?.name === undefined) {
-      getUser(auth.uid as string);
-    }
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      if (user?.name === undefined) {
+        getUser(auth.uid as string);
+      }
+    }, [])
+  );
 
   useEffect(() => {
     const mixed: DebtReceivableType[] = [...userDebts, ...userReceivables];

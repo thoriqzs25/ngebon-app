@@ -43,7 +43,7 @@ const EditPaymentDetails = ({ route }: { route: RouteProp<{ params: { payment: P
   const [value, setValue] = useState<any>();
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const handleSave = async () => {
+  const handleSave = async (isDelete?: boolean) => {
     setIsLoading(true);
     try {
       const payment = {
@@ -57,11 +57,14 @@ const EditPaymentDetails = ({ route }: { route: RouteProp<{ params: { payment: P
         (p) => p.bankName !== oldPayment?.bankName || p.name !== oldPayment?.name || p.number !== oldPayment?.number
       );
 
-      const newPayments = [payment, ...filteredPayments];
-      console.log('line 56', newPayments);
-
-      store.dispatch(setPayments({ payments: newPayments }));
-      addPayment(newPayments, user.uid!!);
+      if (isDelete) {
+        addPayment(filteredPayments, user.uid!!);
+        store.dispatch(setPayments({ payments: filteredPayments }));
+      } else {
+        const newPayments = [payment, ...filteredPayments];
+        store.dispatch(setPayments({ payments: newPayments }));
+        addPayment(newPayments, user.uid!!);
+      }
       if (canGoBack()) goBack();
     } catch {
       __DEV__ && console.log('line 69');
@@ -110,6 +113,7 @@ const EditPaymentDetails = ({ route }: { route: RouteProp<{ params: { payment: P
             inputStyle={styles.inputStyle}
             style={{ marginBottom: 20 }}
             title='Account Number or Mobile Phone'
+            keyboardType='number-pad'
             value={accNumber}
             setValue={setAccNumber}
             placeholderText='Account Number or Mobile Phone'
@@ -121,7 +125,18 @@ const EditPaymentDetails = ({ route }: { route: RouteProp<{ params: { payment: P
             setValue={setAccName}
             placeholderText='Account Name'
           />
-          <CustomButton style={[styles.button]} text='Save' textStyle={styles.buttonText} onPress={handleSave} />
+          <CustomButton
+            style={[styles.button]}
+            text='Save'
+            textStyle={styles.buttonText}
+            onPress={() => handleSave(false)}
+          />
+          <CustomButton
+            style={[styles.button, { backgroundColor: colours.redNormal, marginTop: 16 }]}
+            text='Delete'
+            textStyle={styles.buttonText}
+            onPress={() => handleSave(true)}
+          />
           {isLoading && (
             <View style={{ marginTop: 40 }}>
               <ActivityIndicator animating={isLoading} />

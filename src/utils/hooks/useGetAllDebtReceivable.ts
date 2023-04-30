@@ -41,8 +41,8 @@ const useGetAllDebtReceivable = (username: string) => {
   }) => {
     setIsLoading(true);
     try {
-      if (type === 'Receivable') await updateStatus(debtId, itemsUsername!!, 'declined');
-      else await updateStatus(debtId, userUsername!!, 'declined');
+      if (type === 'Receivable') await updateStatus(debtId, itemsUsername!!, status);
+      else await updateStatus(debtId, userUsername!!, status);
 
       await getData();
     } catch {

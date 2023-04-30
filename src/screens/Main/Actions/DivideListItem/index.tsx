@@ -118,12 +118,13 @@ const DivideListItem = () => {
               showsVerticalScrollIndicator={false}>
               <View style={{ backgroundColor: colours.white }}>
                 <TextField
-                  titleAlt='Title'
+                  titleAlt='Debt Title'
                   setValue={setTitle}
                   style={{ marginVertical: 12, marginBottom: 16, backgroundColor: colours.white }}
                   inputStyle={{ paddingVertical: 4 }}
                 />
               </View>
+              {inputs.length < 1 && <Text style={{ fontFamily: 'dm-500', color: colours.gray300 }}>Add an item</Text>}
               {inputs.map((value, index) => {
                 if (itemConfirmation.includes(index))
                   return (

@@ -131,7 +131,7 @@ const AuthScreen = () => {
         <Text>{userInfo?.displayName ?? 'nothjing'}</Text>
         {userInfo?.photoURL && <Image source={{ uri: userInfo?.photoURL }} style={{ width: 120, height: 120 }} />}
 
-        <TextField title='email' placeholderText='Masukkan email' setValue={setEmail} />
+        {/* <TextField title='email' placeholderText='Masukkan email' setValue={setEmail} />
         <TextField
           title='password'
           placeholderText='Masukkan password'
@@ -151,14 +151,15 @@ const AuthScreen = () => {
           onPress={() => {
             handleRegister();
           }}
-        />
+        /> */}
         <CustomButton
           text='Google Sign-In'
-          style={{ width: '80%', backgroundColor: colours.gray500 }}
+          style={{ width: '80%', backgroundColor: colours.gray500, marginTop: 40 }}
           onPress={() => {
             promptAsync();
           }}
         />
+        <Text>Version 1.0.5</Text>
       </View>
     </SafeAreaView>
   );

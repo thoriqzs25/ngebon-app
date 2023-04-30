@@ -100,6 +100,7 @@ const AddPaymentDetails = () => {
             inputStyle={styles.inputStyle}
             style={{ marginBottom: 20 }}
             title='Account Number or Mobile Phone'
+            keyboardType='number-pad'
             setValue={setAccNumber}
             placeholderText='Account Number or Mobile Phone'
           />

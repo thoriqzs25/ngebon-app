@@ -10,11 +10,12 @@ import { RootState } from '@src/types/states/root';
 import { checkUserRegistered, checkUsernameRegistered } from '@src/utils/collections/userCollection';
 import { createEmptyDocument } from '@src/utils/collections/user_debtCollection';
 import colours from '@src/utils/colours';
+import { IS_ANDROID } from '@src/utils/deviceDimensions';
 import { app, db, storage } from 'firbaseConfig';
 import { addDoc, collection, doc, getDoc, getDocs, serverTimestamp, setDoc, updateDoc } from 'firebase/firestore';
 import { getDownloadURL, getStorage, ref } from 'firebase/storage';
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { KeyboardAvoidingView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useSelector } from 'react-redux';
 
@@ -71,14 +72,19 @@ const UserRegistration = () => {
 
   return (
     <SafeAreaView style={{ flex: 1, alignItems: 'center', height: '100%' }}>
-      <Text style={[styles.title, { color: colours.greenNormal, marginVertical: 40 }]}>COMPLETE YOUR ACCOUNT</Text>
-      <CustomCarousel />
-      <View style={{ alignItems: 'center', padding: 24 }}>
-        <Text style={[styles.title, { color: colours.greenOld }]}>USER CREDENTIALS</Text>
-        <TextField titleAlt={'Full Name'} style={{ marginBottom: 12 }} setValue={setName} />
-        <TextField titleAlt={'Username'} setValue={setUsername} />
-        <CustomButton text='Next' onPress={handleNextBtn} style={styles.button} />
-      </View>
+      <KeyboardAvoidingView
+        behavior={IS_ANDROID ? 'height' : 'position'}
+        keyboardVerticalOffset={IS_ANDROID ? -70 : -200}
+        style={{ flex: 1 }}>
+        <Text style={[styles.title, { color: colours.greenNormal, marginVertical: 40 }]}>COMPLETE YOUR ACCOUNT</Text>
+        <CustomCarousel />
+        <View style={{ alignItems: 'center', padding: 24 }}>
+          <Text style={[styles.title, { color: colours.greenOld }]}>USER CREDENTIALS</Text>
+          <TextField titleAlt={'Full Name'} style={{ marginBottom: 12 }} setValue={setName} />
+          <TextField titleAlt={'Username'} setValue={setUsername} />
+          <CustomButton text='Next' onPress={handleNextBtn} style={styles.button} />
+        </View>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 };

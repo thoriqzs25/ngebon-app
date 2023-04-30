@@ -1,14 +1,14 @@
 {
   "expo": {
-    "name": "ngebon-app",
+    "name": "Ngebon",
     "scheme": "ngebon.app.com",
     "slug": "ngebon-app",
-    "version": "1.0.4",
+    "version": "1.0.5",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./assets/splash-ngebon.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -18,18 +18,18 @@
     "ios": {
       "supportsTablet": false,
       "bundleIdentifier": "ngebon.app.com",
-      "buildNumber": "9"
+      "buildNumber": "11"
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/icon.png",
         "backgroundColor": "#ffffff"
       },
       "package": "ngebon.app.com",
-      "versionCode": 6
+      "versionCode": 7
     },
     "web": {
-      "favicon": "./assets/favicon.png"
+      "favicon": "./assets/icon.png"
     },
     "extra": {
       "eas": {
