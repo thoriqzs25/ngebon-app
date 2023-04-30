@@ -9,7 +9,6 @@ import TextTicker from 'react-native-text-ticker';
 import CustomButton from '../input/CustomButton';
 import { useEffect, useState } from 'react';
 import moment from 'moment';
-import { updateStatus } from '@src/utils/collections/debtCollection';
 import { DebtReceivableType } from '@src/types/collection/debtsCollection';
 import { useSelector } from 'react-redux';
 import { RootState } from '@src/types/states/root';
@@ -139,7 +138,7 @@ const TransactionCard = ({
         )}
         {item.status === 'waiting' && item.type === 'Debt' && (
           <CustomButton
-            text='Confirm Payment'
+            text='Done!'
             style={[styles.actionButton]}
             textStyle={{ fontSize: moderateScale(8, 2) }}
             onPress={() => handleUpdateStatus('confirming')}
