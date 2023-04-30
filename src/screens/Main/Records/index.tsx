@@ -15,7 +15,7 @@ import { IS_ANDROID } from '@src/utils/deviceDimensions';
 import { globalStyle } from '@src/utils/globalStyles';
 import useGetAllDebtReceivable from '@src/utils/hooks/useGetAllDebtReceivable';
 import React, { useCallback, useEffect, useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
 import { RefreshControl, ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { moderateScale, moderateVerticalScale } from 'react-native-size-matters';
@@ -28,7 +28,8 @@ const Records = ({ route }: { route: RouteProp<{ params: { tab?: 'Debts' | 'Rece
   const [subTab, setSubTab] = useState<'On Going' | 'History'>('On Going');
   const [refreshing, setRefreshing] = useState<boolean>(false);
 
-  const [userDebts, totalDebts, userReceivables, totalReceivables, getData] = useGetAllDebtReceivable(username!!);
+  const [userDebts, totalDebts, userReceivables, totalReceivables, isLoading, getData, updateDebtReceivableStatus] =
+    useGetAllDebtReceivable(username!!);
 
   const onRefresh = useCallback(() => {
     setRefreshing(true);
@@ -76,6 +77,7 @@ const Records = ({ route }: { route: RouteProp<{ params: { tab?: 'Debts' | 'Rece
               onPress={() => setTab('Receivables')}
             />
           </View>
+
           <View
             style={{
               padding: 20,
@@ -116,6 +118,11 @@ const Records = ({ route }: { route: RouteProp<{ params: { tab?: 'Debts' | 'Rece
                 : totalReceivables.replace(/\B(?=(\d{3})+(?!\d))/g, '.')}
             </Text>
           </View>
+          {isLoading && (
+            <View style={{ marginBottom: 8 }}>
+              <ActivityIndicator animating={isLoading} />
+            </View>
+          )}
           <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 12 }}>
             <TouchableOpacity activeOpacity={0.75} onPress={() => setSubTab('On Going')}>
               <Text style={[styles.subTab, { color: subTab === 'On Going' ? colours.greenNormal : colours.black }]}>
@@ -137,10 +144,14 @@ const Records = ({ route }: { route: RouteProp<{ params: { tab?: 'Debts' | 'Rece
                 const { status, debtId } = debt;
                 if (subTab === 'History') {
                   if (status === 'declined' || status === 'confirmed')
-                    return <TransactionCard key={idx.toString()} item={debt} />;
+                    return (
+                      <TransactionCard key={idx.toString()} item={debt} updateStatus={updateDebtReceivableStatus} />
+                    );
                 } else {
                   if (status === 'requesting' || status === 'waiting' || status === 'confirming')
-                    return <TransactionCard key={idx.toString()} item={debt} />;
+                    return (
+                      <TransactionCard key={idx.toString()} item={debt} updateStatus={updateDebtReceivableStatus} />
+                    );
                 }
               })}
             {tab === 'Receivables' &&
@@ -150,10 +161,14 @@ const Records = ({ route }: { route: RouteProp<{ params: { tab?: 'Debts' | 'Rece
 
                 if (subTab === 'History') {
                   if (status === 'declined' || status === 'confirmed')
-                    return <TransactionCard key={idx.toString()} item={rec} />;
+                    return (
+                      <TransactionCard key={idx.toString()} item={rec} updateStatus={updateDebtReceivableStatus} />
+                    );
                 } else {
                   if (status === 'requesting' || status === 'waiting' || status === 'confirming')
-                    return <TransactionCard key={idx.toString()} item={rec} />;
+                    return (
+                      <TransactionCard key={idx.toString()} item={rec} updateStatus={updateDebtReceivableStatus} />
+                    );
                 }
               })}
           </View>

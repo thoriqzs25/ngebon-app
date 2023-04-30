@@ -1,6 +1,6 @@
 import { DebtReceivableType } from '@src/types/collection/debtsCollection';
 import { useCallback, useEffect, useState } from 'react';
-import { getAllUserDebtReceivable } from '../collections/debtCollection';
+import { getAllUserDebtReceivable, updateStatus } from '../collections/debtCollection';
 import { useFocusEffect } from '@react-navigation/native';
 
 const useGetAllDebtReceivable = (username: string) => {
@@ -8,14 +8,48 @@ const useGetAllDebtReceivable = (username: string) => {
   const [receivables, setUserReceivables] = useState<DebtReceivableType[]>([]);
   const [totalDebts, setTotalDebts] = useState<string>('');
   const [totalReceivables, setTotalReceivables] = useState<string>('');
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const getData = async (uname?: string) => {
-    const data = await getAllUserDebtReceivable(!!uname ? uname : username);
+    setIsLoading(true);
+    try {
+      const data = await getAllUserDebtReceivable(!!uname ? uname : username);
 
-    setTotalDebts(data.totalDebt);
-    setTotalReceivables(data.totalReceivable);
-    setUserDebts(data.debts);
-    setUserReceivables(data.receivables);
+      setTotalDebts(data.totalDebt);
+      setTotalReceivables(data.totalReceivable);
+      setUserDebts(data.debts);
+      setUserReceivables(data.receivables);
+    } catch {
+      __DEV__ && console.log('line 24');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const updateDebtReceivableStatus = async ({
+    type,
+    status,
+    debtId,
+    itemsUsername,
+    userUsername,
+  }: {
+    type: string;
+    status: string;
+    debtId: string;
+    itemsUsername?: string;
+    userUsername?: string;
+  }) => {
+    setIsLoading(true);
+    try {
+      if (type === 'Receivable') await updateStatus(debtId, itemsUsername!!, 'declined');
+      else await updateStatus(debtId, userUsername!!, 'declined');
+
+      await getData();
+    } catch {
+      __DEV__ && console.log('line 37');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   useFocusEffect(
@@ -24,12 +58,26 @@ const useGetAllDebtReceivable = (username: string) => {
     }, [])
   );
 
-  return [debts, totalDebts, receivables, totalReceivables, getData] as [
+  return [debts, totalDebts, receivables, totalReceivables, isLoading, getData, updateDebtReceivableStatus] as [
     DebtReceivableType[],
     string,
     DebtReceivableType[],
     string,
-    (uname?: string) => void
+    boolean,
+    (uname?: string) => void,
+    ({
+      type,
+      status,
+      debtId,
+      itemsUsername,
+      userUsername,
+    }: {
+      type: string;
+      status: string;
+      debtId: string;
+      itemsUsername?: string;
+      userUsername?: string;
+    }) => void
   ];
 };
 

@@ -16,7 +16,25 @@ import { RootState } from '@src/types/states/root';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { navigate } from '@src/navigation';
 
-const TransactionCard = ({ item }: { item: DebtReceivableType }) => {
+const TransactionCard = ({
+  item,
+  updateStatus,
+}: {
+  item: DebtReceivableType;
+  updateStatus?: ({
+    type,
+    status,
+    debtId,
+    itemsUsername,
+    userUsername,
+  }: {
+    type: string;
+    status: string;
+    debtId: string;
+    itemsUsername?: string;
+    userUsername?: string;
+  }) => void;
+}) => {
   const { username } = useSelector((state: RootState) => state.user);
 
   const [formattedDate, setFormattedDate] = useState<string>('');
@@ -28,21 +46,12 @@ const TransactionCard = ({ item }: { item: DebtReceivableType }) => {
     }
   }, [item.createdAt]);
 
-  const handleAccept = async () => {
-    if (item.type === 'Receivable') await updateStatus(item.debtId, item.username!!, 'waiting');
-    else await updateStatus(item.debtId, username!!, 'waiting');
-  };
-  const handleDecline = async () => {
-    if (item.type === 'Receivable') await updateStatus(item.debtId, item.username!!, 'declined');
-    else await updateStatus(item.debtId, username!!, 'declined');
-  };
-  const handleConfirm = async () => {
-    if (item.type === 'Receivable') await updateStatus(item.debtId, item.username!!, 'confirmed');
-    else await updateStatus(item.debtId, username!!, 'confirmed');
-  };
-  const handleConfirmPayment = async () => {
-    if (item.type === 'Receivable') await updateStatus(item.debtId, item.username!!, 'confirming');
-    else await updateStatus(item.debtId, username!!, 'confirming');
+  const handleUpdateStatus = async (status: string) => {
+    if (item.type === 'Receivable')
+      updateStatus &&
+        updateStatus({ type: item.type, status: status, debtId: item.debtId, itemsUsername: item.username!! });
+    else
+      updateStatus && updateStatus({ type: item.type, status: status, debtId: item.debtId, userUsername: username!! });
   };
 
   return (
@@ -102,7 +111,7 @@ const TransactionCard = ({ item }: { item: DebtReceivableType }) => {
             text='Confirm'
             style={[styles.actionButton]}
             textStyle={{ fontSize: moderateScale(8, 2) }}
-            onPress={handleConfirm}
+            onPress={() => handleUpdateStatus('confirmed')}
           />
         )}
         {item.status === 'confirmed' && item.type === 'Receivable' && (
@@ -118,13 +127,13 @@ const TransactionCard = ({ item }: { item: DebtReceivableType }) => {
               text='Accept'
               style={[styles.actionButton, { marginRight: 4 }]}
               textStyle={{ fontSize: moderateScale(8, 2) }}
-              onPress={handleAccept}
+              onPress={() => handleUpdateStatus('waiting')}
             />
             <CustomButton
               text='Decline'
               style={[styles.actionButton, { backgroundColor: colours.redNormal }]}
               textStyle={{ fontSize: moderateScale(8, 2) }}
-              onPress={handleDecline}
+              onPress={() => handleUpdateStatus('declined')}
             />
           </View>
         )}
@@ -133,7 +142,7 @@ const TransactionCard = ({ item }: { item: DebtReceivableType }) => {
             text='Confirm Payment'
             style={[styles.actionButton]}
             textStyle={{ fontSize: moderateScale(8, 2) }}
-            onPress={handleConfirmPayment}
+            onPress={() => handleUpdateStatus('confirming')}
           />
         )}
         {item.status === 'confirming' && item.type === 'Debt' && (

@@ -26,7 +26,8 @@ import { DebtReceivableType } from '@src/types/collection/debtsCollection';
 const Home = () => {
   const { auth, user } = useSelector((state: RootState) => state);
 
-  const [userDebts, totalDebts, userReceivables, totalReceivables, getData] = useGetAllDebtReceivable(user.username!!);
+  const [userDebts, totalDebts, userReceivables, totalReceivables, isLoading, getData, updateDebtReceivableStatus] =
+    useGetAllDebtReceivable(user.username!!);
   const [_sorted, setSorted] = useState<DebtReceivableType[]>([]);
   const [refreshing, setRefreshing] = useState<boolean>(false);
 
@@ -86,7 +87,7 @@ const Home = () => {
               _sorted.map((val, idx) => {
                 const { status } = val;
                 if (status !== 'confirmed' && status !== 'declined')
-                  return <TransactionCard key={idx.toString()} item={val} />;
+                  return <TransactionCard key={idx.toString()} item={val} updateStatus={updateDebtReceivableStatus} />;
               })}
           </View>
         </View>
