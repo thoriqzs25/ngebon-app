@@ -34,6 +34,9 @@ const CustomButton = ({
           elevation: 2,
           shadowColor: colours.white,
         },
+        disabled && {
+          backgroundColor: colours.gray300,
+        },
       ]}
       onPress={
         onPress

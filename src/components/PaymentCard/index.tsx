@@ -6,6 +6,7 @@ import { moderateScale } from 'react-native-size-matters';
 import colours from '@src/utils/colours';
 import CustomCheckbox from '../input/CustomCheckbox';
 import { useEffect, useState } from 'react';
+import { Ionicons } from '@expo/vector-icons';
 
 const knownBank = ['BCA', 'BNI', 'DANA', 'GOPAY', 'SHOPEEPAY', 'JAGO', 'JENIUS', 'OVO', 'MANDIRI'];
 
@@ -16,6 +17,8 @@ const PaymentCard = ({
   withCheckbox = false,
   isChecked,
   onCheckChanged,
+  onPress,
+  rightArrow = false,
 }: {
   type: string;
   name: string;
@@ -23,6 +26,8 @@ const PaymentCard = ({
   withCheckbox?: boolean;
   isChecked?: boolean;
   onCheckChanged?: (checked: boolean) => void;
+  onPress?: () => void;
+  rightArrow?: boolean;
 }) => {
   const { value: check, setValue: setCheck } = useBoolean(false);
   const [img, setImg] = useState<string>();
@@ -36,6 +41,7 @@ const PaymentCard = ({
     onCheckChanged && onCheckChanged(checked);
   };
   const handlePress = () => {
+    onPress && onPress();
     onCheckChanged && onCheckChanged(!isChecked);
   };
 
@@ -67,6 +73,17 @@ const PaymentCard = ({
               justifyContent: 'center',
             }}>
             <CustomCheckbox value={isChecked} onCheckChanged={handleCheckChanged} />
+          </View>
+        )}
+        {rightArrow && (
+          <View
+            style={{
+              width: 40,
+              marginLeft: 'auto',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}>
+            <Ionicons name={'chevron-forward-outline'} color={'rgba(0,0,0,0.25)'} size={24} />
           </View>
         )}
       </View>

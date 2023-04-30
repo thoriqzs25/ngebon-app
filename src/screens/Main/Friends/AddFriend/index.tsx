@@ -5,44 +5,84 @@ import { UserDocument } from '@src/types/collection/usersCollection';
 import { RootState } from '@src/types/states/root';
 import colours from '@src/utils/colours';
 import { IS_ANDROID } from '@src/utils/deviceDimensions';
-import { addNewFriend } from '@src/utils/collections/friendCollection';
+import { addNewFriend, getFriendCollection } from '@src/utils/collections/friendCollection';
 import { getUserByUsername } from '@src/utils/collections/userCollection';
 import { db } from 'firbaseConfig';
 import { collection, getDocs, query, where } from 'firebase/firestore';
-import React, { useState } from 'react';
-import { KeyboardAvoidingView, StyleSheet, Text, TextInput, View } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { ActivityIndicator, KeyboardAvoidingView, StyleSheet, Text, TextInput, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { moderateScale, moderateVerticalScale } from 'react-native-size-matters';
 import { useSelector } from 'react-redux';
+import { useNavigation } from '@react-navigation/native';
 
 const AddFriend = () => {
   const { username: currUsername, uid } = useSelector((state: RootState) => state.user);
 
+  const [friendList, setFriendList] = useState<UserDocument[]>([]);
   const [username, setUsername] = useState<string>('');
   const [friend, setFriend] = useState<UserDocument | null>(null);
   const [friendId, setFriendId] = useState<string | null>(null);
+  const [isAdded, setIsAdded] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  const { goBack, canGoBack } = useNavigation();
 
   const handleSearch = async () => {
-    const data = await getUserByUsername(username).then((res) => {
-      if (res.data) {
-        setFriend(res.data as UserDocument);
-      }
-      if (res.id) {
-        setFriendId(res.id);
-      }
-    });
-    // const usersRef = collection(db, 'users');
-    // const q = query(usersRef, where('username', '==', `${username}`));
-    // const querySnapshot = await getDocs(q);
-
-    // if (querySnapshot.docs.length === 1)
-    //   querySnapshot.forEach((doc) => {
-    //     const data = doc.data();
-    //     setFriend(data as UserDocument);
-    //     setFriendId(doc.id);
-    //   });
-    // else console.log('no user found line 32');
+    setIsLoading(true);
+    try {
+      await getFriends();
+      const data = await getUserByUsername(username).then((res) => {
+        if (res.data) {
+          setFriend(res.data as UserDocument);
+        }
+        if (res.id) {
+          setFriendId(res.id);
+        }
+      });
+    } catch {
+      __DEV__ && console.log('line 42');
+    } finally {
+      setIsLoading(false);
+    }
   };
+
+  const handleAddFriend = async () => {
+    setIsLoading(true);
+    try {
+      await addNewFriend({
+        userId: uid!!,
+        friendId: friendId!!,
+        userUname: currUsername!!,
+        friendUname: friend!!.username,
+      });
+      await getFriends();
+    } catch {
+      __DEV__ && console.log('line 58');
+    } finally {
+      setIsLoading(false);
+      canGoBack() && goBack();
+    }
+  };
+
+  const getFriends = async () => {
+    const data = await getFriendCollection(uid!!);
+    if (data) setFriendList(data);
+  };
+
+  const checkIfFriendAdded = () => {
+    let flag = false;
+    friendList.map((fr) => {
+      if (fr.username === friend?.username) return (flag = true);
+    });
+
+    console.log('line 50', flag);
+    return flag;
+  };
+
+  useEffect(() => {
+    setIsAdded(checkIfFriendAdded());
+  }, [friend, friendList]);
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -72,47 +112,51 @@ const AddFriend = () => {
               }}
             />
 
-            <View style={{ marginVertical: 40 }}>
-              <ImageView
-                name={'tree-1'}
-                remoteAssetFullUri={friend?.avatar}
-                style={{
-                  width: moderateScale(100, 2),
-                  height: moderateScale(100, 2),
-                  alignSelf: 'center',
-                  marginBottom: 12,
-                  borderRadius: moderateScale(46, 2),
-                }}
-              />
-              <Text style={{ fontFamily: 'dm', fontSize: 20, alignSelf: 'center' }}>
-                {friend !== null ? friend.name : 'Jisoo'}
-              </Text>
-            </View>
+            {friend ? (
+              <View style={{ marginTop: 40 }}>
+                <ImageView
+                  name={'tree-1'}
+                  remoteAssetFullUri={friend?.avatar}
+                  style={{
+                    width: moderateScale(100, 2),
+                    height: moderateScale(100, 2),
+                    alignSelf: 'center',
+                    marginBottom: 12,
+                    borderRadius: moderateScale(46, 2),
+                  }}
+                />
+                <Text style={{ fontFamily: 'dm', fontSize: 20, alignSelf: 'center' }}>
+                  {friend !== null ? friend.name : 'Loading...'}
+                </Text>
+              </View>
+            ) : (
+              <View style={{ marginTop: 40 }}>
+                <ActivityIndicator animating={isLoading} />
+              </View>
+            )}
 
             <CustomButton
-              disabled={username === currUsername}
-              text={username === currUsername ? `It's You :D` : friend !== null ? 'Add' : 'Search'}
+              disabled={username === currUsername || isAdded || (!!friend?.username && isLoading)}
+              text={username === currUsername ? `It's You` : isAdded ? 'Added' : friend !== null ? 'Add' : 'Search'}
               style={{
                 // paddingVertical: 16,
+                marginTop: 40,
                 borderRadius: 10,
                 width: '40%',
                 backgroundColor: colours.greenNormal,
                 alignSelf: 'center',
               }}
               onPress={() => {
-                username === currUsername
-                  ? null
-                  : friend !== null
-                  ? addNewFriend({
-                      userId: uid!!,
-                      friendId: friendId!!,
-                      userUname: currUsername!!,
-                      friendUname: friend.username,
-                    })
-                  : handleSearch();
+                username === currUsername ? null : friend !== null ? handleAddFriend() : handleSearch();
               }}
               textStyle={{ fontSize: 16 }}
             />
+
+            {!!friend?.username && isLoading && (
+              <View style={{ marginTop: 40 }}>
+                <ActivityIndicator animating={isLoading} />
+              </View>
+            )}
           </View>
         </SubPage>
       </KeyboardAvoidingView>

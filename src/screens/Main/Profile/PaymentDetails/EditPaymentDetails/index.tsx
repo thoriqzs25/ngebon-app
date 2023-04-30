@@ -2,7 +2,7 @@ import PaymentCard from '@src/components/PaymentCard';
 import SubPage from '@src/components/SubPage';
 import CustomButton from '@src/components/input/CustomButton';
 import colours from '@src/utils/colours';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -16,7 +16,7 @@ import { Payment } from '@src/types/collection/usersCollection';
 import { addPayment } from '@src/utils/collections/userCollection';
 import { store } from '@src/redux/store';
 import { setPayments } from '@src/redux/actions/user';
-import { useNavigation } from '@react-navigation/native';
+import { NavigationProp, RouteProp, useFocusEffect, useNavigation } from '@react-navigation/native';
 
 const DATA = [
   { label: 'BCA', value: 'BCA' },
@@ -31,15 +31,15 @@ const DATA = [
   { label: 'Other...', value: 'OTHER' },
 ];
 
-const AddPaymentDetails = () => {
+const EditPaymentDetails = ({ route }: { route: RouteProp<{ params: { payment: Payment } }> }) => {
   const { user } = useSelector((state: RootState) => state);
 
   const { canGoBack, goBack } = useNavigation();
 
+  const [oldPayment, setOldPayment] = useState<Payment>();
   const [accNumber, setAccNumber] = useState<string>('');
   const [accName, setAccName] = useState<string>('');
   const [bankName, setBankName] = useState<string>('');
-  const [open, setOpen] = useState<boolean>(false);
   const [value, setValue] = useState<any>();
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
@@ -51,28 +51,37 @@ const AddPaymentDetails = () => {
         name: accName,
         number: accNumber,
       } as Payment;
-      let newPayments: Payment[] = [payment];
-      let isExists: boolean = false;
+      const userPayments: Payment[] = user.payments as Payment[];
 
-      if (user.payments !== null && user.payments !== undefined) {
-        user.payments.map((p, idx) => {
-          if (p.bankName === payment.bankName && p.name === payment.name && p.number === payment.number)
-            isExists = true;
-        });
-        newPayments = [payment, ...user.payments];
-      }
+      const filteredPayments = userPayments.filter(
+        (p) => p.bankName !== oldPayment?.bankName || p.name !== oldPayment?.name || p.number !== oldPayment?.number
+      );
 
-      if (!isExists) {
-        store.dispatch(setPayments({ payments: newPayments }));
-        addPayment(newPayments, user.uid!!);
-        if (canGoBack()) goBack();
-      }
+      const newPayments = [payment, ...filteredPayments];
+      console.log('line 56', newPayments);
+
+      store.dispatch(setPayments({ payments: newPayments }));
+      addPayment(newPayments, user.uid!!);
+      if (canGoBack()) goBack();
     } catch {
-      __DEV__ && console.log('line 70');
+      __DEV__ && console.log('line 69');
     } finally {
       setIsLoading(false);
     }
   };
+
+  useFocusEffect(
+    useCallback(() => {
+      if (route.params.payment) {
+        const { bankName, name, number } = route.params.payment;
+        setOldPayment(route.params.payment);
+        setAccName(name);
+        setAccNumber(number);
+        setBankName(bankName);
+        setValue(bankName);
+      }
+    }, [route])
+  );
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -83,7 +92,7 @@ const AddPaymentDetails = () => {
               styles.dmBold,
               { fontSize: moderateScale(14, 2), color: colours.greenNormal, marginTop: 12, marginBottom: 20 },
             ]}>
-            Add Payment Details
+            Edit Payment Details
           </Text>
           <Text style={styles.labelTitle}>Select Bank/e-Wallet</Text>
           <CustomDropdown data={DATA} value={value} setValue={setValue} style={{ marginBottom: 20 }} />
@@ -92,6 +101,7 @@ const AddPaymentDetails = () => {
               inputStyle={styles.inputStyle}
               style={{ marginBottom: 20 }}
               title='Bank/e-Wallet Name'
+              value={bankName}
               setValue={setBankName}
               placeholderText='Bank or e-Wallet Name'
             />
@@ -100,12 +110,14 @@ const AddPaymentDetails = () => {
             inputStyle={styles.inputStyle}
             style={{ marginBottom: 20 }}
             title='Account Number or Mobile Phone'
+            value={accNumber}
             setValue={setAccNumber}
             placeholderText='Account Number or Mobile Phone'
           />
           <TextFieldAlt
             inputStyle={styles.inputStyle}
             title='Account Name'
+            value={accName}
             setValue={setAccName}
             placeholderText='Account Name'
           />
@@ -149,4 +161,4 @@ const styles = StyleSheet.create({
     paddingVertical: 4,
   },
 });
-export default AddPaymentDetails;
+export default EditPaymentDetails;

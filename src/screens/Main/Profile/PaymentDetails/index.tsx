@@ -15,6 +15,10 @@ import { useSelector } from 'react-redux';
 const PaymentDetails = () => {
   const { payments } = useSelector((state: RootState) => state.user);
 
+  const handlePress = (p: Payment) => {
+    navigate('EditPaymentDetails', { payment: p });
+  };
+
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <SubPage>
@@ -26,6 +30,11 @@ const PaymentDetails = () => {
             ]}>
             Payment Details
           </Text>
+          {payments?.length === 0 && (
+            <View>
+              <Text style={styles.prompt}>Add your payment details</Text>
+            </View>
+          )}
           <ScrollView style={{ flex: 1 }}>
             {payments &&
               payments.map((payment: Payment, idx: number) => {
@@ -35,6 +44,8 @@ const PaymentDetails = () => {
                     type={payment.bankName}
                     name={payment.name}
                     number={payment.number}
+                    onPress={() => handlePress(payment)}
+                    rightArrow={true}
                   />
                 );
               })}
@@ -67,6 +78,10 @@ const styles = StyleSheet.create({
   buttonText: {
     fontFamily: 'dm',
     fontSize: moderateScale(11, 2),
+  },
+  prompt: {
+    fontFamily: 'dm-700',
+    color: colours.gray300,
   },
 });
 export default PaymentDetails;
