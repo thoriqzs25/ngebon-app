@@ -9,7 +9,7 @@ import { DebtDoc, DebtDocument } from '@src/types/collection/debtsCollection';
 import { Payment, UserDocument } from '@src/types/collection/usersCollection';
 import { ItemDivide } from '@src/types/states/divide';
 import { RootState } from '@src/types/states/root';
-import { getDebtByIdReturnData } from '@src/utils/collections/debtCollection';
+import { getDebtByIdReturnData, updateStatus } from '@src/utils/collections/debtCollection';
 import colours from '@src/utils/colours';
 import moment from 'moment';
 import React, { useCallback, useEffect, useState } from 'react';
@@ -21,22 +21,22 @@ import { useSelector } from 'react-redux';
 
 const DebtDetails = ({
   route,
-  updateStatus,
-}: {
+}: // updateStatus,
+{
   route: RouteProp<{ params: { debtId: string; isDebtOrReceivable: string; username: string } }>;
-  updateStatus?: ({
-    type,
-    status,
-    debtId,
-    itemsUsername,
-    userUsername,
-  }: {
-    type: string;
-    status: string;
-    debtId: string;
-    itemsUsername?: string;
-    userUsername?: string;
-  }) => void;
+  // updateStatus?: ({
+  //   type,
+  //   status,
+  //   debtId,
+  //   itemsUsername,
+  //   userUsername,
+  // }: {
+  //   type: string;
+  //   status: string;
+  //   debtId: string;
+  //   itemsUsername?: string;
+  //   userUsername?: string;
+  // }) => void;
 }) => {
   const { username: uname } = useSelector((state: RootState) => state.user);
 
@@ -59,42 +59,42 @@ const DebtDetails = ({
     setFormattedDate(formattedDate);
   };
 
-  const handleUpdateStatus = async (status: string) => {
-    if (debtData?.type === 'Receivable')
-      updateStatus &&
-        updateStatus({
-          type: debtData.type,
-          status: status,
-          debtId: route?.params.debtId,
-          itemsUsername: route?.params.username!!,
-        });
-    else
-      updateStatus &&
-        updateStatus({ type: debtData?.type!!, status: status, debtId: route?.params.debtId, userUsername: uname!! });
-  };
+  // const handleUpdateStatus = async (status: string) => {
+  //   if (debtData?.type === 'Receivable')
+  //     updateStatus &&
+  //       updateStatus({
+  //         type: debtData.type,
+  //         status: status,
+  //         debtId: route?.params.debtId,
+  //         itemsUsername: route?.params.username!!,
+  //       });
+  //   else
+  //     updateStatus &&
+  //       updateStatus({ type: debtData?.type!!, status: status, debtId: route?.params.debtId, userUsername: uname!! });
+  // };
 
-  // const handleAccept = async () => {
-  //   if (debtData?.type === 'Receivable') await updateStatus(route?.params.debtId, route?.params.username!!, 'waiting');
-  //   else await updateStatus(route?.params.debtId, uname!!, 'waiting');
-  //   getData();
-  // };
-  // const handleDecline = async () => {
-  //   if (debtData?.type === 'Receivable') await updateStatus(route?.params.debtId, route?.params.username!!, 'declined');
-  //   else await updateStatus(route?.params.debtId, uname!!, 'declined');
-  //   getData();
-  // };
-  // const handleConfirm = async () => {
-  //   if (debtData?.type === 'Receivable')
-  //     await updateStatus(route?.params.debtId, route?.params.username!!, 'confirmed');
-  //   else await updateStatus(route?.params.debtId, uname!!, 'confirmed');
-  //   getData();
-  // };
-  // const handleConfirmPayment = async () => {
-  //   if (debtData?.type === 'Receivable')
-  //     await updateStatus(route?.params.debtId, route?.params.username!!, 'confirming');
-  //   else await updateStatus(route?.params.debtId, uname!!, 'confirming');
-  //   getData();
-  // };
+  const handleAccept = async () => {
+    if (debtData?.type === 'Receivable') await updateStatus(route?.params.debtId, route?.params.username!!, 'waiting');
+    else await updateStatus(route?.params.debtId, uname!!, 'waiting');
+    getData();
+  };
+  const handleDecline = async () => {
+    if (debtData?.type === 'Receivable') await updateStatus(route?.params.debtId, route?.params.username!!, 'declined');
+    else await updateStatus(route?.params.debtId, uname!!, 'declined');
+    getData();
+  };
+  const handleConfirm = async () => {
+    if (debtData?.type === 'Receivable')
+      await updateStatus(route?.params.debtId, route?.params.username!!, 'confirmed');
+    else await updateStatus(route?.params.debtId, uname!!, 'confirmed');
+    getData();
+  };
+  const handleConfirmPayment = async () => {
+    if (debtData?.type === 'Receivable')
+      await updateStatus(route?.params.debtId, route?.params.username!!, 'confirming');
+    else await updateStatus(route?.params.debtId, uname!!, 'confirming');
+    getData();
+  };
 
   useFocusEffect(
     useCallback(() => {
@@ -212,13 +212,13 @@ const DebtDetails = ({
                   text='Accept'
                   style={styles.actionButton}
                   textStyle={styles.actionButtonText}
-                  onPress={() => handleUpdateStatus('waiting')}
+                  onPress={handleAccept}
                 />
                 <CustomButton
                   text='Decline'
                   style={[styles.actionButton, { backgroundColor: colours.redNormal }]}
                   textStyle={styles.actionButtonText}
-                  onPress={() => handleUpdateStatus('declined')}
+                  onPress={handleDecline}
                 />
               </View>
             )}
@@ -228,7 +228,7 @@ const DebtDetails = ({
                   text='Done!'
                   style={styles.actionButton}
                   textStyle={styles.actionButtonText}
-                  onPress={() => handleUpdateStatus('confirming')}
+                  onPress={handleConfirmPayment}
                 />
               </View>
             )}
@@ -238,7 +238,7 @@ const DebtDetails = ({
                   text='Confirm'
                   style={styles.actionButton}
                   textStyle={styles.actionButtonText}
-                  onPress={() => handleUpdateStatus('confirmed')}
+                  onPress={handleConfirm}
                 />
               </View>
             )}
