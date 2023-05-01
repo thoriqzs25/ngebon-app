@@ -18,7 +18,7 @@
     "ios": {
       "supportsTablet": false,
       "bundleIdentifier": "ngebon.app.com",
-      "buildNumber": "12"
+      "buildNumber": "13"
     },
     "android": {
       "adaptiveIcon": {
@@ -26,7 +26,7 @@
         "backgroundColor": "#ffffff"
       },
       "package": "ngebon.app.com",
-      "versionCode": 9
+      "versionCode": 10
     },
     "web": {
       "favicon": "./assets/icon.png"

@@ -57,7 +57,6 @@ const Home = () => {
 
   useEffect(() => {
     const diff = parseInt(totalReceivables) - parseInt(totalDebts);
-    console.log('line 60', diff);
     if (diff >= 0) setImage('tree-1');
     else if (diff >= -50000) setImage('tree-2');
     else if (diff >= -100000) setImage('tree-3');

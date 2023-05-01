@@ -3,7 +3,6 @@ import { navigate } from '@src/navigation';
 import React, { useCallback, useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import * as ImagePicker from 'expo-image-picker';
-import callGoogleVisionAsync from '@src/utils/ocrHelper';
 import ImageView from '@src/components/ImageView';
 import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
@@ -18,6 +17,7 @@ import { getFriendCollection } from '@src/utils/collections/friendCollection';
 import { useFocusEffect } from '@react-navigation/native';
 import AddFriendCard from '@src/components/AddFriendCard';
 import UserCard from '@src/components/UserCard';
+import { callGoogleVisionAsync } from '@src/utils/ocrHelper';
 
 const Friends = () => {
   const { user } = useSelector((state: RootState) => state);
@@ -48,6 +48,7 @@ const Friends = () => {
       if (!result.canceled) {
         const uri = result.assets[0].uri;
         const googleText = await callGoogleVisionAsync(result.assets[0].base64);
+        console.log('line 51', googleText);
         // uploadImage(uri);
 
         setImage(uri);
@@ -71,7 +72,7 @@ const Friends = () => {
       <ScrollView style={{ flex: 1 }}>
         <View
           style={[
-            { width: '100%', height: '100%' },
+            { width: '100%', height: '100%', paddingBottom: 40 },
             globalStyle.paddingHorizontal,
             IS_ANDROID && globalStyle.paddingTop,
           ]}>
@@ -81,18 +82,12 @@ const Friends = () => {
             friends.map((friend, idx) => {
               return <UserCard key={idx} user={friend} />;
             })}
+          <CustomButton text='Open Image' style={{ paddingHorizontal: 20, borderRadius: 8 }} onPress={pickImage} />
+
+          {image && <ImageView remoteAssetFullUri={image} style={{ width: 400, height: 300, resizeMode: 'contain' }} />}
+          <Text>{text}</Text>
+          <ActivityIndicator animating={isLoading} />
         </View>
-        {/* <CustomButton
-          text='Add Friend'
-          style={{ paddingHorizontal: 20, borderRadius: 8 }}
-          onPress={() => navigate('AddFriend')}
-        />
-
-        <CustomButton text='Open Image' style={{ paddingHorizontal: 20, borderRadius: 8 }} onPress={pickImage} />
-
-        {image && <ImageView remoteAssetFullUri={image} style={{ width: 400, height: 300, resizeMode: 'contain' }} />}
-        <Text>{text}</Text>
-        <ActivityIndicator animating={isLoading} /> */}
       </ScrollView>
     </SafeAreaView>
   );

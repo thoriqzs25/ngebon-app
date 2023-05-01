@@ -61,8 +61,7 @@ const UserRegistration = () => {
   const getDummyImg = async () => {
     //  const spaceRef = ref(storage, 'images/space.jpg');
     // const imageRef = spaceRef.parent;
-    const img = await getDownloadURL(ref(storage, 'images/test.jpg'));
-    console.log('line 46', img);
+    const img = await getDownloadURL(ref(storage, 'images/tree_1.webp'));
     setDummyImg(img);
   };
 
