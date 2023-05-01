@@ -7,13 +7,10 @@ import {
   ItemDebtors,
   RecordDebtDocument,
 } from '@src/types/collection/debtsCollection';
-import { Timestamp, collection, doc, getDoc, orderBy, serverTimestamp, setDoc, updateDoc } from 'firebase/firestore';
+import { Timestamp, collection, doc, getDoc, serverTimestamp, setDoc, updateDoc } from 'firebase/firestore';
 import { db } from 'firbaseConfig';
 import { getUserDebtsByUsername, writeUserDebt, writeUserDebtDivide } from './user_debtCollection';
 import { DivideReducerState, ItemDivide } from '@src/types/states/divide';
-import { UserDebtsDocument } from '@src/types/collection/users_debtsCollection';
-import { ref } from 'firebase/storage';
-import { storage } from 'firbaseConfig';
 
 export const createRecordDebt = async (recordRedux: RecordReducerState) => {
   const receipientUser = await getUserDebtsByUsername(recordRedux.receipient?.username!!);
@@ -23,7 +20,7 @@ export const createRecordDebt = async (recordRedux: RecordReducerState) => {
 
   recordRedux.records?.map(async (r) => {
     const { user, amount, note } = r;
-    const _amount: string = amount.replace('.', '');
+    const _amount: string = amount.replace(/\./g, '');
 
     const recordDoc = {
       username: user.username,

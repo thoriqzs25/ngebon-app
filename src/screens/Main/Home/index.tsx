@@ -31,6 +31,7 @@ const Home = () => {
     useGetAllDebtReceivable(user.username!!);
   const [_sorted, setSorted] = useState<DebtReceivableType[]>([]);
   const [refreshing, setRefreshing] = useState<boolean>(false);
+  const [image, setImage] = useState<string>('tree-1');
 
   const onRefresh = useCallback(() => {
     setRefreshing(true);
@@ -50,9 +51,21 @@ const Home = () => {
 
   useEffect(() => {
     const mixed: DebtReceivableType[] = [...userDebts, ...userReceivables];
-    const sorted: DebtReceivableType[] = mixed.sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime());
+    const sorted: DebtReceivableType[] = mixed.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
     setSorted(sorted);
   }, [userDebts, userReceivables]);
+
+  useEffect(() => {
+    const diff = parseInt(totalReceivables) - parseInt(totalDebts);
+    console.log('line 60', diff);
+    if (diff >= 0) setImage('tree-1');
+    else if (diff >= -50000) setImage('tree-2');
+    else if (diff >= -100000) setImage('tree-3');
+    else if (diff >= -250000) setImage('tree-4');
+    else if (diff >= -500000) setImage('tree-5');
+    else if (diff >= -750000) setImage('tree-6');
+    else if (diff < -750000) setImage('tree-7');
+  }, [totalDebts, totalReceivables]);
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -71,7 +84,7 @@ const Home = () => {
           </Text>
 
           <ImageView
-            name='tree-1'
+            name={image ?? 'tree-1'}
             style={{
               width: moderateScale(120, 2),
               height: moderateScale(120, 2),

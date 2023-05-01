@@ -3,7 +3,7 @@
     "name": "Ngebon",
     "scheme": "ngebon.app.com",
     "slug": "ngebon-app",
-    "version": "1.0.5",
+    "version": "1.0.6",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -18,7 +18,7 @@
     "ios": {
       "supportsTablet": false,
       "bundleIdentifier": "ngebon.app.com",
-      "buildNumber": "11"
+      "buildNumber": "12"
     },
     "android": {
       "adaptiveIcon": {
@@ -26,7 +26,7 @@
         "backgroundColor": "#ffffff"
       },
       "package": "ngebon.app.com",
-      "versionCode": 8
+      "versionCode": 9
     },
     "web": {
       "favicon": "./assets/icon.png"
