@@ -9,16 +9,16 @@ export const ItemList = ({
   price,
   qty,
   totalPrice,
-  onEdit,
-  onDelete,
-}: {
+}: // onEdit,
+// onDelete,
+{
   idx: number;
   name: string;
   price: string;
   qty: string;
   totalPrice: number;
-  onEdit: () => void;
-  onDelete: () => void;
+  // onEdit: () => void;
+  // onDelete: () => void;
 }) => {
   const [priceItem, setPrice] = useState<string>('');
   const [total, setTotal] = useState<string>('');
@@ -54,8 +54,8 @@ export const ItemList = ({
 
         <Text style={{ flex: 1, textAlign: 'right', fontFamily: 'dm-500' }}>{total ?? ''}</Text>
       </View>
-      <Ionicons name='pencil-outline' size={24} style={{ paddingLeft: 8 }} onPress={onEdit} />
-      <Ionicons name='md-trash' size={24} style={{ paddingLeft: 8 }} onPress={onDelete} />
+      {/* <Ionicons name='pencil-outline' size={24} style={{ paddingLeft: 8 }} onPress={onEdit} />
+      <Ionicons name='md-trash' size={24} style={{ paddingLeft: 8 }} onPress={onDelete} /> */}
     </View>
   );
 };

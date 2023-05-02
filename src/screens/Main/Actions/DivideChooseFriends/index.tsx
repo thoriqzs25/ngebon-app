@@ -49,7 +49,7 @@ const DivideChooseFriends = () => {
       <SubPage>
         <View style={{ flex: 1, paddingBottom: moderateVerticalScale(50, -1.5) }}>
           <Text style={[styles.dmBold, { fontSize: moderateScale(14, 2), color: colours.greenNormal, marginTop: 12 }]}>
-            Record
+            Divide
           </Text>
           <Text style={[styles.dmBold, { fontSize: moderateScale(16, 2), marginVertical: 8 }]}>Choose Friends</Text>
           <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={true}>

@@ -5,8 +5,6 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Button, KeyboardAvoidingView, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { moderateScale, moderateVerticalScale } from 'react-native-size-matters';
-import Ionicons from '@expo/vector-icons/Ionicons';
-import { TextInput } from 'react-native-gesture-handler';
 import CustomButton from '@src/components/input/CustomButton';
 import { ItemList } from '@src/components/ItemList';
 import { InputItem } from '@src/components/InputItem';
@@ -14,12 +12,16 @@ import { IS_ANDROID } from '@src/utils/deviceDimensions';
 import { navigate } from '@src/navigation';
 import { store } from '@src/redux/store';
 import { setDivideItems } from '@src/redux/actions/divide';
+import CustomIncrementDecrementButton from '@src/components/input/CustomIncrementDecrementButton';
 
 const DivideListItem = () => {
-  const [inputs, setInputs] = useState<Array<{ itemName: string; price: string; qty: string; totalPrice: number }>>([]);
+  const [inputs, setInputs] = useState<Array<{ itemName: string; price: string; qty: string; totalPrice: number }>>([
+    { itemName: '', price: '', qty: '', totalPrice: 0 },
+  ]);
   const [itemConfirmation, setItemConfirmation] = useState<Array<number>>([]);
   const [readyToConfirm, setReadyToConfirm] = useState<boolean>(false);
   const [title, setTitle] = useState<string>('');
+  const [tax, setTax] = useState<number>(0);
 
   const scrollViewRef = useRef<ScrollView>();
 
@@ -135,8 +137,8 @@ const DivideListItem = () => {
                       price={value.price}
                       qty={value.qty}
                       totalPrice={value.totalPrice}
-                      onEdit={() => handleEditInput(index)}
-                      onDelete={() => handleDeleteInput(index)}
+                      // onEdit={() => handleEditInput(index)}
+                      // onDelete={() => handleDeleteInput(index)}
                     />
                   );
                 return (
@@ -154,6 +156,7 @@ const DivideListItem = () => {
                   />
                 );
               })}
+              <CustomIncrementDecrementButton value={tax} setValue={setTax} />
             </ScrollView>
             {readyToConfirm && itemConfirmation.length > 0 ? (
               <View
@@ -164,9 +167,9 @@ const DivideListItem = () => {
                   alignSelf: 'center',
                 }}>
                 <CustomButton
-                  text='Cancel'
-                  style={{ borderRadius: 10, width: '45%', backgroundColor: colours.redNormal, alignSelf: 'center' }}
-                  textStyle={{ fontSize: 16 }}
+                  text='Back'
+                  style={{ borderRadius: 10, width: '45%', backgroundColor: colours.grayNormal, alignSelf: 'center' }}
+                  textStyle={{ fontSize: 14 }}
                   onPress={() => {
                     setItemConfirmation([]);
                   }}
@@ -174,7 +177,7 @@ const DivideListItem = () => {
                 <CustomButton
                   text='Confirm'
                   style={{ borderRadius: 10, width: '45%', backgroundColor: colours.greenNormal, alignSelf: 'center' }}
-                  textStyle={{ fontSize: 16 }}
+                  textStyle={{ fontSize: 14 }}
                   onPress={handleConfirm}
                 />
               </View>
