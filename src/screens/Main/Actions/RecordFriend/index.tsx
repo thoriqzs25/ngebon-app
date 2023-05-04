@@ -68,9 +68,12 @@ const RecordFriend = ({ route }: { route: RouteProp<{ params: { prevInputs: Item
       <SubPage>
         <View style={{ flex: 1 }}>
           <Text style={[styles.dmBold, { fontSize: moderateScale(14, 2), color: colours.greenNormal, marginTop: 12 }]}>
-            Record
+            Record ({prevRecordList.length > 0 ? 2 : 1}/5)
           </Text>
           <Text style={[styles.dmBold, { fontSize: moderateScale(16, 2), marginVertical: 8 }]}>Choose a Person</Text>
+          <Text style={[styles.dmBold, { fontSize: moderateScale(12, 2), marginBottom: 10, color: 'rgba(0,0,0,0.5)' }]}>
+            Choose user to add payment amount
+          </Text>
           <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={true}>
             <Text style={[styles.dmBold, { fontSize: moderateScale(14, 2), marginBottom: 8, marginTop: 4 }]}>You</Text>
             <UserCard user={user} onPress={() => handleSelect(user as UserDocument)} />

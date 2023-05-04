@@ -43,8 +43,11 @@ const Home = () => {
 
   useFocusEffect(
     useCallback(() => {
-      if (user?.name === undefined) {
+      if (user?.name === undefined || user.name === null) {
         getUser(auth.uid as string);
+      }
+      if (user.username) {
+        getData(user.username);
       }
     }, [])
   );
@@ -72,7 +75,7 @@ const Home = () => {
         stickyHeaderIndices={[0]}
         contentInsetAdjustmentBehavior='automatic'
         contentContainerStyle={{ paddingBottom: moderateVerticalScale(160, -1.5) }}
-        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} enabled={true} />}>
+        refreshControl={<RefreshControl refreshing={refreshing || isLoading} onRefresh={onRefresh} enabled={true} />}>
         <HomeHeader />
         <View style={[globalStyle.paddingHorizontal, { paddingTop: 14 }]}>
           <Text style={styles.name}>

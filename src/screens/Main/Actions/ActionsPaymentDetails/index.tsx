@@ -67,10 +67,13 @@ const ActionsPaymentDetails = ({ route }: { route: RouteProp<{ params: { page: s
               styles.dmBold,
               { fontSize: moderateScale(14, 2), color: colours.greenNormal, marginTop: 12, width: '100%' },
             ]}>
-            {route.params.page ?? ''}
+            {route.params?.page ? (route.params?.page === 'Divide' ? 'Divide (6/7)' : 'Record (4/5)') : ''}
           </Text>
           <Text style={[styles.dmBold, { fontSize: moderateScale(16, 2), marginVertical: 8, width: '100%' }]}>
             Payment Details
+          </Text>
+          <Text style={[styles.dmBold, { fontSize: moderateScale(12, 2), marginBottom: 10, color: 'rgba(0,0,0,0.5)' }]}>
+            Select payment method
           </Text>
           <ScrollView
             contentInsetAdjustmentBehavior='automatic'
@@ -100,7 +103,16 @@ const ActionsPaymentDetails = ({ route }: { route: RouteProp<{ params: { page: s
                   />
                 );
               })}
-            <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: IS_ANDROID ? 4 : 16 }}>
+            {userDetail?.payments.length === 0 && (
+              <Text
+                style={[
+                  styles.dmBold,
+                  { fontSize: moderateScale(12, 2), marginBottom: 10, color: 'rgba(0,0,0,0.5)', marginTop: 4 },
+                ]}>
+                You don't have any listed payment method!{`\n\n`}You can add your payment methods in the profile section
+              </Text>
+            )}
+            {/* <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: IS_ANDROID ? 4 : 16 }}>
               <Text style={[styles.dmFont, { fontSize: moderateScale(14, 2) }]}>Require Proof</Text>
               <Switch
                 value={required}
@@ -115,7 +127,7 @@ const ActionsPaymentDetails = ({ route }: { route: RouteProp<{ params: { page: s
                 }}
                 ios_backgroundColor={colours.redNormal}
               />
-            </View>
+            </View> */}
             <CustomButton
               text='Next'
               style={{

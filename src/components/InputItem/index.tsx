@@ -13,6 +13,7 @@ export const InputItem = ({
   setQty,
   onDelete,
   idx,
+  error = false,
 }: {
   name: string;
   price: string;
@@ -23,6 +24,7 @@ export const InputItem = ({
   setQty: (text: string) => void;
   onDelete: () => void;
   idx: number;
+  error?: boolean;
 }) => {
   return (
     <View
@@ -31,7 +33,7 @@ export const InputItem = ({
         alignItems: 'center',
         marginVertical: 12,
       }}>
-      <View style={styles.box}>
+      <View style={[styles.box, error && { borderColor: colours.yellowYoung }]}>
         <Text style={styles.boxTitle}>Item {idx}</Text>
         <TextInput
           style={[styles.input, styles.boxInputText, { flex: 7 }]}
@@ -41,13 +43,13 @@ export const InputItem = ({
           onChangeText={(text) => setName(text)}
         />
         <TextInput
-          style={[styles.input, styles.boxInputPrice, { flex: 4 }]}
+          style={[styles.input, styles.boxInputPrice, { flex: 4, marginRight: 0 }]}
           placeholder={'Price'}
           value={price}
           keyboardType='numeric'
           onChangeText={(text) => setPrice(text)}
         />
-        <Text style={{ marginRight: 4, fontFamily: 'dm-500' }}>X</Text>
+        <Ionicons name='close-outline' size={16} />
         <TextInput
           value={qty}
           style={[styles.input, styles.boxInputPrice, { flex: 2 }]}
@@ -77,7 +79,7 @@ const styles = StyleSheet.create({
     borderColor: colours.black,
     borderRadius: 8,
     flex: 1,
-    height: 44,
+    height: 48,
     borderWidth: 1,
     position: 'relative',
     padding: 8,
@@ -105,7 +107,7 @@ const styles = StyleSheet.create({
   input: {
     paddingHorizontal: 2,
     // paddingVertical: 12,
-    height: 24,
+    height: 28,
     marginRight: 4,
   },
 });

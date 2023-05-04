@@ -1,4 +1,4 @@
-import { RouteProp } from '@react-navigation/native';
+import { RouteProp, useFocusEffect } from '@react-navigation/native';
 import ImageView from '@src/components/ImageView';
 import SubPage from '@src/components/SubPage';
 import UserCard from '@src/components/UserCard';
@@ -12,7 +12,7 @@ import { RootState } from '@src/types/states/root';
 import colours from '@src/utils/colours';
 import { app, storage } from 'firbaseConfig';
 import { getDownloadURL, getStorage, ref } from 'firebase/storage';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -181,46 +181,53 @@ const DivideAssign = ({ route }: { route: RouteProp<{ params: { selectedFriends:
     navigate('PaymentReceipient', { page: 'Divide' });
   };
 
-  useEffect(() => {
-    if (route.params) {
-      let friendList: AssignFriend[] = [];
-      const selectedFriends: UserDocument[] = [...route.params.selectedFriends];
-      selectedFriends.map((friend, idx) => {
-        const user = friend;
-        const _user = {
-          avatar: user.avatar,
-          email: user.email,
-          name: user.name,
-          username: user.username,
-          payments: user.payments,
-        } as UserDocument;
-        friendList.push({ user: _user, selectedItem: [] });
-      });
-      setFriends(friendList);
-    }
-  }, []);
-
-  useEffect(() => {
-    if (divide) {
-      let itemList: AssignItems[] = [];
-      divide?.items?.map((item, idx) => {
-        itemList.push({
-          item: { itemName: item.itemName, price: item.price, qty: item.qty, totalPrice: item.totalPrice },
-          userArr: [],
+  useFocusEffect(
+    useCallback(() => {
+      if (route.params) {
+        let friendList: AssignFriend[] = [];
+        const selectedFriends: UserDocument[] = [...route.params.selectedFriends];
+        selectedFriends.map((friend, idx) => {
+          const user = friend;
+          const _user = {
+            avatar: user.avatar,
+            email: user.email,
+            name: user.name,
+            username: user.username,
+            payments: user.payments,
+          } as UserDocument;
+          friendList.push({ user: _user, selectedItem: [] });
         });
-      });
-      setItems(itemList);
-    }
-  }, []);
+        setFriends(friendList);
+      }
+    }, [])
+  );
+
+  useFocusEffect(
+    useCallback(() => {
+      if (divide) {
+        let itemList: AssignItems[] = [];
+        divide?.items?.map((item, idx) => {
+          itemList.push({
+            item: { itemName: item.itemName, price: item.price, qty: item.qty, totalPrice: item.totalPrice },
+            userArr: [],
+          });
+        });
+        setItems(itemList);
+      }
+    }, [])
+  );
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <SubPage>
         <View style={{ flex: 1, paddingBottom: moderateVerticalScale(40, -1.5) }}>
           <Text style={[styles.dmBold, { fontSize: moderateScale(14, 2), color: colours.greenNormal, marginTop: 12 }]}>
-            Divide
+            Divide (4/7)
           </Text>
           <Text style={[styles.dmBold, { fontSize: moderateScale(16, 2), marginVertical: 8 }]}>Assign</Text>
+          <Text style={[styles.dmBold, { fontSize: moderateScale(12, 2), marginBottom: 10, color: 'rgba(0,0,0,0.5)' }]}>
+            Assign user to items
+          </Text>
           <View style={{ flex: 1 }}>
             <View>
               <ScrollView showsHorizontalScrollIndicator={false} horizontal={true} style={{ marginTop: 12 }}>

@@ -12,6 +12,7 @@ const CustomButton = ({
   iconSize,
   textStyle,
   iconNameRight,
+  iconColor,
 }: {
   text: string;
   glow?: boolean;
@@ -22,6 +23,7 @@ const CustomButton = ({
   style?: StyleProp<any>;
   iconNameRight?: string;
   textStyle?: StyleProp<any>;
+  iconColor?: string;
 }) => {
   return (
     <TouchableOpacity
@@ -45,7 +47,14 @@ const CustomButton = ({
               console.log('click line 38', text);
             }
       }>
-      {iconName && <Ionicons size={iconSize ? iconSize : 12} name={iconName as any} style={{ marginRight: 4 }} />}
+      {iconName && (
+        <Ionicons
+          size={iconSize ? iconSize : 12}
+          name={iconName as any}
+          color={iconColor ? iconColor : 'black'}
+          style={{ marginRight: 4 }}
+        />
+      )}
       <Text style={[styles.title, textStyle]}>{text}</Text>
 
       {iconNameRight && (

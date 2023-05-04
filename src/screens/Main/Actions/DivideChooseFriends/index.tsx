@@ -14,6 +14,8 @@ import { ScrollView } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { moderateScale, moderateVerticalScale } from 'react-native-size-matters';
 import { useSelector } from 'react-redux';
+import { store } from '@src/redux/store';
+import { setAssignedFriends } from '@src/redux/actions/divide';
 
 const DivideChooseFriends = () => {
   const { user } = useSelector((state: RootState) => state);
@@ -49,9 +51,12 @@ const DivideChooseFriends = () => {
       <SubPage>
         <View style={{ flex: 1, paddingBottom: moderateVerticalScale(50, -1.5) }}>
           <Text style={[styles.dmBold, { fontSize: moderateScale(14, 2), color: colours.greenNormal, marginTop: 12 }]}>
-            Divide
+            Divide (3/7)
           </Text>
           <Text style={[styles.dmBold, { fontSize: moderateScale(16, 2), marginVertical: 8 }]}>Choose Friends</Text>
+          <Text style={[styles.dmBold, { fontSize: moderateScale(12, 2), marginBottom: 10, color: 'rgba(0,0,0,0.5)' }]}>
+            Pick users to assign to items
+          </Text>
           <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={true}>
             <Text style={[styles.dmBold, { fontSize: moderateScale(14, 2), marginBottom: 8, marginTop: 4 }]}>You</Text>
             <UserCard
@@ -88,8 +93,7 @@ const DivideChooseFriends = () => {
                   if (idx === 0) return user;
                   return friends[idx - 1];
                 });
-
-              navigate('DivideAssign', { selectedFriends: selectedFriends });
+              if (selectedFriends.length > 0) navigate('DivideAssign', { selectedFriends: selectedFriends });
             }}
           />
         </View>

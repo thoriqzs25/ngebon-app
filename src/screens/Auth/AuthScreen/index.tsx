@@ -13,7 +13,7 @@ import {
   UserCredential,
 } from 'firebase/auth';
 import { useEffect, useState } from 'react';
-import { Alert, Image, Text, View } from 'react-native';
+import { ActivityIndicator, Alert, Image, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import * as AuthSession from 'expo-auth-session';
 import { useAuthRequest } from 'expo-auth-session/build/providers/Google';
@@ -25,7 +25,9 @@ import { navigate } from '@src/navigation';
 import { setAvatar, setUser } from '@src/redux/actions/user';
 import { useSelector } from 'react-redux';
 import { RootState } from '@src/types/states/root';
-import { checkUserRegistered } from '@src/utils/collections/userCollection';
+import { checkUserRegistered, getUser } from '@src/utils/collections/userCollection';
+import Constants from 'expo-constants';
+import { moderateScale } from 'react-native-size-matters';
 
 const AuthScreen = () => {
   const authRedux = useSelector((state: RootState) => state.auth);
@@ -35,6 +37,7 @@ const AuthScreen = () => {
 
   const [token, setToken] = useState<string>('');
   const [userInfo, setUserInfo] = useState<User>();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const [request, response, promptAsync] = Google.useAuthRequest(
     {
@@ -79,30 +82,43 @@ const AuthScreen = () => {
   };
 
   const handleGoogleLogin = async () => {
-    const credential = GoogleAuthProvider.credential(null, token);
-    signInWithCredential(auth, credential)
-      .then((userCred) => {
-        const user = userCred.user;
-        setUserInfo(user);
-        store.dispatch(currentUser({ email: user.email, uid: user.uid }));
+    setIsLoading(true);
+    try {
+      const credential = GoogleAuthProvider.credential(null, token);
+      signInWithCredential(auth, credential)
+        .then((userCred) => {
+          const user = userCred.user;
+          setUserInfo(user);
+          store.dispatch(currentUser({ email: user.email, uid: user.uid }));
 
-        if (user.photoURL) store.dispatch(setAvatar({ avatar: user.photoURL }));
+          if (user.photoURL) store.dispatch(setAvatar({ avatar: user.photoURL }));
 
-        checkUser(user.uid);
-      })
-      .catch((err) => {
-        console.log('line 47', err);
-      });
+          checkUser(user.uid);
+        })
+        .catch((err) => {
+          console.log('line 47', err);
+        });
+    } catch {
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const checkUser = async (userId: string) => {
-    const userExists = await checkUserRegistered(userId);
+    setIsLoading(true);
+    try {
+      const userExists = await checkUserRegistered(userId);
 
-    if (!userExists) {
-      navigate('UserRegistration');
-      console.log('User does not exist!');
-    } else {
-      store.dispatch(userLogin());
+      if (!userExists) {
+        navigate('UserRegistration');
+        console.log('User does not exist!');
+      } else {
+        await getUser(userId);
+        store.dispatch(userLogin());
+      }
+    } catch {
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -122,14 +138,25 @@ const AuthScreen = () => {
       <View
         style={{
           borderRadius: 12,
-          backgroundColor: colours.blueNormal,
+          backgroundColor: colours.greenYoung,
           padding: 20,
           width: '100%',
           // gap: 6,
           alignItems: 'center',
         }}>
-        <Text>{userInfo?.displayName ?? 'nothjing'}</Text>
-        {userInfo?.photoURL && <Image source={{ uri: userInfo?.photoURL }} style={{ width: 120, height: 120 }} />}
+        <Text
+          style={[
+            { fontFamily: 'dm-700', fontSize: moderateScale(20, 2), color: colours.greenNormal, textAlign: 'center' },
+          ]}>
+          {userInfo?.displayName ?? 'Ngebon'}
+        </Text>
+        {userInfo?.photoURL && (
+          <Image
+            source={{ uri: userInfo?.photoURL }}
+            style={{ marginTop: 20, width: 120, height: 120, borderRadius: 20 }}
+          />
+        )}
+        {isLoading && <ActivityIndicator animating={isLoading} />}
 
         {/* <TextField title='email' placeholderText='Masukkan email' setValue={setEmail} />
         <TextField
@@ -154,12 +181,18 @@ const AuthScreen = () => {
         /> */}
         <CustomButton
           text='Google Sign-In'
-          style={{ width: '80%', backgroundColor: colours.gray500, marginTop: 40 }}
+          style={{ width: '80%', marginTop: 20, marginBottom: 12 }}
           onPress={() => {
             promptAsync();
           }}
+          iconSize={24}
+          iconColor='white'
+          iconName='logo-google'
+          textStyle={{ fontFamily: 'dm-700', marginTop: 4, marginLeft: 4 }}
         />
-        <Text>Version 1.0.6</Text>
+        <Text style={[{ fontFamily: 'dm-700', fontSize: moderateScale(12, 2), color: 'rgba(0,0,0,0.5)' }]}>
+          {Constants?.manifest?.version}
+        </Text>
       </View>
     </SafeAreaView>
   );

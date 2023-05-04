@@ -69,7 +69,6 @@ const ActionsConfirmation = ({ route }: { route: RouteProp<{ params: { page: str
   const handleConfirm = () => {
     if (route.params.page === 'Record') createRecordDebt(record);
     if (route.params.page === 'Divide') createDivideDebt(divideRedux, record);
-    console.log('line 53 record successfully written!');
     navigate('Home');
   };
 
@@ -82,10 +81,13 @@ const ActionsConfirmation = ({ route }: { route: RouteProp<{ params: { page: str
               styles.dmBold,
               { fontSize: moderateScale(14, 2), color: colours.greenNormal, marginTop: 12, width: '100%' },
             ]}>
-            {route.params.page}
+            {route.params?.page ? (route.params?.page === 'Divide' ? 'Divide (7/7)' : 'Record (5/5)') : ''}
           </Text>
           <Text style={[styles.dmBold, { fontSize: moderateScale(16, 2), marginVertical: 8, width: '100%' }]}>
             Confirmation
+          </Text>
+          <Text style={[styles.dmBold, { fontSize: moderateScale(12, 2), marginBottom: 10, color: 'rgba(0,0,0,0.5)' }]}>
+            Confirm your debts
           </Text>
           <ScrollView
             contentInsetAdjustmentBehavior='automatic'

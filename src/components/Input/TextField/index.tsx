@@ -68,7 +68,7 @@ const TextField = ({
     <View style={[style]}>
       {title && (
         <View style={[{ flexDirection: 'row', justifyContent: 'space-between' }]}>
-          <Text style={styles.labelTitle}>{title}</Text>
+          <Text style={[styles.labelTitle]}>{title}</Text>
           {title === 'Password' && lupaPass && (
             <TouchableOpacity activeOpacity={0.75} onPress={() => navigate('LupaPassword')}>
               <Text style={{ color: colours.redNormal }}>Lupa Password?</Text>
@@ -86,7 +86,13 @@ const TextField = ({
           inputStyle,
         ]}>
         {titleAlt && (
-          <Text style={[styles.titleAlt, { color: active ? colours.greenNormal : colours.black }]}>{titleAlt}</Text>
+          <Text
+            style={[
+              styles.titleAlt,
+              { color: error ? colours.redNormal : active ? colours.greenNormal : colours.black },
+            ]}>
+            {titleAlt}
+          </Text>
         )}
         <TextInput
           placeholder={placeholderText}

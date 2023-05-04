@@ -44,7 +44,7 @@ const UserCardMoney = ({
         </View>
         <View style={{ flexShrink: 1, marginLeft: 'auto' }}>
           <Text style={[styles.name, { textAlign: 'right', fontSize: 16 }]} numberOfLines={1}>
-            {amount ? `Rp${amount}` : 'Loading'}
+            {amount ? `Rp${amount}` : 'Rp0'}
           </Text>
           <Text style={[styles.dmFont, { color: colours.gray300, fontSize: moderateScale(8, 2), textAlign: 'right' }]}>
             {note ? `Note: ${note}` : ''}

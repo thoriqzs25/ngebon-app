@@ -173,10 +173,13 @@ const RecordPaymentAmount = ({ route }: { route: RouteProp<{ params: { prevInput
               styles.dmBold,
               { fontSize: moderateScale(14, 2), color: colours.greenNormal, marginTop: 12, width: '100%' },
             ]}>
-            Record
+            Record (2/5)
           </Text>
           <Text style={[styles.dmBold, { fontSize: moderateScale(16, 2), marginVertical: 8, width: '100%' }]}>
             Enter Payment Amount
+          </Text>
+          <Text style={[styles.dmBold, { fontSize: moderateScale(12, 2), marginBottom: 10, color: 'rgba(0,0,0,0.5)' }]}>
+            Enter payment amount for each user
           </Text>
           <ScrollView
             contentInsetAdjustmentBehavior='automatic'

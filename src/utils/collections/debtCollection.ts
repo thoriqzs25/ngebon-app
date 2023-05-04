@@ -35,23 +35,25 @@ export const createRecordDebt = async (recordRedux: RecordReducerState) => {
       createdAt: serverTimestamp(),
     } as DebtDocument;
 
-    const collectionRef = collection(db, 'debts');
-    const newDocRef = doc(collectionRef);
-    const newDocId = newDocRef.id;
+    if (payload.recordDebt?.totalAmount && parseInt(payload.recordDebt?.totalAmount) > 0) {
+      const collectionRef = collection(db, 'debts');
+      const newDocRef = doc(collectionRef);
+      const newDocId = newDocRef.id;
 
-    await setDoc(doc(db, 'debts', `record_${newDocId}`), payload).then(async () => {
-      listForReceivables.push(`record_${newDocId}`);
-      totalAmountForReceivables += parseInt(_amount);
+      await setDoc(doc(db, 'debts', `record_${newDocId}`), payload).then(async () => {
+        listForReceivables.push(`record_${newDocId}`);
+        totalAmountForReceivables += parseInt(_amount);
 
-      await writeUserDebt(
-        recordRedux.receipient?.username!!,
-        user.username,
-        `record_${newDocId}`,
-        _amount,
-        listForReceivables,
-        totalAmountForReceivables
-      );
-    });
+        await writeUserDebt(
+          recordRedux.receipient?.username!!,
+          user.username,
+          `record_${newDocId}`,
+          _amount,
+          listForReceivables,
+          totalAmountForReceivables
+        );
+      });
+    }
   });
 };
 
@@ -81,7 +83,8 @@ export const createDivideDebt = async (divideRedux: DivideReducerState, recordRe
       status: 'requesting',
     } as ItemDebtors;
 
-    _debtors.push(itemDebtors);
+    //CAUTION
+    if (_totalPrice > 0) _debtors.push(itemDebtors);
   });
 
   const payload = {

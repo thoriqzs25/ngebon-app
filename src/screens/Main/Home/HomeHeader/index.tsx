@@ -1,8 +1,10 @@
 import ImageView from '@src/components/ImageView';
 import { IS_ANDROID, STATUS_BAR_HEIGHT } from '@src/utils/deviceDimensions';
-import { View } from 'react-native';
+import { Text, View } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import colours from '@src/utils/colours';
+import { moderateScale } from 'react-native-size-matters';
+import Constants from 'expo-constants';
 
 const HomeHeader = () => {
   return (
@@ -25,10 +27,22 @@ const HomeHeader = () => {
         shadowRadius: 1,
       }}>
       <ImageView name='logo' style={{ width: IS_ANDROID ? 36 : 32, height: 32 }} />
-      <View style={{ flexDirection: 'row', gap: IS_ANDROID ? 24 : 12 }}>
+      <Text
+        style={[
+          {
+            fontFamily: 'dm-700',
+            fontSize: moderateScale(12, 2),
+            color: 'rgba(0,0,0,0.5)',
+            // backgroundColor: colours.gray,
+            marginTop: 'auto',
+          },
+        ]}>
+        {Constants?.manifest?.version}
+      </Text>
+      {/* <View style={{ flexDirection: 'row', gap: IS_ANDROID ? 24 : 12 }}>
         <Ionicons name='settings-outline' color={colours.greenNormal} size={IS_ANDROID ? 28 : 24} />
         <Ionicons name='notifications-circle-outline' color={colours.greenNormal} size={IS_ANDROID ? 30 : 26} />
-      </View>
+      </View> */}
     </View>
   );
 };

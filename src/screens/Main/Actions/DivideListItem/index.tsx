@@ -18,16 +18,16 @@ const DivideListItem = () => {
   const [inputs, setInputs] = useState<Array<{ itemName: string; price: string; qty: string; totalPrice: number }>>([
     { itemName: '', price: '', qty: '', totalPrice: 0 },
   ]);
-  const [itemConfirmation, setItemConfirmation] = useState<Array<number>>([]);
-  const [readyToConfirm, setReadyToConfirm] = useState<boolean>(false);
+  const [itemConfirmation, setItemConfirmation] = useState<boolean>(false);
+  const [unfilledItem, setUnfilledItem] = useState<number[]>([]);
   const [title, setTitle] = useState<string>('');
   const [tax, setTax] = useState<number>(0);
+  const [service, setService] = useState<number>(0);
+  const [valueTax, setValueTax] = useState<number>();
+  const [valueService, setValueService] = useState<number>();
 
   const scrollViewRef = useRef<ScrollView>();
 
-  const handleContentSizeChange = () => {
-    scrollViewRef?.current?.scrollToEnd({ animated: true });
-  };
   const handleAddInput = useCallback(() => {
     setInputs([...inputs, { itemName: '', price: '', qty: '', totalPrice: 0 }]);
   }, [inputs]);
@@ -70,19 +70,20 @@ const DivideListItem = () => {
     [inputs]
   );
 
-  const handleEditInput = useCallback(
-    (index: number) => {
-      const newArr = itemConfirmation.filter((num) => num !== index);
-
-      setItemConfirmation(newArr);
-    },
-    [inputs, itemConfirmation]
-  );
-
   const handleNext = () => {
-    const arr = Array.from({ length: inputs.length }, (_, i) => i);
+    let isAllFilled = true;
+    let unfilled: number[] = [];
+    inputs.map((val, idx) => {
+      if (val.itemName === '' || val.totalPrice === 0) {
+        isAllFilled = false;
+        unfilled.push(idx);
+      }
+    });
 
-    setItemConfirmation(arr);
+    if (isAllFilled === true && title !== '') {
+      setItemConfirmation(true);
+      setUnfilledItem([]);
+    } else setUnfilledItem(unfilled);
   };
 
   const handleConfirm = () => {
@@ -90,12 +91,27 @@ const DivideListItem = () => {
     navigate('DivideChooseFriends');
   };
 
-  useEffect(() => {
-    setReadyToConfirm(inputs.length === itemConfirmation.length);
-    // if () {
+  const handleConvertPercentageFromTotal = (percentage: number) => {
+    let _value = 0;
+    inputs.forEach((val) => {
+      _value += (val.totalPrice * percentage) / 100;
+    });
+    return _value;
+  };
 
-    // }
-  }, [inputs, itemConfirmation]);
+  useEffect(() => {
+    if (tax) {
+      const valTax = handleConvertPercentageFromTotal(tax);
+      setValueTax(valTax);
+    }
+  }, [tax, inputs]);
+
+  useEffect(() => {
+    if (service) {
+      const valService = handleConvertPercentageFromTotal(service);
+      setValueService(valService);
+    }
+  }, [service, inputs]);
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -107,28 +123,30 @@ const DivideListItem = () => {
           <View style={{ flex: 1, paddingBottom: moderateVerticalScale(40, -1.5) }}>
             <Text
               style={[styles.dmBold, { fontSize: moderateScale(14, 2), color: colours.greenNormal, marginTop: 12 }]}>
-              Divide
+              Divide ({itemConfirmation ? 2 : 1}/7)
             </Text>
             <Text style={[styles.dmBold, { fontSize: moderateScale(16, 2), marginVertical: 8 }]}>List Items</Text>
+            <Text
+              style={[styles.dmBold, { fontSize: moderateScale(12, 2), marginBottom: 10, color: 'rgba(0,0,0,0.5)' }]}>
+              {itemConfirmation ? 'Confirm your items' : 'Record items to pay'}
+            </Text>
             <ScrollView
               // @ts-ignore
               ref={scrollViewRef}
-              // stickyHeaderHiddenOnScroll={true}
-              // stickyHeaderIndices={[0]}
-              // onContentSizeChange={handleContentSizeChange}
               style={{ flex: 1, marginBottom: 12 }}
               showsVerticalScrollIndicator={false}>
               <View style={{ backgroundColor: colours.white }}>
                 <TextField
                   titleAlt='Debt Title'
                   setValue={setTitle}
+                  error={title === ''}
                   style={{ marginVertical: 12, marginBottom: 16, backgroundColor: colours.white }}
                   inputStyle={{ paddingVertical: 4 }}
                 />
               </View>
               {inputs.length < 1 && <Text style={{ fontFamily: 'dm-500', color: colours.gray300 }}>Add an item</Text>}
               {inputs.map((value, index) => {
-                if (itemConfirmation.includes(index))
+                if (itemConfirmation)
                   return (
                     <ItemList
                       idx={index + 1}
@@ -137,8 +155,6 @@ const DivideListItem = () => {
                       price={value.price}
                       qty={value.qty}
                       totalPrice={value.totalPrice}
-                      // onEdit={() => handleEditInput(index)}
-                      // onDelete={() => handleDeleteInput(index)}
                     />
                   );
                 return (
@@ -149,6 +165,7 @@ const DivideListItem = () => {
                     price={value.price}
                     qty={value.qty}
                     totalPrice={value.totalPrice}
+                    error={unfilledItem.includes(index)}
                     setName={(text) => handleItemNameChange(text, index)}
                     setPrice={(text) => handlePriceChange(text, index)}
                     setQty={(text) => handleQtyChange(text, index)}
@@ -156,9 +173,47 @@ const DivideListItem = () => {
                   />
                 );
               })}
-              <CustomIncrementDecrementButton value={tax} setValue={setTax} />
+              {itemConfirmation ? (
+                <View style={{ alignSelf: 'flex-end' }}>
+                  {valueTax && (
+                    <View style={[{ flexDirection: 'row', width: 240 }]}>
+                      <Text style={[styles.defaultFont]}>Tax({tax}%)</Text>
+                      <Text style={[styles.defaultFont, { marginLeft: 'auto', marginRight: 4 }]}>=</Text>
+                      <Text style={[styles.defaultFont, { width: 120 }]}>Rp{valueTax?.toLocaleString('id-ID')}</Text>
+                    </View>
+                  )}
+                  {valueService && (
+                    <View style={[{ flexDirection: 'row', width: 240 }]}>
+                      <Text style={[styles.defaultFont]}>Service({service}%)</Text>
+                      <Text style={[styles.defaultFont, { marginLeft: 'auto', marginRight: 4 }]}>=</Text>
+                      <Text style={[styles.defaultFont, { width: 120 }]}>
+                        Rp{valueService?.toLocaleString('id-ID')}
+                      </Text>
+                    </View>
+                  )}
+                </View>
+              ) : (
+                <>
+                  <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 12 }}>
+                    <Text style={[{ width: 80 }, styles.defaultFont]}>Tax</Text>
+                    <CustomIncrementDecrementButton value={tax} setValue={setTax} />
+                    <Text style={[styles.defaultFont, { marginLeft: 16, marginRight: 8 }]}>=</Text>
+                    <View style={{ borderBottomWidth: 1, borderBottomColor: colours.black, width: 80 }}>
+                      <Text style={[styles.defaultFont]}>{valueTax && valueTax > 0 ? valueTax : ''}</Text>
+                    </View>
+                  </View>
+                  <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 12 }}>
+                    <Text style={[{ width: 80 }, styles.defaultFont]}>Service</Text>
+                    <CustomIncrementDecrementButton value={service} setValue={setService} />
+                    <Text style={[styles.defaultFont, { marginLeft: 16, marginRight: 8 }]}>=</Text>
+                    <View style={{ borderBottomWidth: 1, borderBottomColor: colours.black, width: 80 }}>
+                      <Text style={[styles.defaultFont]}>{valueService && valueService > 0 ? valueService : ''}</Text>
+                    </View>
+                  </View>
+                </>
+              )}
             </ScrollView>
-            {readyToConfirm && itemConfirmation.length > 0 ? (
+            {itemConfirmation ? (
               <View
                 style={{
                   width: '85%',
@@ -171,7 +226,7 @@ const DivideListItem = () => {
                   style={{ borderRadius: 10, width: '45%', backgroundColor: colours.grayNormal, alignSelf: 'center' }}
                   textStyle={{ fontSize: 14 }}
                   onPress={() => {
-                    setItemConfirmation([]);
+                    setItemConfirmation(false);
                   }}
                 />
                 <CustomButton
@@ -214,8 +269,9 @@ const styles = StyleSheet.create({
   dmBold: {
     fontFamily: 'dm-700',
   },
-  dmFont: {
+  defaultFont: {
     fontFamily: 'dm',
+    fontSize: 14,
   },
   box: {
     borderColor: colours.black,
