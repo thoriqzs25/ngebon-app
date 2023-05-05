@@ -15,5 +15,8 @@
       "yarn": "1.22.18",
       "autoIncrement": true
     }
+  },
+  "cli": {
+    "promptToConfigurePushNotifications": false
   }
 }

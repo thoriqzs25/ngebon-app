@@ -43,7 +43,7 @@ export const InputItem = ({
           onChangeText={(text) => setName(text)}
         />
         <TextInput
-          style={[styles.input, styles.boxInputPrice, { flex: 4, marginRight: 0 }]}
+          style={[styles.input, styles.boxInputPrice, { flex: 4, marginRight: 0, marginLeft: 6 }]}
           placeholder={'Price'}
           value={price}
           keyboardType='numeric'
@@ -79,7 +79,7 @@ const styles = StyleSheet.create({
     borderColor: colours.black,
     borderRadius: 8,
     flex: 1,
-    height: 48,
+    height: 52,
     borderWidth: 1,
     position: 'relative',
     padding: 8,
@@ -107,7 +107,7 @@ const styles = StyleSheet.create({
   input: {
     paddingHorizontal: 2,
     // paddingVertical: 12,
-    height: 28,
+    height: 32,
     marginRight: 4,
   },
 });

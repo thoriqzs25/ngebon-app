@@ -37,6 +37,7 @@ const TransactionCard = ({
   const { username } = useSelector((state: RootState) => state.user);
 
   const [formattedDate, setFormattedDate] = useState<string>('');
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   useEffect(() => {
     if (item.createdAt) {
@@ -45,12 +46,16 @@ const TransactionCard = ({
     }
   }, [item.createdAt]);
 
-  const handleUpdateStatus = async (status: string) => {
+  const handleUpdateStatus = (status: string) => {
+    setIsLoading(true);
     if (item.type === 'Receivable')
       updateStatus &&
         updateStatus({ type: item.type, status: status, debtId: item.debtId, itemsUsername: item.username!! });
     else
       updateStatus && updateStatus({ type: item.type, status: status, debtId: item.debtId, userUsername: username!! });
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 2000);
   };
 
   return (
@@ -111,6 +116,7 @@ const TransactionCard = ({
             style={[styles.actionButton]}
             textStyle={{ fontSize: moderateScale(8, 2) }}
             onPress={() => handleUpdateStatus('confirmed')}
+            disabled={isLoading}
           />
         )}
         {item.status === 'confirmed' && item.type === 'Receivable' && (
@@ -124,15 +130,17 @@ const TransactionCard = ({
           <View style={{ flexDirection: 'row' }}>
             <CustomButton
               text='Accept'
-              style={[styles.actionButton, { marginRight: 4 }]}
+              style={[styles.actionButton, { marginRight: 8 }]}
               textStyle={{ fontSize: moderateScale(8, 2) }}
               onPress={() => handleUpdateStatus('waiting')}
+              disabled={isLoading}
             />
             <CustomButton
               text='Decline'
               style={[styles.actionButton, { backgroundColor: colours.redNormal }]}
               textStyle={{ fontSize: moderateScale(8, 2) }}
               onPress={() => handleUpdateStatus('declined')}
+              disabled={isLoading}
             />
           </View>
         )}
@@ -142,6 +150,7 @@ const TransactionCard = ({
             style={[styles.actionButton]}
             textStyle={{ fontSize: moderateScale(8, 2) }}
             onPress={() => handleUpdateStatus('confirming')}
+            disabled={isLoading}
           />
         )}
         {item.status === 'confirming' && item.type === 'Debt' && (
@@ -187,7 +196,7 @@ const styles = StyleSheet.create({
     fontSize: moderateScale(8, 3),
   },
   actionButton: {
-    paddingVertical: 0,
+    paddingVertical: 2,
     // width: 80,
     minWidth: 80,
     maxWidth: 120,

@@ -73,12 +73,18 @@ const DivideListItem = () => {
   const handleNext = () => {
     let isAllFilled = true;
     let unfilled: number[] = [];
-    inputs.map((val, idx) => {
-      if (val.itemName === '' || val.totalPrice === 0) {
-        isAllFilled = false;
-        unfilled.push(idx);
-      }
-    });
+
+    if (inputs.length === 0) {
+      isAllFilled = false;
+      setInputs([{ itemName: '', price: '', qty: '', totalPrice: 0 }]);
+    } else {
+      inputs.map((val, idx) => {
+        if (val.itemName === '' || val.totalPrice === 0) {
+          isAllFilled = false;
+          unfilled.push(idx);
+        }
+      });
+    }
 
     if (isAllFilled === true && title !== '') {
       setItemConfirmation(true);
