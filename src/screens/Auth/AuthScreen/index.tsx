@@ -1,26 +1,21 @@
 import CustomButton from '@src/components/input/CustomButton';
-import TextField from '@src/components/input/TextField';
 import colours from '@src/utils/colours';
-import { auth, db } from 'firbaseConfig';
+import { auth } from 'firbaseConfig';
 import {
   createUserWithEmailAndPassword,
   signInWithCredential,
-  getAuth,
   GoogleAuthProvider,
-  signInWithPopup,
   User,
   signInWithEmailAndPassword,
-  UserCredential,
+  OAuthProvider,
+  onAuthStateChanged,
 } from 'firebase/auth';
 import { useEffect, useState } from 'react';
-import { ActivityIndicator, Alert, Image, Text, View } from 'react-native';
+import { ActivityIndicator, Image, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import * as AuthSession from 'expo-auth-session';
-import { useAuthRequest } from 'expo-auth-session/build/providers/Google';
 import * as Google from 'expo-auth-session/providers/google';
 import { store } from '@src/redux/store';
 import { currentUser, userLogin } from '@src/redux/actions/auth';
-import { collection, getDocs } from 'firebase/firestore';
 import { navigate } from '@src/navigation';
 import { setAvatar, setUser } from '@src/redux/actions/user';
 import { useSelector } from 'react-redux';
@@ -28,6 +23,9 @@ import { RootState } from '@src/types/states/root';
 import { checkUserRegistered, getUser } from '@src/utils/collections/userCollection';
 import Constants from 'expo-constants';
 import { moderateScale } from 'react-native-size-matters';
+import * as AppleAuthentication from 'expo-apple-authentication';
+import * as Crypto from 'expo-crypto';
+import { IS_ANDROID } from '@src/utils/deviceDimensions';
 
 const AuthScreen = () => {
   const authRedux = useSelector((state: RootState) => state.auth);
@@ -38,6 +36,11 @@ const AuthScreen = () => {
   const [token, setToken] = useState<string>('');
   const [userInfo, setUserInfo] = useState<User>();
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isAppleLoginAvailable, setIsAppleLoginAvailable] = useState(false);
+
+  useEffect(() => {
+    AppleAuthentication.isAvailableAsync().then(setIsAppleLoginAvailable);
+  }, []);
 
   const [request, response, promptAsync] = Google.useAuthRequest(
     {
@@ -85,24 +88,59 @@ const AuthScreen = () => {
     setIsLoading(true);
     try {
       const credential = GoogleAuthProvider.credential(null, token);
-      signInWithCredential(auth, credential)
-        .then((userCred) => {
-          const user = userCred.user;
-          setUserInfo(user);
-          store.dispatch(currentUser({ email: user.email, uid: user.uid }));
-
-          if (user.photoURL) store.dispatch(setAvatar({ avatar: user.photoURL }));
-
-          checkUser(user.uid);
-        })
-        .catch((err) => {
-          console.log('line 47', err);
-        });
+      signInWithCredential(auth, credential);
     } catch {
     } finally {
       setIsLoading(false);
     }
   };
+
+  const handleAppleLogin = async () => {
+    setIsLoading(true);
+    const nonce = Math.random().toString(36).substring(2, 10);
+    try {
+      return Crypto.digestStringAsync(Crypto.CryptoDigestAlgorithm.SHA256, nonce)
+        .then((hashedNonce) =>
+          AppleAuthentication.signInAsync({
+            requestedScopes: [
+              AppleAuthentication.AppleAuthenticationScope.FULL_NAME,
+              AppleAuthentication.AppleAuthenticationScope.EMAIL,
+            ],
+            nonce: hashedNonce,
+          })
+        )
+        .then((appleCredential) => {
+          const { identityToken } = appleCredential;
+          const provider = new OAuthProvider('apple.com');
+          const credential = provider.credential({
+            idToken: identityToken!,
+            rawNonce: nonce,
+          });
+
+          signInWithCredential(auth, credential);
+        })
+        .catch((error) => {
+          // ...
+        });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    const unsubscribeFromAuthStatuChanged = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setUserInfo(user);
+        store.dispatch(currentUser({ email: user.email, uid: user.uid }));
+
+        if (user.photoURL) store.dispatch(setAvatar({ avatar: user.photoURL }));
+
+        checkUser(user.uid);
+      }
+    });
+
+    return unsubscribeFromAuthStatuChanged;
+  }, []);
 
   const checkUser = async (userId: string) => {
     setIsLoading(true);
@@ -141,7 +179,6 @@ const AuthScreen = () => {
           backgroundColor: colours.greenYoung,
           padding: 20,
           width: '100%',
-          // gap: 6,
           alignItems: 'center',
         }}>
         <Text
@@ -181,16 +218,27 @@ const AuthScreen = () => {
         /> */}
         <CustomButton
           text='Google Sign-In'
-          style={{ width: '80%', marginTop: 20, marginBottom: 12 }}
+          style={{ width: '80%', marginTop: 20, marginBottom: 8, paddingVertical: 0, height: 44 }}
           onPress={() => {
             promptAsync();
           }}
-          iconSize={24}
+          iconSize={16}
           iconColor='white'
           iconName='logo-google'
-          textStyle={{ fontFamily: 'dm-700', marginTop: 4, marginLeft: 4 }}
+          textStyle={{ fontFamily: 'dm-700', fontSize: 20, marginTop: 4, marginLeft: 4, lineHeight: 20 }}
         />
-        <Text style={[{ fontFamily: 'dm-700', fontSize: moderateScale(12, 2), color: 'rgba(0,0,0,0.5)' }]}>
+        {isAppleLoginAvailable && (
+          <AppleAuthentication.AppleAuthenticationButton
+            buttonType={AppleAuthentication.AppleAuthenticationButtonType.SIGN_IN}
+            buttonStyle={AppleAuthentication.AppleAuthenticationButtonStyle.BLACK}
+            cornerRadius={24}
+            style={{ width: '80%', height: 48 }}
+            onPress={handleAppleLogin}
+          />
+        )}
+
+        <Text
+          style={[{ fontFamily: 'dm-700', fontSize: moderateScale(12, 2), color: 'rgba(0,0,0,0.5)', marginTop: 12 }]}>
           {Constants?.manifest?.version}
         </Text>
       </View>

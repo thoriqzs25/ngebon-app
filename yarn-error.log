@@ -1,5 +1,5 @@
 Arguments: 
-  /usr/local/bin/node /usr/local/bin/yarnpkg add expo-updates@~0.15.6
+  /usr/local/bin/node /usr/local/bin/yarnpkg add expo-apple-authentication@~5.0.1
 
 PATH: 
   /Users/thoriqzs/.sdkman/candidates/java/current/bin:/Users/thoriqzs/.sdkman/candidates/gradle/current/bin:/Users/thoriqzs/.jenv/shims:/opt/homebrew/opt/mysql-client/bin:/Users/thoriqzs/GCI/google-cloud-sdk/bin:/Users/thoriqzs/.jenv/shims:/Users/thoriqzs/.jenv/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Library/Apple/usr/bin:/Users/thoriqzs/Library/Android/sdk/platform-tools:/Users/thoriqzs/Library/Android/sdk/emulator:/Users/thoriqzs/Library/Android/sdk/platform-tools:/opt/homebrew/Cellar/mysql-client/8.0.31/bin
@@ -19,7 +19,7 @@ Trace:
 npm manifest: 
   {
     "name": "ngebon-app",
-    "version": "1.0.0",
+    "version": "1.0.7",
     "main": "node_modules/expo/AppEntry.js",
     "scripts": {
       "start": "expo start",
@@ -37,11 +37,13 @@ npm manifest:
       "@react-navigation/stack": "^6.3.16",
       "@reduxjs/toolkit": "^1.9.3",
       "expo": "^47.0.0",
+      "expo-apple-authentication": "^6.0.1",
       "expo-auth-session": "~3.8.0",
       "expo-cli": "^6.3.2",
       "expo-image-picker": "~14.0.2",
       "expo-random": "~13.0.0",
       "expo-status-bar": "~1.4.2",
+      "expo-updates": "^0.16.4",
       "expo-web-browser": "~12.0.0",
       "firebase": "^9.18.0",
       "moment": "^2.29.4",
@@ -1599,6 +1601,19 @@ Lockfile:
     version "0.6.0"
     resolved "https://registry.npmjs.org/@expo/metro-config/-/metro-config-0.6.0.tgz"
     integrity sha512-AqiWCyD6MGQuddZuitdpNVpPUO7JZEjPmLaDabAf/hEP6Uo9UJ4flx0OGcJRBkZTRSZ3Z3WwSBtq0LWvABJzrA==
+    dependencies:
+      "@expo/config" "~8.0.0"
+      chalk "^4.1.0"
+      debug "^4.3.2"
+      find-yarn-workspace-root "~2.0.0"
+      getenv "^1.0.0"
+      resolve-from "^5.0.0"
+      sucrase "^3.20.0"
+  
+  "@expo/metro-config@~0.7.0":
+    version "0.7.1"
+    resolved "https://registry.npmjs.org/@expo/metro-config/-/metro-config-0.7.1.tgz"
+    integrity sha512-vGWU62Zp5pRGw5IEHDNdqvsy62/hu/Na7bswePYVjoaItOjJY7+qilFeF0AAK+3V8qAM8fpltH3ByylKfWaA7A==
     dependencies:
       "@expo/config" "~8.0.0"
       chalk "^4.1.0"
@@ -5179,6 +5194,11 @@ Lockfile:
       snapdragon "^0.8.1"
       to-regex "^3.0.1"
   
+  expo-apple-authentication@^6.0.1:
+    version "6.0.1"
+    resolved "https://registry.npmjs.org/expo-apple-authentication/-/expo-apple-authentication-6.0.1.tgz"
+    integrity sha512-Vp7HzSdUJj9lC6rJokJjDU1BBA3EgZMEzoQJpI8Kjck4/5BXlOhlKMxqk4zUoPEqZ/hhj5DgqMhM3IeNm46mag==
+  
   expo-application@~5.0.1:
     version "5.0.1"
     resolved "https://registry.npmjs.org/expo-application/-/expo-application-5.0.1.tgz"
@@ -5284,6 +5304,11 @@ Lockfile:
     resolved "https://registry.npmjs.org/expo-crypto/-/expo-crypto-12.0.0.tgz"
     integrity sha512-2KC52eLYsXndDZOVFyr+K3Zs9wDgpqZ7F7fwAiUg+yNbE21CJrHKDFvo/Br0FAaDf/w9pUks5/qi1azB5sDzvg==
   
+  expo-eas-client@~0.5.0:
+    version "0.5.1"
+    resolved "https://registry.npmjs.org/expo-eas-client/-/expo-eas-client-0.5.1.tgz"
+    integrity sha512-i3L/iwhI6cFhSUpVsCxSU5qehNznL/rQFYoof6qUIh3CMyijCuTEwjEhwbw2a5W6obPBzQUXbomMSFDO6D5/0Q==
+  
   expo-error-recovery@~4.0.1:
     version "4.0.1"
     resolved "https://registry.npmjs.org/expo-error-recovery/-/expo-error-recovery-4.0.1.tgz"
@@ -5315,6 +5340,11 @@ Lockfile:
     dependencies:
       expo-image-loader "~4.0.0"
   
+  expo-json-utils@~0.5.0:
+    version "0.5.1"
+    resolved "https://registry.npmjs.org/expo-json-utils/-/expo-json-utils-0.5.1.tgz"
+    integrity sha512-Y5boshyf40vPjwxNnOIfacZPNkOymecZRQ1k+TSXlq6gnw5XRsnM5hnP0VLVYhdv8x+9CX6E1fDsDUNvsK38Dg==
+  
   expo-keep-awake@~11.0.1:
     version "11.0.1"
     resolved "https://registry.npmjs.org/expo-keep-awake/-/expo-keep-awake-11.0.1.tgz"
@@ -5330,6 +5360,13 @@ Lockfile:
       invariant "^2.2.4"
       qs "^6.9.1"
       url-parse "^1.5.9"
+  
+  expo-manifests@~0.5.0:
+    version "0.5.2"
+    resolved "https://registry.npmjs.org/expo-manifests/-/expo-manifests-0.5.2.tgz"
+    integrity sha512-WnsTlE2le3pV/B/AJPKTOSjb2K9AT1mPDCfQxTQ/KMCwF95saoXYt2OPF3hxZNaMAV6VIAhXgd5Y6wpcH9ruPQ==
+    dependencies:
+      expo-json-utils "~0.5.0"
   
   expo-modules-autolinking@>=0.8.1, expo-modules-autolinking@1.0.2:
     version "1.0.2"
@@ -5382,6 +5419,33 @@ Lockfile:
     version "1.4.4"
     resolved "https://registry.npmjs.org/expo-status-bar/-/expo-status-bar-1.4.4.tgz"
     integrity sha512-5DV0hIEWgatSC3UgQuAZBoQeaS9CqeWRZ3vzBR9R/+IUD87Adbi4FGhU10nymRqFXOizGsureButGZIXPs7zEA==
+  
+  expo-structured-headers@~3.1.0:
+    version "3.1.1"
+    resolved "https://registry.npmjs.org/expo-structured-headers/-/expo-structured-headers-3.1.1.tgz"
+    integrity sha512-oV6yNGsJxQt7S9HYZTr+4L0I/yRwOF38USJ81I1KiN3GQI4C2z7P5OosyREA2VL9O+kUZVCCpNYsBLSa3/5bAQ==
+  
+  expo-updates-interface@~0.9.0:
+    version "0.9.1"
+    resolved "https://registry.npmjs.org/expo-updates-interface/-/expo-updates-interface-0.9.1.tgz"
+    integrity sha512-wk88LLhseQ7LJvxdN7BTKiryyqALxnrvr+lyHK3/prg76Yy0EGi2Q/oE/rtFyyZ1JmQDRbO/5pdX0EE6QqVQXQ==
+  
+  expo-updates@^0.16.4:
+    version "0.16.4"
+    resolved "https://registry.npmjs.org/expo-updates/-/expo-updates-0.16.4.tgz"
+    integrity sha512-hEUotP10sBiYn6dvkYC2rIa+kAmsBuaMp32sIVNAYEwKMQJqEwqNAKTU6CpJ4Aoc//BYL2Hv8qNo/UsT4rATRg==
+    dependencies:
+      "@expo/code-signing-certificates" "0.0.5"
+      "@expo/config" "~8.0.0"
+      "@expo/config-plugins" "~6.0.0"
+      "@expo/metro-config" "~0.7.0"
+      arg "4.1.0"
+      expo-eas-client "~0.5.0"
+      expo-manifests "~0.5.0"
+      expo-structured-headers "~3.1.0"
+      expo-updates-interface "~0.9.0"
+      fbemitter "^3.0.0"
+      resolve-from "^5.0.0"
   
   expo-web-browser@~12.0.0:
     version "12.0.0"
