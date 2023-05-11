@@ -3,6 +3,8 @@ import ImageView from '@src/components/ImageView';
 import SubPage from '@src/components/SubPage';
 import UserCard from '@src/components/UserCard';
 import CustomButton from '@src/components/input/CustomButton';
+import CustomIncrementDecrementButton from '@src/components/input/CustomIncrementDecrementButton';
+import CustomIncrementDecrementButtonParts from '@src/components/input/CustomIncrementDecrementButtonParts';
 import { navigate } from '@src/navigation';
 import { setAssignedFriends, setDivideItems } from '@src/redux/actions/divide';
 import { store } from '@src/redux/store';
@@ -18,113 +20,7 @@ import { ScrollView } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { moderateScale, moderateVerticalScale } from 'react-native-size-matters';
 import { useSelector } from 'react-redux';
-
-const AssignCard = ({
-  active = false,
-  onPress,
-  item,
-  users,
-  idx,
-}: {
-  active?: boolean;
-  onPress?: () => void;
-  item: { itemName: string; price: string; qty: string; totalPrice: number };
-  users: UserDocument[];
-  idx: number;
-}) => {
-  const [priceItem, setPrice] = useState<string>('');
-  const [total, setTotal] = useState<string>('');
-  const [dummyImg, setDummyImg] = useState<string>('');
-
-  const parseTotalPrice = () => {
-    const formattedTotal = 'Rp' + item.totalPrice.toLocaleString('id-ID');
-    const formattedPrice = parseInt(item.price).toLocaleString('id-ID');
-    setPrice(formattedPrice);
-    setTotal(formattedTotal);
-  };
-
-  const getDummyImg = async () => {
-    const img = await getDownloadURL(ref(storage, 'images/tree_1.webp'));
-    setDummyImg(img);
-  };
-
-  useEffect(() => {
-    parseTotalPrice();
-  }, []);
-
-  useEffect(() => {
-    getDummyImg();
-  }, []);
-
-  return (
-    <View style={{ marginBottom: 2 }}>
-      <TouchableOpacity activeOpacity={0.9} onPress={() => onPress && onPress()} style={{ marginTop: 12 }}>
-        <View style={styles.box}>
-          <Text style={styles.boxTitle}>Item {idx + 1}</Text>
-          <View style={{ marginLeft: 4, flex: 1 }}>
-            <Text style={{ fontFamily: 'dm-500' }} numberOfLines={1}>
-              {item.itemName}
-            </Text>
-            <Text style={{ fontFamily: 'dm', color: 'rgba(0, 0, 0, 0.35)' }}>{priceItem ?? ''}</Text>
-          </View>
-          <Text style={{ marginRight: 4, flex: 1, textAlign: 'center', fontFamily: 'dm-500' }}>x{item.qty}</Text>
-
-          <Text style={{ flex: 1, textAlign: 'right', fontFamily: 'dm-500' }}>{total ?? ''}</Text>
-          <View style={{ flex: 1 }}>
-            <View
-              style={{
-                alignSelf: 'flex-end',
-                alignItems: 'center',
-                justifyContent: 'center',
-                width: 20,
-                height: 20,
-                borderRadius: 10,
-                borderWidth: 2,
-                borderColor: active ? colours.greenNormal : '#636366',
-              }}>
-              <View
-                style={{
-                  width: 10,
-                  height: 10,
-                  backgroundColor: active ? colours.greenNormal : colours.white,
-                  borderRadius: 8,
-                }}
-              />
-            </View>
-          </View>
-        </View>
-      </TouchableOpacity>
-      <View style={{ flexDirection: 'row', marginTop: 4 }}>
-        {users &&
-          users.map((user, idx) => {
-            let img = dummyImg;
-            if (user.avatar !== '') {
-              img = user?.avatar ?? dummyImg;
-            }
-
-            if (idx <= 0) {
-              return (
-                <Image
-                  key={idx.toString()}
-                  source={{
-                    uri: img,
-                  }}
-                  style={[styles.listedUserAvatar]}
-                />
-              );
-            }
-            return (
-              <Image
-                key={idx.toString()}
-                source={{ uri: img }}
-                style={[styles.listedUserAvatar, { marginLeft: -10 }]}
-              />
-            );
-          })}
-      </View>
-    </View>
-  );
-};
+import AssignCard from './AssignCard';
 
 const DivideAssign = ({ route }: { route: RouteProp<{ params: { selectedFriends: UserDocument[] } }> }) => {
   const { divide } = useSelector((state: RootState) => state);
@@ -329,6 +225,16 @@ const styles = StyleSheet.create({
     borderRadius: 6,
     borderColor: colours.placeholderBorder,
     borderWidth: 1,
+  },
+  grayParts: {
+    bottom: -4,
+    width: 20,
+    height: 20,
+    borderRadius: 10,
+    position: 'absolute',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: colours.gray300,
   },
 });
 
