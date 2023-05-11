@@ -1,5 +1,6 @@
 import CustomIncrementDecrementButtonParts from '@src/components/input/CustomIncrementDecrementButtonParts';
 import { UserDocument } from '@src/types/collection/usersCollection';
+import { AssignFriend } from '@src/types/states/divide';
 import colours from '@src/utils/colours';
 import { app, storage } from 'firbaseConfig';
 import { getDownloadURL, getStorage, ref } from 'firebase/storage';
@@ -14,17 +15,27 @@ const AssignCard = ({
   item,
   users,
   idx,
-}: {
+  incrementParts,
+  decrementParts,
+  friends,
+  currFriendIdx,
+}: // partsValue,
+{
   active?: boolean;
   onPress?: () => void;
   item: { itemName: string; price: string; qty: string; totalPrice: number };
   users: UserDocument[];
   idx: number;
+  incrementParts: () => void;
+  decrementParts: () => void;
+  friends: AssignFriend[];
+  currFriendIdx: number;
+  // partsValue: number;
 }) => {
   const [priceItem, setPrice] = useState<string>('');
   const [total, setTotal] = useState<string>('');
   const [dummyImg, setDummyImg] = useState<string>('');
-  const [parts, setParts] = useState<number>(1);
+  const [value, setValue] = useState<number>(1);
 
   const parseTotalPrice = () => {
     const formattedTotal = 'Rp' + item.totalPrice.toLocaleString('id-ID');
@@ -45,6 +56,16 @@ const AssignCard = ({
   useEffect(() => {
     getDummyImg();
   }, []);
+
+  useEffect(() => {
+    let _parts: number = 1;
+    const _selectedItems = friends[currFriendIdx]?.selectedItem;
+
+    const item = _selectedItems.find((item) => item.itemIdx === idx);
+    if (item) _parts = item?.parts;
+
+    setValue(_parts);
+  }, [friends]);
 
   return (
     <View style={{ marginBottom: 2 }}>
@@ -90,49 +111,66 @@ const AssignCard = ({
             horizontal={true}
             style={{
               flex: 1,
-              flexDirection: 'row',
               marginTop: 4,
+              marginRight: 8,
               paddingBottom: 4,
+              flexDirection: 'row',
               // backgroundColor: colours.blueNormal,
             }}>
             {users &&
-              users.map((user, idx) => {
+              users.map((user, index) => {
                 let img = dummyImg;
+                let _parts = 1;
                 if (user.avatar !== '') {
                   img = user?.avatar ?? dummyImg;
                 }
 
-                if (idx <= 0) {
+                // Not best approach
+                friends.map((fr) => {
+                  if (fr.user.username === user.username) {
+                    _parts = 1;
+                    fr.selectedItem.forEach((itemParts) => {
+                      if (itemParts.itemIdx === idx) {
+                        _parts = itemParts.parts;
+                      }
+                    });
+                  }
+                });
+                //
+
+                if (index <= 0) {
                   return (
-                    <View style={{ position: 'relative', alignItems: 'center' }}>
+                    <View key={index} style={{ position: 'relative', alignItems: 'center' }}>
                       <Image
-                        key={idx.toString()}
                         source={{
                           uri: img,
                         }}
                         style={[styles.listedUserAvatar]}
                       />
                       <View style={[styles.grayParts]}>
-                        <Text style={{ color: colours.white, fontFamily: 'dm', fontSize: 12 }}>2</Text>
+                        <Text style={{ color: colours.white, fontFamily: 'dm', fontSize: 12 }}>{_parts}</Text>
                       </View>
                     </View>
                   );
                 }
                 return (
-                  <View style={{ position: 'relative', alignItems: 'center' }}>
-                    <Image
-                      key={idx.toString()}
-                      source={{ uri: img }}
-                      style={[styles.listedUserAvatar, { marginLeft: -10 }]}
-                    />
+                  <View
+                    key={index}
+                    style={{
+                      position: 'relative',
+                      alignItems: 'center',
+                      marginLeft: -10,
+                    }}>
+                    <Image source={{ uri: img }} style={[styles.listedUserAvatar]} />
                     <View
                       style={[
                         styles.grayParts,
                         {
-                          left: 0,
+                          // left: 0,
+                          // backgroundColor: colours.blueNormal,
                         },
                       ]}>
-                      <Text style={{ color: colours.white, fontFamily: 'dm' }}>2</Text>
+                      <Text style={{ color: colours.white, fontFamily: 'dm' }}>{_parts}</Text>
                     </View>
                   </View>
                 );
@@ -141,7 +179,12 @@ const AssignCard = ({
         </View>
         {active && (
           <View style={{ justifyContent: 'center' }}>
-            <CustomIncrementDecrementButtonParts value={parts} setValue={setParts} />
+            <CustomIncrementDecrementButtonParts
+              value={value}
+              // value={1}
+              increment={incrementParts}
+              decrement={decrementParts}
+            />
           </View>
         )}
       </View>

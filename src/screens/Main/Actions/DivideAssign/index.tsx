@@ -9,7 +9,7 @@ import { navigate } from '@src/navigation';
 import { setAssignedFriends, setDivideItems } from '@src/redux/actions/divide';
 import { store } from '@src/redux/store';
 import { UserDocument } from '@src/types/collection/usersCollection';
-import { AssignFriend, AssignItems, ItemDivide } from '@src/types/states/divide';
+import { AssignFriend, AssignItems, ItemDivide, ItemParts } from '@src/types/states/divide';
 import { RootState } from '@src/types/states/root';
 import colours from '@src/utils/colours';
 import { app, storage } from 'firbaseConfig';
@@ -26,55 +26,109 @@ const DivideAssign = ({ route }: { route: RouteProp<{ params: { selectedFriends:
   const { divide } = useSelector((state: RootState) => state);
 
   const [currIdx, setCurrIdx] = useState<number>(0);
-  const [friends, setFriends] = useState<AssignFriend[]>([]);
   const [items, setItems] = useState<AssignItems[]>([]);
-  // const [active, setActive] = useState<boolean>(false);
+  const [friends, setFriends] = useState<AssignFriend[]>([]);
 
-  const handleSelectItem = async (item: AssignItems, idx: number) => {
+  const handleSelectItem = (item: AssignItems, idx: number) => {
     const prevItems = [...items];
     const prevFriends = [...friends];
 
     if (prevItems[idx].userArr.find((item) => item.username === friends[currIdx].user.username) === undefined) {
       prevItems[idx].userArr.push(friends[currIdx].user);
-
+      const _fullParts = prevItems[idx].item.fullParts;
+      prevItems[idx].item.fullParts = _fullParts + 1;
       // prevItems[idx].userArr.sort((a, b) => a.username.toLowerCase().localeCompare(b.username.toLowerCase()));
       setItems(prevItems);
     } else {
       const userArr = prevItems[idx].userArr.filter((user) => user.username !== friends[currIdx].user.username);
       prevItems[idx].userArr = userArr;
+      const _parts = prevFriends[currIdx].selectedItem[idx].parts;
+      prevItems[idx].item.fullParts = prevItems[idx].item.fullParts - _parts;
       setItems(prevItems);
     }
 
-    if (prevFriends[currIdx].selectedItem.find((num) => num === idx) === undefined) {
-      prevFriends[currIdx].selectedItem.push(idx);
+    if (prevFriends[currIdx].selectedItem.find((itemParts) => itemParts.itemIdx === idx) === undefined) {
+      prevFriends[currIdx].selectedItem.push({ itemIdx: idx, parts: 1 });
 
       // prevFriends[currIdx].selectedItem.sort((a, b) => a - b);
       setFriends(prevFriends);
     } else {
-      const selectedItemArr = prevFriends[currIdx].selectedItem.filter((num) => num !== idx);
+      const selectedItemArr = prevFriends[currIdx].selectedItem.filter((itemParts) => itemParts.itemIdx !== idx);
       prevFriends[currIdx].selectedItem = selectedItemArr;
       setFriends(prevFriends);
     }
   };
 
-  const handleNext = () => {
-    let _items: ItemDivide[] = [];
-    items.map((item, idx) => {
-      const payload = {
-        ...item.item,
-        pricePerUser: Math.ceil(item.item.totalPrice / item.userArr.length),
-      } as ItemDivide;
-      _items.push(payload);
+  const handleIncrementParts = (idx: number) => {
+    const prevItems = [...items];
+    const prevFriends = [...friends];
+
+    const _fullParts = prevItems[idx].item.fullParts;
+    const _selectedItems = prevFriends[currIdx].selectedItem;
+    let _parts = 1;
+
+    _selectedItems.forEach((itemParts) => {
+      if (itemParts.itemIdx === idx) _parts = itemParts.parts;
     });
 
-    store.dispatch(setDivideItems({ title: divide.title, items: _items }));
-    store.dispatch(setAssignedFriends({ friends: friends }));
+    prevItems[idx].item.fullParts = _fullParts + 1;
 
-    setFriends([]);
-    setItems([]);
-    setCurrIdx(0);
+    const _item = prevFriends[currIdx].selectedItem.find((itemParts) => {
+      return itemParts.itemIdx === idx;
+    });
 
-    navigate('PaymentReceipient', { page: 'Divide' });
+    if (_item) {
+      _item.parts = _parts + 1;
+    }
+
+    setItems(prevItems);
+    setFriends(prevFriends);
+  };
+
+  const handleDecrementParts = (idx: number) => {
+    const prevItems = [...items];
+    const prevFriends = [...friends];
+
+    const _fullParts = prevItems[idx].item.fullParts;
+    const _selectedItems = prevFriends[currIdx].selectedItem;
+    let _parts = 1;
+
+    _selectedItems.forEach((itemParts) => {
+      if (itemParts.itemIdx === idx) _parts = itemParts.parts;
+    });
+
+    if (_fullParts - 1 <= 0 || _parts - 1 <= 0) return;
+
+    prevItems[idx].item.fullParts = _fullParts - 1;
+
+    const _item = prevFriends[currIdx].selectedItem.find((itemParts) => {
+      return itemParts.itemIdx === idx;
+    });
+
+    if (_item) {
+      _item.parts = _parts - 1;
+    }
+
+    setItems(prevItems);
+    setFriends(prevFriends);
+  };
+
+  const handleNext = () => {
+    console.log('line 91', items);
+    // let _items: ItemDivide[] = [];
+    // items.map((item, idx) => {
+    //   const payload = {
+    //     ...item.item,
+    //     pricePerUser: Math.ceil(item.item.totalPrice / item.userArr.length),
+    //   } as ItemDivide;
+    //   _items.push(payload);
+    // });
+    // store.dispatch(setDivideItems({ title: divide.title, items: _items }));
+    // store.dispatch(setAssignedFriends({ friends: friends }));
+    // setFriends([]);
+    // setItems([]);
+    // setCurrIdx(0);
+    // navigate('PaymentReceipient', { page: 'Divide' });
   };
 
   useFocusEffect(
@@ -104,7 +158,13 @@ const DivideAssign = ({ route }: { route: RouteProp<{ params: { selectedFriends:
         let itemList: AssignItems[] = [];
         divide?.items?.map((item, idx) => {
           itemList.push({
-            item: { itemName: item.itemName, price: item.price, qty: item.qty, totalPrice: item.totalPrice },
+            item: {
+              itemName: item.itemName,
+              price: item.price,
+              qty: item.qty,
+              totalPrice: item.totalPrice,
+              fullParts: 0,
+            },
             userArr: [],
           });
         });
@@ -152,15 +212,20 @@ const DivideAssign = ({ route }: { route: RouteProp<{ params: { selectedFriends:
               <View style={{ flex: 1 }}>
                 {items &&
                   items.map((item, idx) => {
+                    const _active =
+                      item.userArr.find((item) => item.username === friends[currIdx].user.username) !== undefined;
                     return (
                       <AssignCard
                         key={idx}
                         idx={idx}
+                        currFriendIdx={currIdx}
                         item={item.item}
-                        active={
-                          item.userArr.find((item) => item.username === friends[currIdx].user.username) !== undefined
-                        }
+                        active={_active}
                         users={item.userArr}
+                        incrementParts={() => handleIncrementParts(idx)}
+                        decrementParts={() => handleDecrementParts(idx)}
+                        friends={friends}
+                        // partsValue={_active ? friends[currIdx].selectedItem[idx].parts ?? 1 : 0}
                         onPress={() => handleSelectItem(item, idx)}
                       />
                     );

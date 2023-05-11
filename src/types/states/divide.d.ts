@@ -20,14 +20,20 @@ export type DivideReducerAction =
 
 export type AssignFriend = {
   user: UserDocument;
-  selectedItem: number[];
+  selectedItem: ItemParts[];
+};
+
+type ItemParts = {
+  itemIdx: number;
+  parts: number;
 };
 
 export type AssignItems = {
   item: {
-    itemName: string;
-    price: string;
     qty: string;
+    price: string;
+    itemName: string;
+    fullParts: number;
     totalPrice: number;
   };
   userArr: UserDocument[];
