@@ -185,14 +185,14 @@ const AuthScreen = () => {
           style={[
             { fontFamily: 'dm-700', fontSize: moderateScale(20, 2), color: colours.greenNormal, textAlign: 'center' },
           ]}>
-          {userInfo?.displayName ?? 'Ngebon'}
+          {'Ngebon'}
         </Text>
-        {userInfo?.photoURL && (
+        {/* {userInfo?.photoURL && (
           <Image
             source={{ uri: userInfo?.photoURL }}
             style={{ marginTop: 20, width: 120, height: 120, borderRadius: 20 }}
           />
-        )}
+        )} */}
         {isLoading && <ActivityIndicator animating={isLoading} />}
 
         {/* <TextField title='email' placeholderText='Masukkan email' setValue={setEmail} />

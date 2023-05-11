@@ -27,7 +27,7 @@ import { updateUser } from '@src/utils/collections/userCollection';
 import { useNavigation } from '@react-navigation/native';
 
 const EditProfileInformation = () => {
-  // const { uid } = useSelector((state: RootState) => state.auth);
+  const { uid } = useSelector((state: RootState) => state.auth);
   const { user } = useSelector((state: RootState) => state);
 
   const { navigate, goBack, canGoBack } = useNavigation();
@@ -38,12 +38,11 @@ const EditProfileInformation = () => {
   const [email, setEmail] = useState<string>(user.email ?? '');
 
   const pickImage = async () => {
-    // No permissions request is necessary for launching the image library
     let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
       aspect: [4, 3],
-      quality: 1,
+      quality: 0,
     });
 
     if (!result.canceled) {
@@ -54,29 +53,25 @@ const EditProfileInformation = () => {
   };
 
   const uploadImage = async (uri: string) => {
-    const blob = (await new Promise((resolve, reject) => {
-      const xhr = new XMLHttpRequest();
-      xhr.onload = function () {
-        resolve(xhr.response);
-      };
-      xhr.onerror = function () {
-        reject(new TypeError('Network request failed'));
-      };
-      xhr.responseType = 'blob';
-      xhr.open('GET', uri, true);
-      xhr.send(null);
-    })) as Blob;
-    const imgRef = ref(storage, 'images/test.jpg');
+    try {
+      const reference = ref(storage, `profile-picture/${username}.jpg`);
 
-    uploadBytes(imgRef, blob).then((snapshot) => {
-      getDownloadURL(imgRef).then(async (url) => {
-        const res = await updateDoc(doc(db, 'users', `${user.uid}`), {
-          avatar: url,
-        });
+      const response = await fetch(uri);
+      const bytes = await response.blob();
 
-        store.dispatch(setAvatar({ avatar: url }));
+      await uploadBytes(reference, bytes);
+
+      const url = await getDownloadURL(reference).then((url) => {
+        return url;
       });
-    });
+
+      await updateDoc(doc(db, 'users', `${uid}`), {
+        avatar: url,
+      });
+      store.dispatch(setAvatar({ avatar: url }));
+    } catch (err) {
+      console.log('line 66', err);
+    }
   };
 
   const handleSave = () => {
@@ -118,7 +113,7 @@ const EditProfileInformation = () => {
               }}>
               <ImageView
                 name={'tree-1'}
-                remoteAssetFullUri={user.avatar}
+                remoteAssetFullUri={image}
                 style={{
                   width: moderateScale(100, 2),
                   height: moderateScale(100, 2),

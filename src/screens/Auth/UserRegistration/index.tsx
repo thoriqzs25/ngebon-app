@@ -45,7 +45,7 @@ const UserRegistration = () => {
 
     try {
       const isExists = await checkUsernameRegistered(username);
-      if (isExists) return;
+      if (isExists || username.toLowerCase().includes('guest')) return;
 
       const resUser = await setDoc(doc(db, 'users', `${uid}`), newUserDoc, { merge: true });
       const resFriend = await setDoc(doc(db, 'friends', `${uid}`), newFriendDoc, { merge: true });

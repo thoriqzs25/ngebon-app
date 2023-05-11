@@ -6,7 +6,7 @@ import colours from '@src/utils/colours';
 import { useState } from 'react';
 import { Button, Image, StyleSheet, Text, View } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
-import { db, storage } from 'firbaseConfig';
+import { auth, db, storage } from 'firbaseConfig';
 import { getDownloadURL, getStorage, ref, uploadBytes, uploadString } from 'firebase/storage';
 import { doc, setDoc, updateDoc } from 'firebase/firestore';
 import { useSelector } from 'react-redux';
@@ -29,50 +29,42 @@ const Profile = () => {
   const { uid } = useSelector((state: RootState) => state.auth);
   const { avatar, username, name } = useSelector((state: RootState) => state.user);
 
-  const [image, setImage] = useState<string | null>(null);
-
   const pickImage = async () => {
     // No permissions request is necessary for launching the image library
     let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
       aspect: [4, 3],
-      quality: 1,
+      quality: 0,
     });
 
     if (!result.canceled) {
       const uri = result.assets[0].uri;
 
       uploadImage(uri);
-
-      setImage(uri);
     }
   };
 
   const uploadImage = async (uri: string) => {
-    const blob = (await new Promise((resolve, reject) => {
-      const xhr = new XMLHttpRequest();
-      xhr.onload = function () {
-        resolve(xhr.response);
-      };
-      xhr.onerror = function () {
-        reject(new TypeError('Network request failed'));
-      };
-      xhr.responseType = 'blob';
-      xhr.open('GET', uri, true);
-      xhr.send(null);
-    })) as Blob;
-    const imgRef = ref(storage, 'images/test.jpg');
+    try {
+      const reference = ref(storage, `profile-picture/${username}.jpg`);
 
-    uploadBytes(imgRef, blob).then((snapshot) => {
-      getDownloadURL(imgRef).then(async (url) => {
-        const res = await updateDoc(doc(db, 'users', `${uid}`), {
-          avatar: url,
-        });
+      const response = await fetch(uri);
+      const bytes = await response.blob();
 
-        store.dispatch(setAvatar({ avatar: url }));
+      await uploadBytes(reference, bytes);
+
+      const url = await getDownloadURL(reference).then((url) => {
+        return url;
       });
-    });
+
+      await updateDoc(doc(db, 'users', `${uid}`), {
+        avatar: url,
+      });
+      store.dispatch(setAvatar({ avatar: url }));
+    } catch (err) {
+      console.log('line 66', err);
+    }
   };
 
   return (
@@ -84,7 +76,6 @@ const Profile = () => {
           IS_ANDROID && globalStyle.paddingTop,
         ]}>
         <Text style={styles.page}>Profile</Text>
-        {/* <Button title='Pick an image from camera roll' onPress={pickImage} /> */}
         <TouchableOpacity activeOpacity={0.85} onPress={pickImage}>
           <View
             style={{
@@ -124,7 +115,6 @@ const Profile = () => {
             </View>
           </View>
         </TouchableOpacity>
-
         <Text style={styles.name} numberOfLines={1}>
           {name}
         </Text>
@@ -151,6 +141,7 @@ const Profile = () => {
           <TouchableOpacity
             activeOpacity={0.75}
             onPress={() => {
+              auth.signOut();
               store.dispatch(userLogout());
               store.dispatch(removeUser());
             }}>
