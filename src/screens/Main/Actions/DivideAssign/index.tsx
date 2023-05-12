@@ -6,7 +6,7 @@ import CustomButton from '@src/components/input/CustomButton';
 import CustomIncrementDecrementButton from '@src/components/input/CustomIncrementDecrementButton';
 import CustomIncrementDecrementButtonParts from '@src/components/input/CustomIncrementDecrementButtonParts';
 import { navigate } from '@src/navigation';
-import { setAssignedFriends, setDivideItems } from '@src/redux/actions/divide';
+import { resetAssignedFriends, setAssignedFriends, setDivideItems } from '@src/redux/actions/divide';
 import { store } from '@src/redux/store';
 import { UserDocument } from '@src/types/collection/usersCollection';
 import { AssignFriend, AssignItems, ItemDivide, ItemParts } from '@src/types/states/divide';
@@ -42,9 +42,13 @@ const DivideAssign = ({ route }: { route: RouteProp<{ params: { selectedFriends:
     } else {
       const userArr = prevItems[idx].userArr.filter((user) => user.username !== friends[currIdx].user.username);
       prevItems[idx].userArr = userArr;
-      const _parts = prevFriends[currIdx].selectedItem[idx].parts;
-      prevItems[idx].item.fullParts = prevItems[idx].item.fullParts - _parts;
-      setItems(prevItems);
+
+      const _selectedItems = prevFriends[currIdx].selectedItem.find((item) => item.itemIdx === idx);
+      if (_selectedItems) {
+        const _parts = _selectedItems?.parts;
+        prevItems[idx].item.fullParts = prevItems[idx].item.fullParts - _parts;
+        setItems(prevItems);
+      }
     }
 
     if (prevFriends[currIdx].selectedItem.find((itemParts) => itemParts.itemIdx === idx) === undefined) {
@@ -114,64 +118,68 @@ const DivideAssign = ({ route }: { route: RouteProp<{ params: { selectedFriends:
   };
 
   const handleNext = () => {
-    // console.log('line 91', items);
-    let _items: ItemDivide[] = [];
-    items.map((item, idx) => {
-      const payload = {
-        ...item.item,
-        // pricePerUser: Math.ceil(item.item.totalPrice / item.userArr.length),
-      } as ItemDivide;
-      _items.push(payload);
+    let allAssigned = true;
+    const _items = items.map((item) => {
+      if (item.userArr.length === 0) allAssigned = false;
+      return { ...item.item };
     });
-    store.dispatch(setDivideItems({ title: divide.title, items: _items }));
-    store.dispatch(setAssignedFriends({ friends: friends }));
-    setFriends([]);
-    setItems([]);
-    setCurrIdx(0);
-    navigate('PaymentReceipient', { page: 'Divide' });
+    const _friends = [...friends];
+    const _title = divide.title;
+
+    if (allAssigned) {
+      store.dispatch(setDivideItems({ title: _title, items: _items }));
+      store.dispatch(setAssignedFriends({ friends: _friends }));
+      // setFriends([]);
+      // setItems([]);
+      setCurrIdx(0);
+      navigate('PaymentReceipient', { page: 'Divide' });
+    }
   };
 
   useFocusEffect(
     useCallback(() => {
-      if (route.params) {
-        let friendList: AssignFriend[] = [];
-        const selectedFriends: UserDocument[] = [...route.params.selectedFriends];
-        selectedFriends.map((friend, idx) => {
-          const user = friend;
-          const _user = {
-            avatar: user.avatar,
-            email: user.email,
-            name: user.name,
-            username: user.username,
-            payments: user.payments,
-          } as UserDocument;
-          friendList.push({ user: _user, selectedItem: [] });
-        });
-        setFriends(friendList);
-      }
+      store.dispatch(resetAssignedFriends());
     }, [])
   );
 
-  useFocusEffect(
-    useCallback(() => {
-      if (divide) {
-        let itemList: AssignItems[] = [];
-        divide?.items?.map((item, idx) => {
-          itemList.push({
-            item: {
-              itemName: item.itemName,
-              price: item.price,
-              qty: item.qty,
-              totalPrice: item.totalPrice,
-              fullParts: 0,
-            },
-            userArr: [],
-          });
+  useEffect(() => {
+    if (divide) {
+      let _itemList: AssignItems[] = [];
+
+      divide?.items?.map((item, idx) => {
+        _itemList.push({
+          item: {
+            itemName: item.itemName,
+            price: item.price,
+            qty: item.qty,
+            totalPrice: item.totalPrice,
+            fullParts: 0,
+          },
+          userArr: [],
         });
-        setItems(itemList);
-      }
-    }, [])
-  );
+      });
+      setItems(_itemList);
+    }
+  }, [route.params]);
+
+  useEffect(() => {
+    if (route.params && friends.length === 0) {
+      let friendList: AssignFriend[] = [];
+      const selectedFriends: UserDocument[] = [...route.params.selectedFriends];
+      selectedFriends.map((friend, idx) => {
+        const user = friend;
+        const _user = {
+          avatar: user.avatar,
+          email: user.email,
+          name: user.name,
+          username: user.username,
+          payments: user.payments,
+        } as UserDocument;
+        friendList.push({ user: _user, selectedItem: [] });
+      });
+      setFriends(friendList);
+    }
+  }, [divide]);
 
   return (
     <SafeAreaView style={{ flex: 1 }}>

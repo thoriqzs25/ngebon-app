@@ -51,9 +51,6 @@ const AssignCard = ({
 
   useEffect(() => {
     parseTotalPrice();
-  }, []);
-
-  useEffect(() => {
     getDummyImg();
   }, []);
 
@@ -61,8 +58,10 @@ const AssignCard = ({
     let _parts: number = 1;
     const _selectedItems = friends[currFriendIdx]?.selectedItem;
 
-    const item = _selectedItems.find((item) => item.itemIdx === idx);
-    if (item) _parts = item?.parts;
+    if (_selectedItems) {
+      const item = _selectedItems.find((item) => item.itemIdx === idx);
+      if (item) _parts = item?.parts;
+    }
 
     setValue(_parts);
   }, [friends, currFriendIdx]);

@@ -19,6 +19,12 @@ const divideReducer = (prevState = defaultState, action: DivideReducerAction) =>
         ...prevState,
         assignedFriends: action.friends,
       };
+    case 'RESET_ASSIGNED_FRIENDS':
+      return {
+        ...prevState,
+        assignedFriends: null,
+      };
+
     default:
       return prevState;
   }

@@ -12,13 +12,14 @@ export type ItemDivide = {
   qty: string;
   // pricePerUser?: number;
   parts?: number;
-  fullParts: number;
+  fullParts?: number;
   totalPrice: number;
 };
 
 export type DivideReducerAction =
   | { type: 'SET_DIVIDE_ITEMS'; title: string; items: ItemDivide[] }
-  | { type: 'SET_ASSIGNED_FRIENDS'; friends: AssignFriend[] };
+  | { type: 'SET_ASSIGNED_FRIENDS'; friends: AssignFriend[] }
+  | { type: 'RESET_ASSIGNED_FRIENDS' };
 
 export type AssignFriend = {
   user: UserDocument;

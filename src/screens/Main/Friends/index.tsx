@@ -82,7 +82,7 @@ const Friends = () => {
             friends.map((friend, idx) => {
               return <UserCard key={idx} user={friend} />;
             })}
-          <CustomButton text='Open Image' style={{ paddingHorizontal: 20, borderRadius: 8 }} onPress={pickImage} />
+          {/* <CustomButton text='Open Image' style={{ paddingHorizontal: 20, borderRadius: 8 }} onPress={pickImage} /> */}
 
           {image && <ImageView remoteAssetFullUri={image} style={{ width: 400, height: 300, resizeMode: 'contain' }} />}
           <Text>{text}</Text>

@@ -10,3 +10,7 @@ export const setAssignedFriends = ({ friends }: { friends: AssignFriend[] }) => 
   type: 'SET_ASSIGNED_FRIENDS',
   friends: friends,
 });
+
+export const resetAssignedFriends = () => ({
+  type: 'RESET_ASSIGNED_FRIENDS',
+});

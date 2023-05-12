@@ -15,10 +15,11 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { moderateScale, moderateVerticalScale } from 'react-native-size-matters';
 import { useSelector } from 'react-redux';
 import { store } from '@src/redux/store';
-import { setAssignedFriends } from '@src/redux/actions/divide';
+import { resetAssignedFriends, setAssignedFriends } from '@src/redux/actions/divide';
 
 const DivideChooseFriends = () => {
   const { user } = useSelector((state: RootState) => state);
+  const { assignedFriends } = useSelector((state: RootState) => state.divide);
 
   const [checkedItems, setCheckedItems] = useState<Array<number>>([]);
   const [friends, setFriends] = useState<UserDocument[]>([]);
@@ -39,6 +40,12 @@ const DivideChooseFriends = () => {
   useFocusEffect(
     useCallback(() => {
       getFriends();
+    }, [])
+  );
+
+  useFocusEffect(
+    useCallback(() => {
+      store.dispatch(resetAssignedFriends());
     }, [])
   );
 
