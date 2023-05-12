@@ -28,7 +28,7 @@ const UserCardMoneyDivide = ({
   useEffect(() => {
     let total = 0;
     selectedItem.map((item) => {
-      total += (item.parts / items[item.itemIdx].fullParts) * items[item.itemIdx].totalPrice;
+      total += (item.parts / items[item.itemIdx].fullParts!!) * items[item.itemIdx].totalPrice;
       // total += items[num].pricePerUser!!;
     });
 
@@ -66,7 +66,12 @@ const UserCardMoneyDivide = ({
             </View>
             <View style={{ flexShrink: 1, marginLeft: 'auto' }}>
               <Text style={[styles.name, { textAlign: 'right', fontSize: 16 }]} numberOfLines={1}>
-                Rp{totalAmount.toLocaleString('id-ID')}
+                Rp
+                {totalAmount
+                  .toFixed(2)
+                  .toString()
+                  .replace(/\B(?=(\d{3})+(?!\d))/g, '.')
+                  .replace(/\.?0+$/, '')}
               </Text>
             </View>
           </View>
@@ -84,7 +89,7 @@ const UserCardMoneyDivide = ({
                 }`}</Text>
                 {/* <Text style={[styles.dmFont, styles.items, { flex: 1, marginLeft: 4 }]}>{qty ?? ''}</Text> */}
                 <Text numberOfLines={1} style={[styles.dmFont, styles.items, { flex: 3 }]}>
-                  {totalPrice ? `Rp${totalPrice.toLocaleString('id-ID')}` : ''}
+                  {totalPrice ? `Rp${totalPrice.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}` : ''}
                 </Text>
               </View>
             );
