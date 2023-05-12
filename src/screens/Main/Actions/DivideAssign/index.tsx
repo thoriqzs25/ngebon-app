@@ -114,21 +114,21 @@ const DivideAssign = ({ route }: { route: RouteProp<{ params: { selectedFriends:
   };
 
   const handleNext = () => {
-    console.log('line 91', items);
-    // let _items: ItemDivide[] = [];
-    // items.map((item, idx) => {
-    //   const payload = {
-    //     ...item.item,
-    //     pricePerUser: Math.ceil(item.item.totalPrice / item.userArr.length),
-    //   } as ItemDivide;
-    //   _items.push(payload);
-    // });
-    // store.dispatch(setDivideItems({ title: divide.title, items: _items }));
-    // store.dispatch(setAssignedFriends({ friends: friends }));
-    // setFriends([]);
-    // setItems([]);
-    // setCurrIdx(0);
-    // navigate('PaymentReceipient', { page: 'Divide' });
+    // console.log('line 91', items);
+    let _items: ItemDivide[] = [];
+    items.map((item, idx) => {
+      const payload = {
+        ...item.item,
+        // pricePerUser: Math.ceil(item.item.totalPrice / item.userArr.length),
+      } as ItemDivide;
+      _items.push(payload);
+    });
+    store.dispatch(setDivideItems({ title: divide.title, items: _items }));
+    store.dispatch(setAssignedFriends({ friends: friends }));
+    setFriends([]);
+    setItems([]);
+    setCurrIdx(0);
+    navigate('PaymentReceipient', { page: 'Divide' });
   };
 
   useFocusEffect(

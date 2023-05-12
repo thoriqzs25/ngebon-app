@@ -10,7 +10,9 @@ export type ItemDivide = {
   itemName: string;
   price: string;
   qty: string;
-  pricePerUser?: number;
+  // pricePerUser?: number;
+  parts?: number;
+  fullParts: number;
   totalPrice: number;
 };
 

@@ -177,16 +177,21 @@ const DebtDetails = ({
               <View style={{ marginTop: 8 }}>
                 <Text style={[styles.dmBold, { fontSize: moderateScale(10, 2) }]}>Items :</Text>
                 {debtData.data.items.map((item, idx) => {
-                  const { itemName, price } = item;
+                  const { itemName, totalPrice } = item;
                   return (
                     <View key={idx.toString()} style={{ flexDirection: 'row', width: '85%', marginTop: 12 }}>
                       <Text numberOfLines={1} style={[styles.dmFont, styles.items, { flex: 5 }]}>
                         {itemName ?? ''}
                       </Text>
-                      <Text style={[styles.dmFont, styles.items, { flex: 1, marginLeft: 4 }]}>{'1'}</Text>
+                      <Text
+                        style={[
+                          styles.dmFont,
+                          styles.items,
+                          { flex: 1, marginLeft: 4 },
+                        ]}>{`${item.parts}/${item.fullParts}`}</Text>
                       {/* <Text style={[styles.dmFont, styles.items, { flex: 1, marginLeft: 4 }]}>{qty ?? ''}</Text> */}
                       <Text numberOfLines={1} style={[styles.dmFont, styles.items, { flex: 3 }]}>
-                        {price ? `Rp${parseInt(price).toLocaleString('id-ID')}` : ''}
+                        {totalPrice ? `Rp${totalPrice.toLocaleString('id-ID')}` : ''}
                       </Text>
                     </View>
                   );

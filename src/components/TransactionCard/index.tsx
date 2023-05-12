@@ -170,7 +170,12 @@ const TransactionCard = ({
             fontFamily: 'dm-500',
             fontSize: moderateScale(12, 2),
           }}>
-          Rp{item.totalAmount.replace(/\B(?=(\d{3})+(?!\d))/g, '.')}
+          Rp
+          {parseInt(item.totalAmount)
+            .toFixed(2)
+            .toString()
+            .replace(/\B(?=(\d{3})+(?!\d))/g, '.')
+            .replace(/\.?0+$/, '')}
         </Text>
       </View>
     </View>

@@ -69,16 +69,18 @@ export const createDivideDebt = async (divideRedux: DivideReducerState, recordRe
     let _items: ItemDivide[] = [];
     let _totalPrice: number = 0;
     fr.selectedItem.map((itm) => {
-      const _item = divideRedux.items!![itm];
-      _totalPrice += _item.pricePerUser!!;
-      _items.push(_item);
+      const _item = divideRedux.items!![itm.itemIdx];
+      _totalPrice +=
+        (itm.parts / divideRedux.items!![itm.itemIdx].fullParts) * divideRedux.items!![itm.itemIdx].totalPrice;
+      // (item.parts / items[item.itemIdx].fullParts) * items[item.itemIdx].totalPrice;
+      _items.push({ ..._item, parts: itm.parts });
     });
 
     totalAmountForReceivables += _totalPrice;
 
     const itemDebtors = {
       username: fr.user.username,
-      totalAmount: _totalPrice.toString(),
+      totalAmount: _totalPrice.toFixed(2).toString(),
       items: _items,
       status: 'requesting',
     } as ItemDebtors;

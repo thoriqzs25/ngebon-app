@@ -65,7 +65,7 @@ const AssignCard = ({
     if (item) _parts = item?.parts;
 
     setValue(_parts);
-  }, [friends]);
+  }, [friends, currFriendIdx]);
 
   return (
     <View style={{ marginBottom: 2 }}>

@@ -1,7 +1,7 @@
 import { navigate } from '@src/navigation';
 import colours from '@src/utils/colours';
 import React, { useEffect, useState } from 'react';
-import { StyleSheet } from 'react-native';
+import { Easing, StyleSheet } from 'react-native';
 import { Text, View } from 'react-native';
 import { TouchableHighlight } from 'react-native-gesture-handler';
 import { moderateScale } from 'react-native-size-matters';
@@ -9,7 +9,8 @@ import ImageView from '../ImageView';
 import CustomCheckbox from '../input/CustomCheckbox';
 import { UserDocument } from '@src/types/collection/usersCollection';
 import { UserReducerState } from '@src/types/states/user';
-import { ItemDivide } from '@src/types/states/divide';
+import { ItemDivide, ItemParts } from '@src/types/states/divide';
+import TextTicker from 'react-native-text-ticker';
 
 const UserCardMoneyDivide = ({
   onPress,
@@ -20,14 +21,15 @@ const UserCardMoneyDivide = ({
   onPress?: () => void;
   user: UserDocument | UserReducerState;
   items: ItemDivide[];
-  selectedItem: number[];
+  selectedItem: ItemParts[];
 }) => {
   const [totalAmount, setTotalAmount] = useState<number>(0);
 
   useEffect(() => {
     let total = 0;
-    selectedItem.map((num) => {
-      total += items[num].pricePerUser!!;
+    selectedItem.map((item) => {
+      total += (item.parts / items[item.itemIdx].fullParts) * items[item.itemIdx].totalPrice;
+      // total += items[num].pricePerUser!!;
     });
 
     setTotalAmount(total);
@@ -47,10 +49,17 @@ const UserCardMoneyDivide = ({
         />
         <View style={{ flex: 1, marginLeft: 24 }}>
           <View style={{ flexDirection: 'row' }}>
-            <View>
-              <Text style={[styles.name]} numberOfLines={1}>
-                {user ? user.name : 'Loading'}
-              </Text>
+            <View style={{ flex: 1, marginRight: 12 }}>
+              <TextTicker
+                style={{ fontFamily: 'dm-500', fontSize: moderateScale(12, 2) }}
+                duration={5000}
+                bounce={false}
+                easing={Easing.inOut(Easing.linear)}
+                // @ts-ignore
+                scroll={'toLeft'}
+                repeatSpacer={30}>
+                {user ? `${user.name}` : 'Loading'}
+              </TextTicker>
               <Text style={[styles.dmFont, { color: colours.gray300, fontSize: moderateScale(10, 2) }]}>
                 {user ? user.username : ''}
               </Text>
@@ -62,18 +71,20 @@ const UserCardMoneyDivide = ({
             </View>
           </View>
           <Text style={[styles.dmFont, styles.items, { marginTop: 8 }]}>Items:</Text>
-          {selectedItem.map((num, idx) => {
-            const { itemName, qty, price } = items[num];
+          {selectedItem.map((item, idx) => {
+            const { itemName, qty, totalPrice } = items[item.itemIdx];
 
             return (
               <View key={idx.toString()} style={{ flexDirection: 'row', width: '85%' }}>
                 <Text numberOfLines={1} style={[styles.dmFont, styles.items, { flex: 5 }]}>
                   {itemName ?? ''}
                 </Text>
-                <Text style={[styles.dmFont, styles.items, { flex: 1, marginLeft: 4 }]}>{'1'}</Text>
+                <Text style={[styles.dmFont, styles.items, { flex: 1, marginLeft: 4 }]}>{`${item.parts}/${
+                  items[item.itemIdx].fullParts
+                }`}</Text>
                 {/* <Text style={[styles.dmFont, styles.items, { flex: 1, marginLeft: 4 }]}>{qty ?? ''}</Text> */}
                 <Text numberOfLines={1} style={[styles.dmFont, styles.items, { flex: 3 }]}>
-                  {price ? `Rp${parseInt(price).toLocaleString('id-ID')}` : ''}
+                  {totalPrice ? `Rp${totalPrice.toLocaleString('id-ID')}` : ''}
                 </Text>
               </View>
             );
