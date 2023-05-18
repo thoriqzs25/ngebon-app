@@ -18,6 +18,7 @@ import { useFocusEffect } from '@react-navigation/native';
 import AddFriendCard from '@src/components/AddFriendCard';
 import UserCard from '@src/components/UserCard';
 import { callGoogleVisionAsync } from '@src/utils/ocrHelper';
+import { moderateScale } from 'react-native-size-matters';
 
 const Friends = () => {
   const { user } = useSelector((state: RootState) => state);
@@ -93,6 +94,22 @@ const Friends = () => {
             })}
           {/* <CustomButton text='Open Image' style={{ paddingHorizontal: 20, borderRadius: 8 }} onPress={pickImage} /> */}
 
+          {friends.length === 0 && (
+            <Text
+              style={[
+                // styles.dmBold,
+                {
+                  marginTop: 12,
+                  textAlign: 'center',
+                  fontFamily: 'dm-700',
+                  paddingHorizontal: 20,
+                  color: 'rgba(0,0,0,0.5)',
+                  fontSize: moderateScale(12, 2),
+                },
+              ]}>
+              Add friend by username
+            </Text>
+          )}
           {image && <ImageView remoteAssetFullUri={image} style={{ width: 400, height: 300, resizeMode: 'contain' }} />}
           <Text>{text}</Text>
           <ActivityIndicator animating={isLoading} />

@@ -27,7 +27,7 @@ const Card = ({ children }: { children: JSX.Element }) => {
 
 const Profile = () => {
   const { uid } = useSelector((state: RootState) => state.auth);
-  const { avatar, username, name } = useSelector((state: RootState) => state.user);
+  const { avatar, username, name, payments } = useSelector((state: RootState) => state.user);
 
   const pickImage = async () => {
     // No permissions request is necessary for launching the image library
@@ -76,23 +76,26 @@ const Profile = () => {
           IS_ANDROID && globalStyle.paddingTop,
         ]}>
         <Text style={styles.page}>Profile</Text>
-        <TouchableOpacity activeOpacity={0.85} onPress={pickImage}>
+        <TouchableOpacity
+          activeOpacity={0.85}
+          onPress={pickImage}
+          containerStyle={{
+            marginBottom: 12,
+            alignSelf: 'center',
+            width: moderateScale(100, 2),
+            height: moderateScale(100, 2),
+          }}>
           <View
             style={{
-              alignSelf: 'center',
               position: 'relative',
-              width: moderateScale(100, 2),
-              height: moderateScale(100, 2),
-
-              marginBottom: 12,
             }}>
             <ImageView
               name={'tree-1'}
               remoteAssetFullUri={avatar}
               style={{
+                alignSelf: 'center',
                 width: moderateScale(100, 2),
                 height: moderateScale(100, 2),
-                alignSelf: 'center',
                 borderRadius: moderateScale(46, 2),
               }}
             />
@@ -118,9 +121,26 @@ const Profile = () => {
         <Text style={styles.name} numberOfLines={1}>
           {name}
         </Text>
-        <Text style={styles.username} numberOfLines={1}>
-          {username}
-        </Text>
+        {username !== undefined ? (
+          <Text style={styles.username} numberOfLines={1}>
+            {username}
+          </Text>
+        ) : (
+          <Text
+            style={[
+              // styles.dmBold,
+              {
+                marginTop: 12,
+                marginBottom: 8,
+                textAlign: 'center',
+                paddingHorizontal: 20,
+                color: 'rgba(0,0,0,0.5)',
+                fontSize: moderateScale(12, 2),
+              },
+            ]}>
+            Please add your username under the "Edit Profile Information" page
+          </Text>
+        )}
         <Card>
           <View>
             <TouchableOpacity activeOpacity={0.75} onPress={() => navigate('EditProfileInformation')}>
@@ -197,6 +217,9 @@ const styles = StyleSheet.create({
     fontFamily: 'dm',
     marginLeft: 8,
     // fontSize: 18,
+  },
+  dmBold: {
+    fontFamily: 'dm-700',
   },
 });
 

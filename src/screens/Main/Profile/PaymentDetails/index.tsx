@@ -19,6 +19,10 @@ const PaymentDetails = () => {
     navigate('EditPaymentDetails', { payment: p });
   };
 
+  useEffect(() => {
+    if (payments?.length === 0) navigate('AddPaymentDetails');
+  }, []);
+
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <SubPage>

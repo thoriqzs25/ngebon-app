@@ -4,7 +4,7 @@ import { removeUser, setAvatar } from '@src/redux/actions/user';
 import { store } from '@src/redux/store';
 import colours from '@src/utils/colours';
 import { useEffect, useState } from 'react';
-import { Button, Image, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, Button, Image, StyleSheet, Text, View } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { db, storage } from 'firbaseConfig';
 import { getDownloadURL, getStorage, ref, uploadBytes, uploadString } from 'firebase/storage';
@@ -34,9 +34,10 @@ const EditProfileInformation = () => {
 
   const [image, setImage] = useState<string | null>(user.avatar ?? '');
   const [username, setUsername] = useState<string>(user.username ?? '');
-  const [usernameError, setUsernameError] = useState<string>('');
+  const [usernameError, setUsernameError] = useState<string>('Required field');
   const [name, setName] = useState<string>(user.name ?? '');
   const [email, setEmail] = useState<string>(user.email ?? '');
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -76,22 +77,29 @@ const EditProfileInformation = () => {
   };
 
   const handleSave = async () => {
-    if (username === undefined || username === null || username === '') {
-      setUsernameError('Username is required');
-      return;
-    }
+    setIsLoading(true);
+    try {
+      if (username === undefined || username === null || username === '') {
+        setUsernameError('Username is required');
+        return;
+      }
 
-    const isExists = await checkUsernameRegistered(username);
-    if (isExists || username.toLowerCase().includes('guest')) {
-      setUsernameError('Username has already been taken');
-      return;
-    } else {
-      setUsernameError('');
-    }
+      const isExists = await checkUsernameRegistered(username);
+      if (isExists || username.toLowerCase().includes('guest')) {
+        setUsernameError('Username has already been taken');
+        return;
+      } else {
+        setUsernameError('');
+      }
 
-    await updateUser(name, username, user.uid!!);
-    await uploadImage(image!!);
-    if (canGoBack()) goBack();
+      await updateUser(name, username, user.uid!!);
+      await uploadImage(image!!);
+      canGoBack() && goBack();
+    } catch (e) {
+      __DEV__ && console.log('line 99', e);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -115,15 +123,18 @@ const EditProfileInformation = () => {
             Edit Profile Infromation
           </Text>
           {/* <Button title='Pick an image from camera roll' onPress={pickImage} /> */}
-          <TouchableOpacity activeOpacity={0.85} onPress={pickImage}>
+          <TouchableOpacity
+            activeOpacity={0.85}
+            onPress={pickImage}
+            containerStyle={{
+              marginBottom: 12,
+              alignSelf: 'center',
+              width: moderateScale(100, 2),
+              height: moderateScale(100, 2),
+            }}>
             <View
               style={{
-                alignSelf: 'center',
                 position: 'relative',
-                width: moderateScale(100, 2),
-                height: moderateScale(100, 2),
-
-                marginBottom: 12,
               }}>
               <ImageView
                 name={'tree-1'}
@@ -154,7 +165,7 @@ const EditProfileInformation = () => {
               </View>
             </View>
           </TouchableOpacity>
-
+          {isLoading && <ActivityIndicator animating={isLoading} />}
           <TextFieldAlt
             value={username ?? ''}
             disable={user.username !== undefined && user.username !== null && user.username !== ''}

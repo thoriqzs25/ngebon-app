@@ -110,8 +110,8 @@ const Home = () => {
             ) : (
               <View
                 style={{
-                  padding: 12,
                   marginTop: 12,
+                  paddingVertical: 20,
                   borderTopLeftRadius: 12,
                   borderTopRightRadius: 12,
                   borderBottomLeftRadius: 12,

@@ -9,6 +9,7 @@ import {
   signInWithEmailAndPassword,
   OAuthProvider,
   onAuthStateChanged,
+  updateProfile,
 } from 'firebase/auth';
 import { useEffect, useState } from 'react';
 import { ActivityIndicator, Image, Text, View } from 'react-native';
@@ -58,7 +59,23 @@ const AuthScreen = () => {
     setIsLoading(true);
     try {
       const credential = GoogleAuthProvider.credential(null, token);
-      signInWithCredential(auth, credential);
+      signInWithCredential(auth, credential).then((userCred) => {
+        const user = userCred.user;
+        if (user) {
+          const payload = {
+            displayName: user.displayName ?? '',
+            email: user.email ?? '',
+            photoURL: user.photoURL ?? '',
+          };
+          registerUser(payload, user.uid);
+
+          store.dispatch(currentUser({ email: user.email, uid: user.uid }));
+
+          if (user.photoURL) store.dispatch(setAvatar({ avatar: user.photoURL }));
+
+          checkUser(user.uid);
+        }
+      });
     } catch {
     } finally {
       setIsLoading(false);
@@ -80,6 +97,12 @@ const AuthScreen = () => {
           })
         )
         .then((appleCredential) => {
+          const fixDisplayNameFromApple = [
+            appleCredential.fullName?.givenName ?? '',
+            appleCredential.fullName?.familyName ?? '',
+          ]
+            .join(' ')
+            .trim();
           const { identityToken } = appleCredential;
           const provider = new OAuthProvider('apple.com');
           const credential = provider.credential({
@@ -87,10 +110,47 @@ const AuthScreen = () => {
             rawNonce: nonce,
           });
 
-          signInWithCredential(auth, credential);
+          signInWithCredential(auth, credential).then((userCred) => {
+            const user = userCred.user;
+            if (user.displayName === null) {
+              updateProfile(user, {
+                displayName: fixDisplayNameFromApple,
+              }).then(() => {
+                if (user) {
+                  const payload = {
+                    displayName: fixDisplayNameFromApple ?? '',
+                    email: user.email ?? '',
+                    photoURL: user.photoURL ?? '',
+                  };
+                  registerUser(payload, user.uid);
+
+                  store.dispatch(currentUser({ email: user.email, uid: user.uid }));
+
+                  if (user.photoURL) store.dispatch(setAvatar({ avatar: user.photoURL }));
+
+                  checkUser(user.uid);
+                }
+              });
+            } else {
+              if (user) {
+                const payload = {
+                  displayName: fixDisplayNameFromApple ?? '',
+                  email: user.email ?? '',
+                  photoURL: user.photoURL ?? '',
+                };
+                registerUser(payload, user.uid);
+
+                store.dispatch(currentUser({ email: user.email, uid: user.uid }));
+
+                if (user.photoURL) store.dispatch(setAvatar({ avatar: user.photoURL }));
+
+                checkUser(user.uid);
+              }
+            }
+          });
         })
         .catch((error) => {
-          // ...
+          __DEV__ && console.log('line 138', error);
         });
     } finally {
       setIsLoading(false);
@@ -116,7 +176,6 @@ const AuthScreen = () => {
   const registerUser = async (user: { displayName: string; email: string; photoURL: string }, uid: string) => {
     const newUserDoc = {
       name: user.displayName,
-      // username: username,
       email: user.email,
       createdAt: serverTimestamp(),
       avatar: user.photoURL ?? dummyImg ?? '',
@@ -130,36 +189,18 @@ const AuthScreen = () => {
     } as FriendDocument;
 
     try {
-      const resUser = await setDoc(doc(db, 'users', `${uid}`), newUserDoc, { merge: true });
-      const resFriend = await setDoc(doc(db, 'friends', `${uid}`), newFriendDoc, { merge: true });
-
       const userExists = await checkUserRegistered(uid as string);
-      if (userExists) store.dispatch(userLogin());
+      if (userExists) {
+        store.dispatch(userLogin());
+        return;
+      }
+
+      await setDoc(doc(db, 'users', `${uid}`), newUserDoc, { merge: true });
+      await setDoc(doc(db, 'friends', `${uid}`), newFriendDoc, { merge: true });
     } catch (e) {
       console.log('line 24 err', e);
     }
   };
-
-  useEffect(() => {
-    const unsubscribeFromAuthStatuChanged = onAuthStateChanged(auth, (user) => {
-      if (user) {
-        const payload = {
-          displayName: user.displayName ?? '',
-          email: user.email ?? '',
-          photoURL: user.photoURL ?? '',
-        };
-        registerUser(payload, user.uid);
-
-        store.dispatch(currentUser({ email: user.email, uid: user.uid }));
-
-        if (user.photoURL) store.dispatch(setAvatar({ avatar: user.photoURL }));
-
-        checkUser(user.uid);
-      }
-    });
-
-    return unsubscribeFromAuthStatuChanged;
-  }, []);
 
   useEffect(() => {
     getDummyImg();

@@ -13,8 +13,7 @@ const Actions = () => {
   const [modalVisible, setShowModal] = useState<boolean>(false);
 
   const handleClickAction = (type: string) => {
-    console.log('line 16', username);
-    if (username !== null) {
+    if (username === null || username === undefined) {
       navigate('UserRegistration');
       return;
     }
