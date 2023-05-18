@@ -101,12 +101,28 @@ const Home = () => {
           />
           <View style={{ marginTop: 20 }}>
             <Text style={{ fontFamily: 'dm-500', fontSize: moderateScale(16, 2) }}>Recent</Text>
-            {_sorted &&
+            {_sorted.length > 0 ? (
               _sorted.map((val, idx) => {
                 const { status } = val;
                 if (status !== 'confirmed' && status !== 'declined')
                   return <TransactionCard key={idx.toString()} item={val} updateStatus={updateDebtReceivableStatus} />;
-              })}
+              })
+            ) : (
+              <View
+                style={{
+                  padding: 12,
+                  marginTop: 12,
+                  borderTopLeftRadius: 12,
+                  borderTopRightRadius: 12,
+                  borderBottomLeftRadius: 12,
+                  borderBottomRightRadius: 12,
+                  backgroundColor: colours.gray200,
+                }}>
+                <Text style={{ textAlign: 'center', fontFamily: 'dm', color: colours.gray500 }}>
+                  No recent transaction
+                </Text>
+              </View>
+            )}
           </View>
         </View>
       </ScrollView>

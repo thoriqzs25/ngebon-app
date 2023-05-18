@@ -21,6 +21,7 @@ import { callGoogleVisionAsync } from '@src/utils/ocrHelper';
 
 const Friends = () => {
   const { user } = useSelector((state: RootState) => state);
+  const { username } = useSelector((state: RootState) => state.user);
 
   const [friends, setFriends] = useState<UserDocument[]>([]);
   const [prevRecordList, setPrevRecordList] = useState<ItemRecord[]>([]);
@@ -31,6 +32,14 @@ const Friends = () => {
   const getFriends = async () => {
     const data = await getFriendCollection(user.uid!!);
     if (data) setFriends(data);
+  };
+
+  const handleAddFriend = () => {
+    if (username !== undefined) {
+      navigate('AddFriend');
+    } else {
+      navigate('UserRegistration');
+    }
   };
 
   const pickImage = async () => {
@@ -77,7 +86,7 @@ const Friends = () => {
             IS_ANDROID && globalStyle.paddingTop,
           ]}>
           <Text style={styles.page}>Friends</Text>
-          <AddFriendCard onPress={() => navigate('AddFriend')} />
+          <AddFriendCard onPress={handleAddFriend} />
           {friends &&
             friends.map((friend, idx) => {
               return <UserCard key={idx} user={friend} />;

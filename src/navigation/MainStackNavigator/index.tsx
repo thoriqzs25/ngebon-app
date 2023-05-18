@@ -15,6 +15,7 @@ import ActionsPaymentDetails from '@src/screens/Main/Actions/ActionsPaymentDetai
 import ActionsConfirmation from '@src/screens/Main/Actions/ActionsConfirmation';
 import DebtDetails from '@src/screens/Main/Records/DebtDetails';
 import EditPaymentDetails from '@src/screens/Main/Profile/PaymentDetails/EditPaymentDetails';
+import UserRegistration from '@src/screens/Auth/UserRegistration';
 
 const Main = createStackNavigator<Record<string, any>>();
 
@@ -49,6 +50,9 @@ const MainStackNavigator = () => {
       <Main.Screen name={'PaymentDetails'} component={PaymentDetails} options={{ headerShown: false }} />
       <Main.Screen name={'AddPaymentDetails'} component={AddPaymentDetails} options={{ headerShown: false }} />
       <Main.Screen name={'EditPaymentDetails'} component={EditPaymentDetails} options={{ headerShown: false }} />
+
+      {/* Username Regis */}
+      <Main.Screen name={'UserRegistration'} component={UserRegistration} options={{ headerShown: false }} />
     </Main.Navigator>
   );
 };

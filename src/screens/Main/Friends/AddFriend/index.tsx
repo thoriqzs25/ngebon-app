@@ -33,7 +33,7 @@ const AddFriend = () => {
     try {
       await getFriends();
       const data = await getUserByUsername(username).then((res) => {
-        if (res.data) {
+        if (Object.keys(res.data).length !== 0) {
           setFriend(res.data as UserDocument);
         }
         if (res.id) {
@@ -54,7 +54,7 @@ const AddFriend = () => {
         userId: uid!!,
         friendId: friendId!!,
         userUname: currUsername!!,
-        friendUname: friend!!.username,
+        friendUname: friend!!.username!!,
       });
       await getFriends();
     } catch {
@@ -81,6 +81,7 @@ const AddFriend = () => {
   };
 
   useEffect(() => {
+    console.log('line 84', friend);
     setIsAdded(checkIfFriendAdded());
   }, [friend, friendList]);
 
@@ -129,9 +130,13 @@ const AddFriend = () => {
                   {friend !== null ? friend.name : 'Loading...'}
                 </Text>
               </View>
-            ) : (
+            ) : isLoading ? (
               <View style={{ marginTop: 40 }}>
                 <ActivityIndicator animating={isLoading} />
+              </View>
+            ) : (
+              <View style={{ marginTop: 40, alignSelf: 'center' }}>
+                <Text style={styles.dmFont}>Not Found</Text>
               </View>
             )}
 

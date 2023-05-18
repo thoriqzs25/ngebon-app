@@ -4,7 +4,7 @@ export type UserDocument = {
   avatar?: string;
   email: string;
   name: string;
-  username: string;
+  username?: string;
   payments: Payment[] | [];
 };
 

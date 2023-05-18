@@ -1,6 +1,6 @@
 import CustomButton from '@src/components/input/CustomButton';
 import colours from '@src/utils/colours';
-import { auth } from 'firbaseConfig';
+import { auth, db, storage } from 'firbaseConfig';
 import {
   createUserWithEmailAndPassword,
   signInWithCredential,
@@ -26,17 +26,18 @@ import { moderateScale } from 'react-native-size-matters';
 import * as AppleAuthentication from 'expo-apple-authentication';
 import * as Crypto from 'expo-crypto';
 import { IS_ANDROID } from '@src/utils/deviceDimensions';
+import { doc, serverTimestamp, setDoc } from 'firebase/firestore';
+import { UserDocument } from '@src/types/collection/usersCollection';
+import { FriendDocument } from '@src/types/collection/friendsCollection';
+import { getDownloadURL, ref } from 'firebase/storage';
 
 const AuthScreen = () => {
   const authRedux = useSelector((state: RootState) => state.auth);
 
-  const [email, setEmail] = useState<string>('');
-  const [pass, setPass] = useState<string>('');
-
   const [token, setToken] = useState<string>('');
-  const [userInfo, setUserInfo] = useState<User>();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isAppleLoginAvailable, setIsAppleLoginAvailable] = useState(false);
+  const [dummyImg, setDummyImg] = useState<string>('');
 
   useEffect(() => {
     AppleAuthentication.isAvailableAsync().then(setIsAppleLoginAvailable);
@@ -52,37 +53,6 @@ const AuthScreen = () => {
       scheme: 'ngebon.app.com',
     }
   );
-
-  const handleRegister = async () => {
-    createUserWithEmailAndPassword(auth, email, pass)
-      .then((userCred) => {
-        const user = userCred.user;
-        store.dispatch(currentUser({ email: user.email, uid: user.uid }));
-        navigate('UserRegistration');
-      })
-      .catch((err) => {
-        const errCode = err.code;
-        const errMsg = err.message;
-
-        console.log('line 24 error login', errCode, ', msg:', errMsg);
-      });
-  };
-
-  const handleLogin = async () => {
-    signInWithEmailAndPassword(auth, email, pass)
-      .then((userCred) => {
-        const user = userCred.user;
-        store.dispatch(currentUser({ email: user.email, uid: user.uid }));
-
-        checkUser(user.uid);
-      })
-      .catch((err) => {
-        const errCode = err.code;
-        const errMsg = err.message;
-
-        console.log('line 24 error login', errCode, ', msg:', errMsg);
-      });
-  };
 
   const handleGoogleLogin = async () => {
     setIsLoading(true);
@@ -127,10 +97,59 @@ const AuthScreen = () => {
     }
   };
 
+  const checkUser = async (userId: string) => {
+    setIsLoading(true);
+    try {
+      await getUser(userId);
+      store.dispatch(userLogin());
+    } catch {
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const getDummyImg = async () => {
+    const img = await getDownloadURL(ref(storage, 'images/tree_1.webp'));
+    setDummyImg(img);
+  };
+
+  const registerUser = async (user: { displayName: string; email: string; photoURL: string }, uid: string) => {
+    const newUserDoc = {
+      name: user.displayName,
+      // username: username,
+      email: user.email,
+      createdAt: serverTimestamp(),
+      avatar: user.photoURL ?? dummyImg ?? '',
+      payments: [],
+    } as UserDocument;
+
+    const newFriendDoc = {
+      allFriends: [],
+      ownRequests: [],
+      friendRequests: [],
+    } as FriendDocument;
+
+    try {
+      const resUser = await setDoc(doc(db, 'users', `${uid}`), newUserDoc, { merge: true });
+      const resFriend = await setDoc(doc(db, 'friends', `${uid}`), newFriendDoc, { merge: true });
+
+      const userExists = await checkUserRegistered(uid as string);
+      if (userExists) store.dispatch(userLogin());
+    } catch (e) {
+      console.log('line 24 err', e);
+    }
+  };
+
   useEffect(() => {
     const unsubscribeFromAuthStatuChanged = onAuthStateChanged(auth, (user) => {
       if (user) {
-        setUserInfo(user);
+        const payload = {
+          displayName: user.displayName ?? '',
+          email: user.email ?? '',
+          photoURL: user.photoURL ?? '',
+        };
+        registerUser(payload, user.uid);
+
         store.dispatch(currentUser({ email: user.email, uid: user.uid }));
 
         if (user.photoURL) store.dispatch(setAvatar({ avatar: user.photoURL }));
@@ -142,23 +161,9 @@ const AuthScreen = () => {
     return unsubscribeFromAuthStatuChanged;
   }, []);
 
-  const checkUser = async (userId: string) => {
-    setIsLoading(true);
-    try {
-      const userExists = await checkUserRegistered(userId);
-
-      if (!userExists) {
-        navigate('UserRegistration');
-        console.log('User does not exist!');
-      } else {
-        await getUser(userId);
-        store.dispatch(userLogin());
-      }
-    } catch {
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  useEffect(() => {
+    getDummyImg();
+  }, []);
 
   useEffect(() => {
     if (response?.type === 'success') {
@@ -187,35 +192,8 @@ const AuthScreen = () => {
           ]}>
           {'Ngebon'}
         </Text>
-        {/* {userInfo?.photoURL && (
-          <Image
-            source={{ uri: userInfo?.photoURL }}
-            style={{ marginTop: 20, width: 120, height: 120, borderRadius: 20 }}
-          />
-        )} */}
         {isLoading && <ActivityIndicator animating={isLoading} />}
 
-        {/* <TextField title='email' placeholderText='Masukkan email' setValue={setEmail} />
-        <TextField
-          title='password'
-          placeholderText='Masukkan password'
-          setValue={setPass}
-          style={{ marginBottom: 12 }}
-        />
-        <CustomButton
-          text='Login'
-          style={{ width: '80%', backgroundColor: colours.gray500, marginBottom: 6 }}
-          onPress={() => {
-            handleLogin();
-          }}
-        />
-        <CustomButton
-          text='Register'
-          style={{ width: '80%', backgroundColor: colours.gray500, marginBottom: 6 }}
-          onPress={() => {
-            handleRegister();
-          }}
-        /> */}
         <CustomButton
           text='Google Sign-In'
           style={{ width: '80%', marginTop: 20, marginBottom: 8, paddingVertical: 0, height: 44 }}

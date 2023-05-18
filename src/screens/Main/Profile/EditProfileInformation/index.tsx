@@ -23,7 +23,7 @@ import SubPage from '@src/components/SubPage';
 import TextField from '@src/components/input/TextField';
 import TextFieldAlt from '@src/components/input/TextFieldAlt';
 import { navigate } from '@src/navigation';
-import { updateUser } from '@src/utils/collections/userCollection';
+import { checkUsernameRegistered, updateUser } from '@src/utils/collections/userCollection';
 import { useNavigation } from '@react-navigation/native';
 
 const EditProfileInformation = () => {
@@ -34,6 +34,7 @@ const EditProfileInformation = () => {
 
   const [image, setImage] = useState<string | null>(user.avatar ?? '');
   const [username, setUsername] = useState<string>(user.username ?? '');
+  const [usernameError, setUsernameError] = useState<string>('');
   const [name, setName] = useState<string>(user.name ?? '');
   const [email, setEmail] = useState<string>(user.email ?? '');
 
@@ -74,9 +75,22 @@ const EditProfileInformation = () => {
     }
   };
 
-  const handleSave = () => {
-    updateUser(name, user.uid!!);
-    uploadImage(image!!);
+  const handleSave = async () => {
+    if (username === undefined || username === null || username === '') {
+      setUsernameError('Username is required');
+      return;
+    }
+
+    const isExists = await checkUsernameRegistered(username);
+    if (isExists || username.toLowerCase().includes('guest')) {
+      setUsernameError('Username has already been taken');
+      return;
+    } else {
+      setUsernameError('');
+    }
+
+    await updateUser(name, username, user.uid!!);
+    await uploadImage(image!!);
     if (canGoBack()) goBack();
   };
 
@@ -143,11 +157,13 @@ const EditProfileInformation = () => {
 
           <TextFieldAlt
             value={username ?? ''}
-            disable={true}
+            disable={user.username !== undefined && user.username !== null && user.username !== ''}
             title='Username'
             setValue={setUsername}
             style={styles.inputField}
+            error={usernameError !== ''}
           />
+          {usernameError && <Text style={styles.errorText}>{usernameError}</Text>}
           <TextFieldAlt value={name ?? ''} title='Name' setValue={setName} style={styles.inputField} />
           <TextFieldAlt
             value={email ?? ''}
@@ -210,7 +226,7 @@ const styles = StyleSheet.create({
     // fontSize: 18,
   },
   inputField: {
-    marginBottom: 12,
+    marginTop: 12,
   },
   button: {
     width: 160,
@@ -221,6 +237,10 @@ const styles = StyleSheet.create({
   buttonText: {
     fontFamily: 'dm',
     fontSize: moderateScale(11, 2),
+  },
+  errorText: {
+    fontFamily: 'dm',
+    color: colours.redNormal,
   },
 });
 

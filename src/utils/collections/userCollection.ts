@@ -71,9 +71,10 @@ export const getAllUsers = async () => {
   return usersList;
 };
 
-export const updateUser = async (name: string, uid: string) => {
+export const updateUser = async (name: string, username: string, uid: string) => {
   const user = await updateDoc(doc(db, 'users', `${uid}`), {
     name: name,
+    username: username,
   }).then(async () => {
     await getUser(uid);
   });

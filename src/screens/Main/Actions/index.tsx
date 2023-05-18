@@ -1,12 +1,31 @@
 import IcDivide from '@src/assets/svg/IcDivide';
 import IcRecord from '@src/assets/svg/IcRecord';
 import { navigate } from '@src/navigation';
+import { RootState } from '@src/types/states/root';
 import colours from '@src/utils/colours';
-import React from 'react';
-import { Pressable, SafeAreaView, StyleSheet, Text, View } from 'react-native';
+import React, { useState } from 'react';
+import { Modal, Pressable, SafeAreaView, StyleSheet, Text, View } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import { useSelector } from 'react-redux';
 
 const Actions = () => {
+  const { username } = useSelector((state: RootState) => state.user);
+  const [modalVisible, setShowModal] = useState<boolean>(false);
+
+  const handleClickAction = (type: string) => {
+    console.log('line 16', username);
+    if (username !== null) {
+      navigate('UserRegistration');
+      return;
+    }
+
+    if (type === 'record') {
+      navigate('RecordFriend');
+    } else if (type === 'divide') {
+      navigate('DivideListItem');
+    }
+  };
+
   return (
     <SafeAreaView style={{ flex: 1, justifyContent: 'center', marginBottom: 100 }}>
       <View
@@ -16,7 +35,7 @@ const Actions = () => {
           alignItems: 'center',
           justifyContent: 'center',
         }}>
-        <Pressable onPress={() => navigate('RecordFriend')}>
+        <Pressable onPress={() => handleClickAction('record')}>
           <TouchableOpacity activeOpacity={0.75}>
             <IcRecord size={200} />
           </TouchableOpacity>
@@ -27,7 +46,7 @@ const Actions = () => {
         </Pressable>
       </View>
       <View style={{ alignItems: 'center', width: '100%', marginTop: 40 }}>
-        <Pressable onPress={() => navigate('DivideListItem')}>
+        <Pressable onPress={() => handleClickAction('divide')}>
           <TouchableOpacity activeOpacity={0.75}>
             <IcDivide size={200} />
           </TouchableOpacity>
@@ -42,8 +61,31 @@ const Actions = () => {
 };
 
 const styles = StyleSheet.create({
-  title: { fontFamily: 'inter-500', fontSize: 24, textAlign: 'center', marginTop: 12 },
-  desc: { fontFamily: 'inter', color: colours.gray300 },
+  title: {
+    fontSize: 24,
+    marginTop: 12,
+    textAlign: 'center',
+    fontFamily: 'inter-500',
+  },
+  desc: {
+    fontFamily: 'inter',
+    color: colours.gray300,
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: 'white',
+    borderRadius: 20,
+    padding: 35,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
 });
 
 export default Actions;
