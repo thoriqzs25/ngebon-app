@@ -27,7 +27,13 @@ import { useSelector } from 'react-redux';
 
 const ActionsConfirmation = ({ route }: { route: RouteProp<{ params: { page: string } }> }) => {
   const { receipient, selectedPayments, records, requireProof } = useSelector((state: RootState) => state.record);
-  const { assignedFriends: af, items: divide } = useSelector((state: RootState) => state.divide);
+  const {
+    assignedFriends: af,
+    items: divide,
+    tax,
+    service,
+    totalAmountOfDivide,
+  } = useSelector((state: RootState) => state.divide);
   const { record, divide: divideRedux } = useSelector((state: RootState) => state);
 
   const [userDetail, setUserDetail] = useState<UserRecord>();
@@ -68,7 +74,8 @@ const ActionsConfirmation = ({ route }: { route: RouteProp<{ params: { page: str
 
   const handleConfirm = () => {
     if (route.params.page === 'Record') createRecordDebt(record);
-    if (route.params.page === 'Divide') createDivideDebt(divideRedux, record);
+    if (route.params.page === 'Divide')
+      createDivideDebt(divideRedux, record, tax ?? 0, service ?? 0, totalAmountOfDivide ?? 0);
     navigate('Home');
   };
 
@@ -108,6 +115,9 @@ const ActionsConfirmation = ({ route }: { route: RouteProp<{ params: { page: str
                     user={item.user}
                     items={itemDivides}
                     selectedItem={item.selectedItem}
+                    tax={tax ?? 0}
+                    service={service ?? 0}
+                    totalAmountOfDivide={totalAmountOfDivide ?? 0}
                   />
                 );
               })}

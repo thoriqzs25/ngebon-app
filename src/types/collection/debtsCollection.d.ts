@@ -25,6 +25,8 @@ export type ItemDebtors = {
   totalAmount: string;
   items: ItemDivide[];
   status: string;
+  taxToPay: string;
+  serviceToPay: string;
 };
 
 export type DebtReceivableType = {

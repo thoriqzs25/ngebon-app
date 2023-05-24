@@ -14,3 +14,18 @@ export const setAssignedFriends = ({ friends }: { friends: AssignFriend[] }) => 
 export const resetAssignedFriends = () => ({
   type: 'RESET_ASSIGNED_FRIENDS',
 });
+
+export const setTaxAndService = ({
+  tax,
+  service,
+  totalAmount,
+}: {
+  tax: number;
+  service: number;
+  totalAmount: number;
+}) => ({
+  type: 'SET_TAX_AND_SERVICE',
+  tax: tax,
+  service: service,
+  totalAmountOfDivide: totalAmount,
+});

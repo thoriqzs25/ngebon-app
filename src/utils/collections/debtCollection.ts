@@ -57,7 +57,13 @@ export const createRecordDebt = async (recordRedux: RecordReducerState) => {
   });
 };
 
-export const createDivideDebt = async (divideRedux: DivideReducerState, recordRedux: RecordReducerState) => {
+export const createDivideDebt = async (
+  divideRedux: DivideReducerState,
+  recordRedux: RecordReducerState,
+  tax: number,
+  service: number,
+  totalAmountOfDivide: number
+) => {
   const receipientUser = await getUserDebtsByUsername(recordRedux.receipient?.username!!);
 
   let listForReceivables: string[] = receipientUser ? [...receipientUser?.receivables!!] : [];
@@ -68,21 +74,27 @@ export const createDivideDebt = async (divideRedux: DivideReducerState, recordRe
   divideRedux.assignedFriends?.map(async (fr) => {
     let _items: ItemDivide[] = [];
     let _totalPrice: number = 0;
+    let _taxToPay: number = 0;
+    let _serviceToPay: number = 0;
+
     fr.selectedItem.map((itm) => {
       const _item = divideRedux.items!![itm.itemIdx];
       _totalPrice +=
-        (itm.parts / divideRedux.items!![itm.itemIdx].fullParts) * divideRedux.items!![itm.itemIdx].totalPrice;
+        (itm.parts / divideRedux.items!![itm.itemIdx].fullParts!!) * divideRedux.items!![itm.itemIdx].totalPrice;
       // (item.parts / items[item.itemIdx].fullParts) * items[item.itemIdx].totalPrice;
       _items.push({ ..._item, parts: itm.parts });
     });
 
     totalAmountForReceivables += _totalPrice;
+    _taxToPay = tax * (totalAmountOfDivide / _totalPrice);
 
     const itemDebtors = {
       username: fr.user.username,
       totalAmount: _totalPrice.toFixed(2).toString(),
       items: _items,
       status: 'requesting',
+      taxToPay: _taxToPay.toString(),
+      serviceToPay: _serviceToPay.toString(),
     } as ItemDebtors;
 
     //CAUTION

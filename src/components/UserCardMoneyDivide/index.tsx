@@ -17,11 +17,17 @@ const UserCardMoneyDivide = ({
   user,
   items,
   selectedItem,
+  tax,
+  service,
+  totalAmountOfDivide,
 }: {
   onPress?: () => void;
   user: UserDocument | UserReducerState;
   items: ItemDivide[];
   selectedItem: ItemParts[];
+  tax: number;
+  service: number;
+  totalAmountOfDivide: number;
 }) => {
   const [totalAmount, setTotalAmount] = useState<number>(0);
 
@@ -94,6 +100,33 @@ const UserCardMoneyDivide = ({
               </View>
             );
           })}
+          <View style={{ marginTop: 8 }} />
+          {tax > 0 && (
+            <View style={{ flexDirection: 'row', width: '85%' }}>
+              <Text numberOfLines={1} style={[styles.dmFont, styles.items, { flex: 5 }]}>
+                Tax
+              </Text>
+              <Text style={[styles.dmFont, styles.items, { flex: 1, marginLeft: 4 }]} />
+              {/* <Text style={[styles.dmFont, styles.items, { flex: 1, marginLeft: 4 }]}>{qty ?? ''}</Text> */}
+              <Text numberOfLines={1} style={[styles.dmFont, styles.items, { flex: 3 }]}>
+                {tax
+                  ? `Rp${((tax * totalAmountOfDivide) / totalAmount).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}`
+                  : ''}
+              </Text>
+            </View>
+          )}
+          {service > 0 && (
+            <View style={{ flexDirection: 'row', width: '85%' }}>
+              <Text numberOfLines={1} style={[styles.dmFont, styles.items, { flex: 5 }]}>
+                Service
+              </Text>
+              <Text style={[styles.dmFont, styles.items, { flex: 1, marginLeft: 4 }]} />
+              {/* <Text style={[styles.dmFont, styles.items, { flex: 1, marginLeft: 4 }]}>{qty ?? ''}</Text> */}
+              <Text numberOfLines={1} style={[styles.dmFont, styles.items, { flex: 3 }]}>
+                {service ? `Rp${service.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}` : ''}
+              </Text>
+            </View>
+          )}
         </View>
       </View>
     </View>

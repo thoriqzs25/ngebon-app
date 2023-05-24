@@ -2,7 +2,7 @@ import SubPage from '@src/components/SubPage';
 import TextField from '@src/components/input/TextField';
 import colours from '@src/utils/colours';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { Button, KeyboardAvoidingView, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Button, KeyboardAvoidingView, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { moderateScale, moderateVerticalScale } from 'react-native-size-matters';
 import CustomButton from '@src/components/input/CustomButton';
@@ -11,7 +11,7 @@ import { InputItem } from '@src/components/InputItem';
 import { IS_ANDROID } from '@src/utils/deviceDimensions';
 import { navigate } from '@src/navigation';
 import { store } from '@src/redux/store';
-import { setDivideItems } from '@src/redux/actions/divide';
+import { setDivideItems, setTaxAndService } from '@src/redux/actions/divide';
 import CustomIncrementDecrementButton from '@src/components/input/CustomIncrementDecrementButton';
 
 const DivideListItem = () => {
@@ -23,8 +23,8 @@ const DivideListItem = () => {
   const [title, setTitle] = useState<string>('');
   const [tax, setTax] = useState<number>(0);
   const [service, setService] = useState<number>(0);
-  const [valueTax, setValueTax] = useState<number>();
-  const [valueService, setValueService] = useState<number>();
+  const [valueTax, setValueTax] = useState<string>('');
+  const [valueService, setValueService] = useState<string>('');
 
   const scrollViewRef = useRef<ScrollView>();
 
@@ -93,7 +93,16 @@ const DivideListItem = () => {
   };
 
   const handleConfirm = () => {
+    const _totalAmount = inputs.reduce((accumulator, item) => accumulator + item.totalPrice, 0);
+
     store.dispatch(setDivideItems({ title: title, items: inputs }));
+    store.dispatch(
+      setTaxAndService({
+        tax: valueTax !== '' ? parseInt(valueTax) : 0,
+        service: valueService !== '' ? parseInt(valueService) : 0,
+        totalAmount: _totalAmount,
+      })
+    );
     navigate('DivideChooseFriends');
   };
 
@@ -105,19 +114,19 @@ const DivideListItem = () => {
     return _value;
   };
 
-  useEffect(() => {
-    if (tax) {
-      const valTax = handleConvertPercentageFromTotal(tax);
-      setValueTax(valTax);
-    }
-  }, [tax, inputs]);
+  // useEffect(() => {
+  //   if (tax) {
+  //     const valTax = handleConvertPercentageFromTotal(tax);
+  //     setValueTax(valTax);
+  //   }
+  // }, [tax, inputs]);
 
-  useEffect(() => {
-    if (service) {
-      const valService = handleConvertPercentageFromTotal(service);
-      setValueService(valService);
-    }
-  }, [service, inputs]);
+  // useEffect(() => {
+  //   if (service) {
+  //     const valService = handleConvertPercentageFromTotal(service);
+  //     setValueService(valService);
+  //   }
+  // }, [service, inputs]);
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -183,17 +192,19 @@ const DivideListItem = () => {
                 <View style={{ alignSelf: 'flex-end' }}>
                   {valueTax && (
                     <View style={[{ flexDirection: 'row', width: 240 }]}>
-                      <Text style={[styles.defaultFont]}>Tax({tax}%)</Text>
+                      <Text style={[styles.defaultFont]}>Tax</Text>
                       <Text style={[styles.defaultFont, { marginLeft: 'auto', marginRight: 4 }]}>=</Text>
-                      <Text style={[styles.defaultFont, { width: 120 }]}>Rp{valueTax?.toLocaleString('id-ID')}</Text>
+                      <Text style={[styles.defaultFont, { width: 120 }]}>
+                        Rp{parseInt(valueTax)?.toLocaleString('id-ID')}
+                      </Text>
                     </View>
                   )}
                   {valueService && (
                     <View style={[{ flexDirection: 'row', width: 240 }]}>
-                      <Text style={[styles.defaultFont]}>Service({service}%)</Text>
+                      <Text style={[styles.defaultFont]}>Service</Text>
                       <Text style={[styles.defaultFont, { marginLeft: 'auto', marginRight: 4 }]}>=</Text>
                       <Text style={[styles.defaultFont, { width: 120 }]}>
-                        Rp{valueService?.toLocaleString('id-ID')}
+                        Rp{parseInt(valueService)?.toLocaleString('id-ID')}
                       </Text>
                     </View>
                   )}
@@ -202,18 +213,32 @@ const DivideListItem = () => {
                 <>
                   <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 12 }}>
                     <Text style={[{ width: 80 }, styles.defaultFont]}>Tax</Text>
-                    <CustomIncrementDecrementButton value={tax} setValue={setTax} />
+                    {/* <CustomIncrementDecrementButton value={tax} setValue={setTax} /> */}
                     <Text style={[styles.defaultFont, { marginLeft: 16, marginRight: 8 }]}>=</Text>
                     <View style={{ borderBottomWidth: 1, borderBottomColor: colours.black, width: 80 }}>
-                      <Text style={[styles.defaultFont]}>{valueTax && valueTax > 0 ? valueTax : ''}</Text>
+                      <TextInput
+                        value={valueTax}
+                        onChangeText={(text: string) => setValueTax(text)}
+                        style={[styles.defaultFont, { paddingVertical: 0 }]}
+                        keyboardType='number-pad'
+                      />
+                      {/* <Text style={[styles.defaultFont]}>{valueTax && valueTax > 0 ? valueTax : ''}</Text> */}
                     </View>
                   </View>
                   <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 12 }}>
                     <Text style={[{ width: 80 }, styles.defaultFont]}>Service</Text>
-                    <CustomIncrementDecrementButton value={service} setValue={setService} />
+                    {/* <CustomIncrementDecrementButton value={service} setValue={setService} /> */}
                     <Text style={[styles.defaultFont, { marginLeft: 16, marginRight: 8 }]}>=</Text>
                     <View style={{ borderBottomWidth: 1, borderBottomColor: colours.black, width: 80 }}>
-                      <Text style={[styles.defaultFont]}>{valueService && valueService > 0 ? valueService : ''}</Text>
+                      <TextInput
+                        value={valueService}
+                        onChangeText={(text: string) => setValueService(text)}
+                        style={[styles.defaultFont, { paddingVertical: 0 }]}
+                        keyboardType='number-pad'
+                      />
+                      {/* <Text style={[styles.defaultFont]}>
+                        {valueService && parseInt(valueService) > 0 ? valueService : ''}
+                      </Text> */}
                     </View>
                   </View>
                 </>

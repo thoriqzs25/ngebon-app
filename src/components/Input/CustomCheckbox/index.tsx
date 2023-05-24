@@ -23,36 +23,38 @@ const CustomCheckbox = ({
   error?: boolean;
   onCheckChanged?: (checked: boolean) => void;
 }) => {
-  const { value: active, setValue: setActive } = useBoolean(false);
+  // const { value: active, setValue: setActive } = useBoolean(false);
 
-  useEffect(() => {
-    if (value) setActive.true();
-    else setActive.false();
-  }, [value]);
+  // useEffect(() => {
+  //   if (value) setActive.true();
+  //   else setActive.false();
+  // }, [value]);
 
-  useEffect(() => {
-    if (active) setValue && setValue.true();
-    else setValue && setValue.false();
+  // useEffect(() => {
+  //   if (active) setValue && setValue.true();
+  //   else setValue && setValue.false();
 
-    onCheckChanged && onCheckChanged(!!active);
-  }, [active]);
+  //   onCheckChanged && onCheckChanged(!!active);
+  // }, [active]);
   return (
     <TouchableOpacity
       activeOpacity={0.75}
       onPress={() => {
-        setActive.toggle();
+        // setActive.toggle();
+        setValue && setValue.toggle();
       }}
+      // disabled={true}
       style={[styles.container, style]}>
       <View
         style={[
           styles.boxContainer,
           boxStyle,
           {
-            borderColor: active ? colours.greenNormal : error ? colours.redNormal : colours.gray300,
-            backgroundColor: active ? colours.greenNormal : colours.white,
+            borderColor: value ? colours.greenNormal : error ? colours.redNormal : colours.gray300,
+            backgroundColor: value ? colours.greenNormal : colours.white,
           },
         ]}>
-        {active && (
+        {value && (
           <Ionicons
             name={'checkmark-outline'}
             size={15}

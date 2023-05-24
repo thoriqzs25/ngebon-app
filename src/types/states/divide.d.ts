@@ -4,6 +4,9 @@ export interface DivideReducerState {
   title: string | null;
   items: ItemDivide[] | null;
   assignedFriends: AssignFriend[] | null;
+  tax: number | null;
+  service: number | null;
+  totalAmountOfDivide: number | null;
 }
 
 export type ItemDivide = {
@@ -19,7 +22,8 @@ export type ItemDivide = {
 export type DivideReducerAction =
   | { type: 'SET_DIVIDE_ITEMS'; title: string; items: ItemDivide[] }
   | { type: 'SET_ASSIGNED_FRIENDS'; friends: AssignFriend[] }
-  | { type: 'RESET_ASSIGNED_FRIENDS' };
+  | { type: 'RESET_ASSIGNED_FRIENDS' }
+  | { type: 'SET_TAX_AND_SERVICE'; tax: number; service: number; totalAmountOfDivide: number };
 
 export type AssignFriend = {
   user: UserDocument;

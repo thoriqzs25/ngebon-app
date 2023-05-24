@@ -4,6 +4,9 @@ const defaultState = {
   title: null,
   items: null,
   assignedFriends: null,
+  tax: null,
+  service: null,
+  totalAmountToDivide: null,
 } as DivideReducerState;
 
 const divideReducer = (prevState = defaultState, action: DivideReducerAction) => {
@@ -23,6 +26,13 @@ const divideReducer = (prevState = defaultState, action: DivideReducerAction) =>
       return {
         ...prevState,
         assignedFriends: null,
+      };
+    case 'SET_TAX_AND_SERVICE':
+      return {
+        ...prevState,
+        tax: action.tax,
+        service: action.service,
+        totalAmountToDivide: action.totalAmountOfDivide,
       };
 
     default:

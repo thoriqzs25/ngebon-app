@@ -9,7 +9,7 @@ import { RootState } from '@src/types/states/root';
 import colours from '@src/utils/colours';
 import { getFriendCollection } from '@src/utils/collections/friendCollection';
 import React, { useCallback, useEffect, useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { moderateScale, moderateVerticalScale } from 'react-native-size-matters';
@@ -73,6 +73,10 @@ const DivideChooseFriends = () => {
               isChecked={checkedItems.includes(0)}
               user={user}
             />
+            {/* <Pressable
+              onPress={() => console.log('line 76')}
+              style={{ backgroundColor: colours.blueNormal, width: 12, height: 12 }}
+            /> */}
             <Text style={[styles.dmBold, { fontSize: moderateScale(14, 2), marginBottom: 8 }]}>Friends</Text>
             <AddFriendCard onPress={() => navigate('AddFriend')} />
             {friends &&

@@ -112,9 +112,8 @@ const AssignCard = ({
               flex: 1,
               marginTop: 4,
               marginRight: 8,
-              paddingBottom: 4,
+              paddingBottom: 6,
               flexDirection: 'row',
-              // backgroundColor: colours.blueNormal,
             }}>
             {users &&
               users.map((user, index) => {
@@ -139,7 +138,14 @@ const AssignCard = ({
 
                 if (index <= 0) {
                   return (
-                    <View key={index} style={{ position: 'relative', alignItems: 'center' }}>
+                    <View
+                      key={index}
+                      style={{
+                        position: 'relative',
+                        alignItems: 'center',
+
+                        paddingBottom: 4,
+                      }}>
                       <Image
                         source={{
                           uri: img,
@@ -159,6 +165,7 @@ const AssignCard = ({
                       position: 'relative',
                       alignItems: 'center',
                       marginLeft: -10,
+                      paddingBottom: 4,
                     }}>
                     <Image source={{ uri: img }} style={[styles.listedUserAvatar]} />
                     <View
@@ -239,7 +246,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
   },
   grayParts: {
-    bottom: -4,
+    bottom: 0,
     width: 20,
     height: 20,
     borderRadius: 10,
