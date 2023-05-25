@@ -34,6 +34,7 @@ export const getUserByUsername = async (uname: string) => {
 
   let user = {};
   let id = '';
+
   if (querySnapshot.docs.length === 1) {
     querySnapshot.forEach((doc) => {
       id = doc.id;

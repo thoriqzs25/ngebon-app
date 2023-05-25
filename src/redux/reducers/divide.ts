@@ -6,7 +6,7 @@ const defaultState = {
   assignedFriends: null,
   tax: null,
   service: null,
-  totalAmountToDivide: null,
+  totalAmountOfDivide: null,
 } as DivideReducerState;
 
 const divideReducer = (prevState = defaultState, action: DivideReducerAction) => {
@@ -32,7 +32,7 @@ const divideReducer = (prevState = defaultState, action: DivideReducerAction) =>
         ...prevState,
         tax: action.tax,
         service: action.service,
-        totalAmountToDivide: action.totalAmountOfDivide,
+        totalAmountOfDivide: action.totalAmountOfDivide,
       };
 
     default:

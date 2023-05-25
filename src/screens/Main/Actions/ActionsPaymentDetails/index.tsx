@@ -73,7 +73,7 @@ const ActionsPaymentDetails = ({ route }: { route: RouteProp<{ params: { page: s
             Payment Details
           </Text>
           <Text style={[styles.dmBold, { fontSize: moderateScale(12, 2), marginBottom: 10, color: 'rgba(0,0,0,0.5)' }]}>
-            Select payment method
+            Payment are going to be received by
           </Text>
           <ScrollView
             contentInsetAdjustmentBehavior='automatic'
@@ -85,7 +85,7 @@ const ActionsPaymentDetails = ({ route }: { route: RouteProp<{ params: { page: s
             </Text>
             {userDetail && <UserCard user={userDetail} />}
 
-            <Text style={[styles.dmBold, { fontSize: moderateScale(15, 2), marginTop: 4 }]}>Payment Method</Text>
+            {/* <Text style={[styles.dmBold, { fontSize: moderateScale(15, 2), marginTop: 4 }]}>Payment Method</Text>
             <Text style={[styles.dmFont, { color: colours.gray300, fontSize: moderateScale(10, 2) }]}>
               Select one or more
             </Text>
@@ -111,7 +111,7 @@ const ActionsPaymentDetails = ({ route }: { route: RouteProp<{ params: { page: s
                 ]}>
                 You don't have any listed payment method!{`\n\n`}You can add your payment methods in the profile section
               </Text>
-            )}
+            )} */}
             {/* <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: IS_ANDROID ? 4 : 16 }}>
               <Text style={[styles.dmFont, { fontSize: moderateScale(14, 2) }]}>Require Proof</Text>
               <Switch

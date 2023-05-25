@@ -19,20 +19,20 @@ const UserCardMoneyDivide = ({
   selectedItem,
   tax,
   service,
-  totalAmountOfDivide,
-}: {
+}: // totalAmountOfDivide,
+{
   onPress?: () => void;
   user: UserDocument | UserReducerState;
   items: ItemDivide[];
   selectedItem: ItemParts[];
   tax: number;
   service: number;
-  totalAmountOfDivide: number;
+  // totalAmountOfDivide: number;
 }) => {
   const [totalAmount, setTotalAmount] = useState<number>(0);
 
   useEffect(() => {
-    let total = 0;
+    let total = 0 + tax + service;
     selectedItem.map((item) => {
       total += (item.parts / items[item.itemIdx].fullParts!!) * items[item.itemIdx].totalPrice;
       // total += items[num].pricePerUser!!;
@@ -40,6 +40,8 @@ const UserCardMoneyDivide = ({
 
     setTotalAmount(total);
   }, [selectedItem]);
+
+  console.log('line 44', tax, service);
   return (
     <View style={{ padding: 4, borderRadius: 12, marginBottom: 8 }}>
       <View style={{ flex: 1, flexDirection: 'row' }}>
@@ -109,9 +111,7 @@ const UserCardMoneyDivide = ({
               <Text style={[styles.dmFont, styles.items, { flex: 1, marginLeft: 4 }]} />
               {/* <Text style={[styles.dmFont, styles.items, { flex: 1, marginLeft: 4 }]}>{qty ?? ''}</Text> */}
               <Text numberOfLines={1} style={[styles.dmFont, styles.items, { flex: 3 }]}>
-                {tax
-                  ? `Rp${((tax * totalAmountOfDivide) / totalAmount).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}`
-                  : ''}
+                {tax ? `Rp${tax.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}` : ''}
               </Text>
             </View>
           )}

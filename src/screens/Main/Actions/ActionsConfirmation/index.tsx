@@ -25,6 +25,11 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { moderateScale, moderateVerticalScale } from 'react-native-size-matters';
 import { useSelector } from 'react-redux';
 
+type AssignedFriendWithTaxService = AssignFriend & {
+  taxToPay: number;
+  serviceToPay: number;
+};
+
 const ActionsConfirmation = ({ route }: { route: RouteProp<{ params: { page: string } }> }) => {
   const { receipient, selectedPayments, records, requireProof } = useSelector((state: RootState) => state.record);
   const {
@@ -40,7 +45,7 @@ const ActionsConfirmation = ({ route }: { route: RouteProp<{ params: { page: str
   const [payments, setPayments] = useState<Payment[]>([]);
   const [itemRecords, setItemRecords] = useState<ItemRecord[]>([]);
   const [itemDivides, setItemDivides] = useState<ItemDivide[]>([]);
-  const [assignedFriends, setAssignedFriends] = useState<AssignFriend[]>([]);
+  const [assignedFriends, setAssignedFriends] = useState<AssignedFriendWithTaxService[]>([]);
 
   useEffect(() => {
     if (receipient) {
@@ -67,10 +72,26 @@ const ActionsConfirmation = ({ route }: { route: RouteProp<{ params: { page: str
   }, [divide]);
 
   useEffect(() => {
-    if (af) {
-      setAssignedFriends(af);
+    if (af && divide) {
+      let _af: AssignedFriendWithTaxService[] = [];
+      console.log('line 77', tax, service);
+      af.map((item, idx) => {
+        let total = 0;
+        item.selectedItem.map((item) => {
+          // console.log('line 81', item.itemIdx);
+          total += (item.parts / divide[item.itemIdx].fullParts!!) * divide[item.itemIdx].totalPrice;
+        });
+        const payload = {
+          ...item,
+          taxToPay: parseInt(((tax!! * total) / totalAmountOfDivide!!).toFixed(0)),
+          serviceToPay: parseInt(((service!! * total) / totalAmountOfDivide!!).toFixed(0)),
+        } as AssignedFriendWithTaxService;
+        _af.push(payload);
+      });
+      // console.log('line 90', _af);
+      setAssignedFriends(_af);
     }
-  }, [af]);
+  }, [af, divide]);
 
   const handleConfirm = () => {
     if (route.params.page === 'Record') createRecordDebt(record);
@@ -115,9 +136,8 @@ const ActionsConfirmation = ({ route }: { route: RouteProp<{ params: { page: str
                     user={item.user}
                     items={itemDivides}
                     selectedItem={item.selectedItem}
-                    tax={tax ?? 0}
-                    service={service ?? 0}
-                    totalAmountOfDivide={totalAmountOfDivide ?? 0}
+                    tax={item.taxToPay ?? 0}
+                    service={item.serviceToPay ?? 0}
                   />
                 );
               })}

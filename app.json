@@ -18,7 +18,7 @@
     "ios": {
       "supportsTablet": false,
       "bundleIdentifier": "ngebon.app.com",
-      "buildNumber": "24",
+      "buildNumber": "27",
       "usesAppleSignIn": true
     },
     "android": {

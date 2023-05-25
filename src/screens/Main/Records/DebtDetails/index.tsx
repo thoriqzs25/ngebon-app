@@ -179,7 +179,7 @@ const DebtDetails = ({
                 {debtData.data.items.map((item, idx) => {
                   const { itemName, totalPrice } = item;
                   return (
-                    <View key={idx.toString()} style={{ flexDirection: 'row', width: '85%', marginTop: 12 }}>
+                    <View key={idx.toString()} style={{ flexDirection: 'row', width: '85%', marginTop: 4 }}>
                       <Text numberOfLines={1} style={[styles.dmFont, styles.items, { flex: 5 }]}>
                         {itemName ?? ''}
                       </Text>
@@ -196,8 +196,39 @@ const DebtDetails = ({
                     </View>
                   );
                 })}
+                <View style={{ marginTop: 8 }}>
+                  {debtData?.data.taxToPay && parseInt(debtData?.data.taxToPay) > 0 && (
+                    <View style={{ flexDirection: 'row', width: '85%', marginTop: 4 }}>
+                      <Text numberOfLines={1} style={[styles.dmFont, styles.items, { flex: 5 }]}>
+                        Tax
+                      </Text>
+                      <Text style={[styles.dmFont, styles.items, { flex: 1, marginLeft: 4 }]} />
+                      {/* <Text style={[styles.dmFont, styles.items, { flex: 1, marginLeft: 4 }]}>{qty ?? ''}</Text> */}
+                      <Text numberOfLines={1} style={[styles.dmFont, styles.items, { flex: 3 }]}>
+                        {debtData?.data.taxToPay
+                          ? `Rp${parseInt(debtData?.data.taxToPay).toLocaleString('id-ID')}`
+                          : ''}
+                      </Text>
+                    </View>
+                  )}
+                  {debtData?.data.serviceToPay && parseInt(debtData?.data.serviceToPay) > 0 && (
+                    <View style={{ flexDirection: 'row', width: '85%', marginTop: 4 }}>
+                      <Text numberOfLines={1} style={[styles.dmFont, styles.items, { flex: 5 }]}>
+                        Service
+                      </Text>
+                      <Text style={[styles.dmFont, styles.items, { flex: 1, marginLeft: 4 }]} />
+                      {/* <Text style={[styles.dmFont, styles.items, { flex: 1, marginLeft: 4 }]}>{qty ?? ''}</Text> */}
+                      <Text numberOfLines={1} style={[styles.dmFont, styles.items, { flex: 3 }]}>
+                        {debtData?.data.serviceToPay
+                          ? `Rp${parseInt(debtData?.data.serviceToPay).toLocaleString('id-ID')}`
+                          : ''}
+                      </Text>
+                    </View>
+                  )}
+                </View>
               </View>
             )}
+
             {debtData?.data.notes && (
               <Text style={[styles.dmBold, { marginTop: 8 }]}>{`Notes : ${debtData.data.notes}`}</Text>
             )}

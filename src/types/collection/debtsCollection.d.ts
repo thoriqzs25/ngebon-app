@@ -51,4 +51,6 @@ export type DebtData = {
   notes?: string;
   receipient: UserDocument;
   status: string;
+  taxToPay?: string;
+  serviceToPay?: string;
 };

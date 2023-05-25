@@ -86,15 +86,18 @@ export const createDivideDebt = async (
     });
 
     totalAmountForReceivables += _totalPrice;
-    _taxToPay = tax * (totalAmountOfDivide / _totalPrice);
+    _taxToPay = tax * (_totalPrice / totalAmountOfDivide);
+    _serviceToPay = service * (_totalPrice / totalAmountOfDivide);
+
+    _totalPrice = _totalPrice + _taxToPay + _serviceToPay;
 
     const itemDebtors = {
       username: fr.user.username,
-      totalAmount: _totalPrice.toFixed(2).toString(),
+      totalAmount: _totalPrice.toFixed(0).toString(),
       items: _items,
       status: 'requesting',
-      taxToPay: _taxToPay.toString(),
-      serviceToPay: _serviceToPay.toString(),
+      taxToPay: _taxToPay.toFixed(0).toString(),
+      serviceToPay: _serviceToPay.toFixed(0).toString(),
     } as ItemDebtors;
 
     //CAUTION
@@ -323,12 +326,16 @@ export const getDebtByIdReturnData = async (id: string, username: string) => {
     let _totalAmount: string = '';
     let _items: ItemDivide[] = [];
     let _status: string = '';
+    let _taxToPay: string = '';
+    let _serviceToPay: string = '';
 
     res.divideDebt?.debtors.map((dbt) => {
       if (dbt.username === username) {
         _totalAmount = dbt.totalAmount;
         _items = [...dbt.items];
         _status = dbt.status;
+        _taxToPay = dbt.taxToPay;
+        _serviceToPay = dbt.serviceToPay;
       }
     });
 
@@ -339,6 +346,8 @@ export const getDebtByIdReturnData = async (id: string, username: string) => {
       username: username,
       status: _status,
       items: _items,
+      taxToPay: _taxToPay,
+      serviceToPay: _serviceToPay,
     };
     return data;
   }
