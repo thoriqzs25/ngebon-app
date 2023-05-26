@@ -1,8 +1,8 @@
 import SubPage from '@src/components/SubPage';
 import TextField from '@src/components/input/TextField';
 import colours from '@src/utils/colours';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { Button, KeyboardAvoidingView, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
+import React, { useCallback, useRef, useState } from 'react';
+import { KeyboardAvoidingView, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { moderateScale, moderateVerticalScale } from 'react-native-size-matters';
 import CustomButton from '@src/components/input/CustomButton';
@@ -12,7 +12,6 @@ import { IS_ANDROID } from '@src/utils/deviceDimensions';
 import { navigate } from '@src/navigation';
 import { store } from '@src/redux/store';
 import { setDivideItems, setTaxAndService } from '@src/redux/actions/divide';
-import CustomIncrementDecrementButton from '@src/components/input/CustomIncrementDecrementButton';
 
 const DivideListItem = () => {
   const [inputs, setInputs] = useState<Array<{ itemName: string; price: string; qty: string; totalPrice: number }>>([

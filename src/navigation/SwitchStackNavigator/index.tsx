@@ -1,12 +1,10 @@
 import { SwitchStackParamList } from '@cTypes/navigation/types';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { TransitionPresets } from '@react-navigation/stack';
-// import { RootState } from '@src/types/states/root';
 import { useSelector } from 'react-redux';
 import AuthStackNavigator from '../AuthStackNavigator';
 import MainStackNavigator from '../MainStackNavigator';
 import { RootState } from '@src/types/states/root';
-// import AuthStackNavigator from '../AuthStackNavigator';
 
 const Switch = createNativeStackNavigator<SwitchStackParamList>();
 

@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react';
 import { StyleSheet, Text, TextInput, View } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import colours from '@src/utils/colours';

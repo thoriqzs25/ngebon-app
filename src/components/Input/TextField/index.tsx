@@ -3,14 +3,7 @@ import useBoolean from '@src/utils/hooks/useBoolean';
 import { navigate } from '@src/navigation';
 import colours from '@src/utils/colours';
 import { useEffect, useRef, useState } from 'react';
-import {
-  KeyboardTypeOptions,
-  StyleProp,
-  StyleSheet,
-  StyleSheetProperties,
-  TextInputProps,
-  TouchableOpacity,
-} from 'react-native';
+import { KeyboardTypeOptions, StyleProp, StyleSheet, TouchableOpacity } from 'react-native';
 import { Text, TextInput, View } from 'react-native';
 
 const TextField = ({

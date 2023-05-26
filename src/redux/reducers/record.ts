@@ -1,4 +1,3 @@
-import { Payment } from '@src/types/collection/usersCollection';
 import { RecordReducerAction, RecordReducerState } from '@src/types/states/record';
 
 const defaultState = {

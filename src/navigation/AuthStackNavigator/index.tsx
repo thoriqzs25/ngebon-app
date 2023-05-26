@@ -1,5 +1,4 @@
 import { createStackNavigator } from '@react-navigation/stack';
-import UserRegistration from '@src/screens/Auth/UserRegistration';
 import AuthScreen from '@src/screens/Auth/AuthScreen';
 
 const Auth = createStackNavigator<Record<string, any>>();

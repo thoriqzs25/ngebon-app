@@ -1,7 +1,6 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { TouchableHighlight } from 'react-native-gesture-handler';
-import ImageView from '../ImageView';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { moderateScale } from 'react-native-size-matters';
 

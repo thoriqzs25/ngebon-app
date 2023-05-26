@@ -1,20 +1,12 @@
 import { RouteProp, useFocusEffect } from '@react-navigation/native';
 import TransactionCard from '@src/components/TransactionCard';
 import CustomButton from '@src/components/input/CustomButton';
-import { DebtReceivableType } from '@src/types/collection/debtsCollection';
-import { UserDebtsDocument } from '@src/types/collection/users_debtsCollection';
 import { RootState } from '@src/types/states/root';
-import {
-  getAllUserDebtReceivable,
-  getDebtByIdReturnDebt,
-  getReceivableByIdReturnReceivable,
-} from '@src/utils/collections/debtCollection';
-import { getUserDebtsByUsername } from '@src/utils/collections/user_debtCollection';
 import colours from '@src/utils/colours';
 import { IS_ANDROID } from '@src/utils/deviceDimensions';
 import { globalStyle } from '@src/utils/globalStyles';
 import useGetAllDebtReceivable from '@src/utils/hooks/useGetAllDebtReceivable';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
 import { RefreshControl, ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';

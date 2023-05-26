@@ -1,4 +1,3 @@
-import CustomButton from '@src/components/input/CustomButton';
 import { navigate } from '@src/navigation';
 import React, { useCallback, useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';

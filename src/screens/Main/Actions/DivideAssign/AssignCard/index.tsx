@@ -2,9 +2,9 @@ import CustomIncrementDecrementButtonParts from '@src/components/input/CustomInc
 import { UserDocument } from '@src/types/collection/usersCollection';
 import { AssignFriend } from '@src/types/states/divide';
 import colours from '@src/utils/colours';
-import { app, storage } from 'firbaseConfig';
-import { getDownloadURL, getStorage, ref } from 'firebase/storage';
-import React, { useCallback, useEffect, useState } from 'react';
+import { storage } from 'firbaseConfig';
+import { getDownloadURL, ref } from 'firebase/storage';
+import React, { useEffect, useState } from 'react';
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { moderateScale } from 'react-native-size-matters';

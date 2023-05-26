@@ -2,7 +2,6 @@ import ImageView from '@src/components/ImageView';
 import colours from '@src/utils/colours';
 import React, { useState } from 'react';
 import { StyleSheet, View, Text, StyleProp } from 'react-native';
-import { Dropdown } from 'react-native-element-dropdown';
 import DropDownPicker from 'react-native-dropdown-picker';
 import { moderateScale } from 'react-native-size-matters';
 import { TouchableOpacity } from 'react-native-gesture-handler';

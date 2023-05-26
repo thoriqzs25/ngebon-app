@@ -1,8 +1,7 @@
 import colours from '@utils/colours';
 import { SCREEN_WIDTH } from '@utils/deviceDimensions';
-import { globalStyle, ph } from '@utils/globalStyles';
 import { useEffect, useRef, useState } from 'react';
-import { Animated, FlatList, StyleSheet, Text, View } from 'react-native';
+import { Animated, FlatList, StyleSheet, View } from 'react-native';
 import ImageView from '../ImageView';
 import Pagination from './Pagination';
 

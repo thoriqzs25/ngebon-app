@@ -1,7 +1,7 @@
 import { useNavigation } from '@react-navigation/native';
 import colours from '@utils/colours';
 import { globalStyle } from '@utils/globalStyles';
-import { Pressable, StyleProp, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { StyleProp, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { IS_ANDROID } from '@src/utils/deviceDimensions';
 

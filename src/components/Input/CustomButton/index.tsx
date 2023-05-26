@@ -1,5 +1,5 @@
 import colours from '@src/utils/colours';
-import { Pressable, StyleProp, StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import { StyleProp, StyleSheet, Text, TouchableOpacity } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 
 const CustomButton = ({

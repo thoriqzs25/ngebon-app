@@ -1,7 +1,6 @@
-import { navigate } from '@src/navigation';
 import colours from '@src/utils/colours';
-import React, { useState } from 'react';
-import { Pressable, StyleProp, StyleSheet, TouchableHighlight, TouchableOpacity } from 'react-native';
+import React from 'react';
+import { StyleProp, StyleSheet, TouchableHighlight } from 'react-native';
 import { Text, View } from 'react-native';
 
 import { moderateScale } from 'react-native-size-matters';
@@ -9,7 +8,6 @@ import ImageView from '../ImageView';
 import CustomCheckbox from '../input/CustomCheckbox';
 import { UserDocument } from '@src/types/collection/usersCollection';
 import { UserReducerState } from '@src/types/states/user';
-import { IS_ANDROID } from '@src/utils/deviceDimensions';
 
 const UserCard = ({
   onPress,

@@ -7,8 +7,6 @@ import colours from '@src/utils/colours';
 import { IS_ANDROID } from '@src/utils/deviceDimensions';
 import { addNewFriend, getFriendCollection } from '@src/utils/collections/friendCollection';
 import { getUserByUsername } from '@src/utils/collections/userCollection';
-import { db } from 'firbaseConfig';
-import { collection, getDocs, query, where } from 'firebase/firestore';
 import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, KeyboardAvoidingView, StyleSheet, Text, TextInput, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';

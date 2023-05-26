@@ -1,7 +1,5 @@
 import { RouteProp, useFocusEffect, useNavigation } from '@react-navigation/native';
 import AddFriendCard from '@src/components/AddFriendCard';
-import ImageView from '@src/components/ImageView';
-import CustomButton from '@src/components/input/CustomButton';
 import SubPage from '@src/components/SubPage';
 import UserCard from '@src/components/UserCard';
 import { navigate } from '@src/navigation';
@@ -11,7 +9,7 @@ import { RootState } from '@src/types/states/root';
 import colours from '@src/utils/colours';
 import { getFriendCollection } from '@src/utils/collections/friendCollection';
 import React, { useCallback, useEffect, useState } from 'react';
-import { StyleSheet, Text, TouchableOpacity, TouchableHighlight } from 'react-native';
+import { StyleSheet, Text } from 'react-native';
 import { View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';

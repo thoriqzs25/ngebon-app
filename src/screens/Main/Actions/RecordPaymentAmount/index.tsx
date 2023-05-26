@@ -9,7 +9,7 @@ import { moderateScale, moderateVerticalScale } from 'react-native-size-matters'
 import { useCallback, useEffect, useState } from 'react';
 import CustomButton from '@src/components/input/CustomButton';
 import { navigate } from '@src/navigation';
-import { RouteProp, useNavigation } from '@react-navigation/native';
+import { RouteProp } from '@react-navigation/native';
 import { UserDocument } from '@src/types/collection/usersCollection';
 import { ItemRecord } from '@src/types/states/record';
 import { store } from '@src/redux/store';

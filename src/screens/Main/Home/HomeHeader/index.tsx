@@ -1,7 +1,6 @@
 import ImageView from '@src/components/ImageView';
 import { IS_ANDROID, STATUS_BAR_HEIGHT } from '@src/utils/deviceDimensions';
 import { Text, View } from 'react-native';
-import Ionicons from '@expo/vector-icons/Ionicons';
 import colours from '@src/utils/colours';
 import { moderateScale } from 'react-native-size-matters';
 import Constants from 'expo-constants';

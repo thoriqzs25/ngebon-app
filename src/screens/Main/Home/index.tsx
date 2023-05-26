@@ -9,17 +9,10 @@ import { moderateScale, moderateVerticalScale } from 'react-native-size-matters'
 import GreenSection from './GreenSection';
 import TransactionCard from '@src/components/TransactionCard';
 import { RefreshControl, ScrollView } from 'react-native-gesture-handler';
-import CustomButton from '@src/components/input/CustomButton';
-import ActionSheet, { ActionSheetCustom } from '@alessiocancian/react-native-actionsheet';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '@src/types/states/root';
-import { IS_ANDROID } from '@src/utils/deviceDimensions';
-import IcRecord from '@src/assets/svg/IcRecord';
-import IcDivide from '@src/assets/svg/IcDivide';
 import { getUser } from '@src/utils/collections/userCollection';
-import { store } from '@src/redux/store';
-import { setUser } from '@src/redux/actions/user';
 import useGetAllDebtReceivable from '@src/utils/hooks/useGetAllDebtReceivable';
 import { DebtReceivableType } from '@src/types/collection/debtsCollection';
 import { useFocusEffect } from '@react-navigation/native';
@@ -35,7 +28,7 @@ const Home = () => {
 
   const onRefresh = useCallback(() => {
     setRefreshing(true);
-    getData(user.username ?? '');
+    if (_sorted.length < 1) getData(user.username ?? '');
     setTimeout(() => {
       setRefreshing(false);
     }, 2000);
@@ -46,9 +39,9 @@ const Home = () => {
       if (user?.name === undefined || user.name === null) {
         getUser(auth.uid as string);
       }
-      if (user.username) {
-        getData(user.username);
-      }
+      // if (user.username) {
+      //   getData(user.username);
+      // }
     }, [])
   );
 
@@ -68,6 +61,10 @@ const Home = () => {
     else if (diff >= -750000) setImage('tree-6');
     else if (diff < -750000) setImage('tree-7');
   }, [totalDebts, totalReceivables]);
+
+  // useEffect(() => {
+  //   if (user.username) getData(user.username);
+  // }, [user]);
 
   return (
     <SafeAreaView style={{ flex: 1 }}>

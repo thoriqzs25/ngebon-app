@@ -5,9 +5,8 @@ import PaymentCard from '@src/components/PaymentCard';
 import SubPage from '@src/components/SubPage';
 import UserCard from '@src/components/UserCard';
 import CustomButton from '@src/components/input/CustomButton';
-import { DebtDoc, DebtDocument } from '@src/types/collection/debtsCollection';
-import { Payment, UserDocument } from '@src/types/collection/usersCollection';
-import { ItemDivide } from '@src/types/states/divide';
+import { DebtDoc } from '@src/types/collection/debtsCollection';
+import { Payment } from '@src/types/collection/usersCollection';
 import { RootState } from '@src/types/states/root';
 import { getDebtByIdReturnData, updateStatus } from '@src/utils/collections/debtCollection';
 import colours from '@src/utils/colours';
@@ -261,7 +260,7 @@ const DebtDetails = ({
             {route.params.isDebtOrReceivable === 'Debt' && debtData?.data.status === 'waiting' && (
               <View style={styles.actionButtonContainer}>
                 <CustomButton
-                  text='Done!'
+                  text='Confirm Payment'
                   style={styles.actionButton}
                   textStyle={styles.actionButtonText}
                   onPress={handleConfirmPayment}
@@ -271,7 +270,7 @@ const DebtDetails = ({
             {route.params.isDebtOrReceivable === 'Receivable' && debtData?.data.status === 'confirming' && (
               <View style={styles.actionButtonContainer}>
                 <CustomButton
-                  text='Confirm'
+                  text='Verify'
                   style={styles.actionButton}
                   textStyle={styles.actionButtonText}
                   onPress={handleConfirm}

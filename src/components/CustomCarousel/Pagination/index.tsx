@@ -1,5 +1,5 @@
 import colours from '@src/utils/colours';
-import { Animated, Pressable, StyleSheet, Text, View } from 'react-native';
+import { Animated, Pressable, StyleSheet, View } from 'react-native';
 
 const Pagination = ({
   data,

@@ -1,6 +1,5 @@
-import colours from '@src/utils/colours';
 import React, { useRef } from 'react';
-import { NativeSyntheticEvent, Pressable, Text, TextInputFocusEventData, View } from 'react-native';
+import { Pressable, Text, View } from 'react-native';
 import { TextInput, TouchableOpacity } from 'react-native-gesture-handler';
 
 const CustomIncrementDecrementButton = ({

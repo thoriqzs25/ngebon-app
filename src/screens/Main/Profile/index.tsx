@@ -1,14 +1,12 @@
-import CustomButton from '@src/components/input/CustomButton';
 import { userLogout } from '@src/redux/actions/auth';
 import { removeUser, setAvatar } from '@src/redux/actions/user';
 import { store } from '@src/redux/store';
 import colours from '@src/utils/colours';
-import { useState } from 'react';
-import { Button, Image, StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { auth, db, storage } from 'firbaseConfig';
-import { getDownloadURL, getStorage, ref, uploadBytes, uploadString } from 'firebase/storage';
-import { doc, setDoc, updateDoc } from 'firebase/firestore';
+import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
+import { doc, updateDoc } from 'firebase/firestore';
 import { useSelector } from 'react-redux';
 import { RootState } from '@src/types/states/root';
 import ImageView from '@src/components/ImageView';

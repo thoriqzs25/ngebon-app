@@ -1,25 +1,15 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { getFocusedRouteNameFromRoute, RouteProp, Router, RouterConfigOptions } from '@react-navigation/native';
-import HomeTest from '@src/screens/HomeTest';
-// import Home from '@screens/Main/Home';
-// import CustomIcon from '@src/components/Custom/Icons';
-// import Chat from '@src/screens/Main/Messages';
-// import Profile from '@src/screens/Main/Profile';
-// import { fontFamily } from '@src/utils/fonts';
+import { getFocusedRouteNameFromRoute, RouteProp } from '@react-navigation/native';
 import colours from '@utils/colours';
-import { DEVICE_OS, FULL_TAB_BAR_HEIGHT, SCREEN_WIDTH } from '@utils/deviceDimensions';
-import { StyleSheet, Text, View, ViewStyle } from 'react-native';
+import { DEVICE_OS, SCREEN_WIDTH } from '@utils/deviceDimensions';
+import { StyleSheet, Text, View } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import Home from '@src/screens/Main/Home';
 import Profile from '@src/screens/Main/Profile';
-import AddFriend from '@src/screens/Main/Friends/AddFriend';
 import Actions from '@src/screens/Main/Actions';
 import Friends from '@src/screens/Main/Friends';
 import Records from '@src/screens/Main/Records';
-// import ChatStackNavigator from './ChatStack';
-// import HomeStackNavigator from './HomeStack';
-// import ProfileStackNavigator from './HomeStack/ProfileStack';
 
 const Tab = createBottomTabNavigator<any>();
 

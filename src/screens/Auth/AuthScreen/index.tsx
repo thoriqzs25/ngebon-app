@@ -1,24 +1,14 @@
 import CustomButton from '@src/components/input/CustomButton';
 import colours from '@src/utils/colours';
 import { auth, db, storage } from 'firbaseConfig';
-import {
-  createUserWithEmailAndPassword,
-  signInWithCredential,
-  GoogleAuthProvider,
-  User,
-  signInWithEmailAndPassword,
-  OAuthProvider,
-  onAuthStateChanged,
-  updateProfile,
-} from 'firebase/auth';
+import { signInWithCredential, GoogleAuthProvider, OAuthProvider, updateProfile } from 'firebase/auth';
 import { useEffect, useState } from 'react';
-import { ActivityIndicator, Image, Text, View } from 'react-native';
+import { ActivityIndicator, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import * as Google from 'expo-auth-session/providers/google';
 import { store } from '@src/redux/store';
 import { currentUser, userLogin } from '@src/redux/actions/auth';
-import { navigate } from '@src/navigation';
-import { setAvatar, setUser } from '@src/redux/actions/user';
+import { setAvatar } from '@src/redux/actions/user';
 import { useSelector } from 'react-redux';
 import { RootState } from '@src/types/states/root';
 import { checkUserRegistered, getUser } from '@src/utils/collections/userCollection';
@@ -26,7 +16,6 @@ import Constants from 'expo-constants';
 import { moderateScale } from 'react-native-size-matters';
 import * as AppleAuthentication from 'expo-apple-authentication';
 import * as Crypto from 'expo-crypto';
-import { IS_ANDROID } from '@src/utils/deviceDimensions';
 import { doc, serverTimestamp, setDoc } from 'firebase/firestore';
 import { UserDocument } from '@src/types/collection/usersCollection';
 import { FriendDocument } from '@src/types/collection/friendsCollection';

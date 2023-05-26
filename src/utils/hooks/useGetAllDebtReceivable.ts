@@ -1,5 +1,5 @@
 import { DebtReceivableType } from '@src/types/collection/debtsCollection';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { getAllUserDebtReceivable, updateStatus } from '../collections/debtCollection';
 import { useFocusEffect } from '@react-navigation/native';
 
@@ -55,7 +55,7 @@ const useGetAllDebtReceivable = (username: string) => {
   useFocusEffect(
     useCallback(() => {
       getData();
-    }, [])
+    }, [username])
   );
 
   return [debts, totalDebts, receivables, totalReceivables, isLoading, getData, updateDebtReceivableStatus] as [

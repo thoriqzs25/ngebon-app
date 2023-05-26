@@ -1,9 +1,6 @@
-import React, { memo } from 'react';
+import React from 'react';
 import { Image, View, ImageBackground } from 'react-native';
-import colours from '@src/utils/colours';
-import FastImage from 'react-native-fast-image';
 import { imageSource } from '@src/utils/images';
-import * as ImagePicker from 'expo-image-picker';
 
 interface ImageViewIProps {
   name?: string;

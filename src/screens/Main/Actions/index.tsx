@@ -4,7 +4,7 @@ import { navigate } from '@src/navigation';
 import { RootState } from '@src/types/states/root';
 import colours from '@src/utils/colours';
 import React, { useState } from 'react';
-import { Modal, Pressable, SafeAreaView, StyleSheet, Text, View } from 'react-native';
+import { Pressable, SafeAreaView, StyleSheet, Text, View } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useSelector } from 'react-redux';
 

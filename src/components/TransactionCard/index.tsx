@@ -1,7 +1,6 @@
 import IcGreenCircleArrow from '@src/assets/svg/IcGreenCircleArrow';
 import IcRedCircleArrow from '@src/assets/svg/IcRedCircleArrow';
 import colours from '@src/utils/colours';
-import { IS_ANDROID } from '@src/utils/deviceDimensions';
 import { StyleSheet, Text, Easing } from 'react-native';
 import { View } from 'react-native';
 import { moderateScale } from 'react-native-size-matters';
@@ -98,9 +97,7 @@ const TransactionCard = ({
             // @ts-ignore
             scroll={'toLeft'}
             repeatSpacer={30}>
-            {item.type === 'Receivable'
-              ? `Confirm ${item.username}’s Payment`
-              : `Payment requested by ${item.username}`}
+            {item.type === 'Receivable' ? `Verify ${item.username}’s Payment` : `Payment requested by ${item.username}`}
           </TextTicker>
         </View>
 
@@ -112,7 +109,7 @@ const TransactionCard = ({
         )}
         {item.status === 'confirming' && item.type === 'Receivable' && (
           <CustomButton
-            text='Confirm'
+            text='Verify'
             style={[styles.actionButton]}
             textStyle={{ fontSize: moderateScale(8, 2) }}
             onPress={() => handleUpdateStatus('confirmed')}
@@ -146,7 +143,7 @@ const TransactionCard = ({
         )}
         {item.status === 'waiting' && item.type === 'Debt' && (
           <CustomButton
-            text='Done!'
+            text='Confirm Payment'
             style={[styles.actionButton]}
             textStyle={{ fontSize: moderateScale(8, 2) }}
             onPress={() => handleUpdateStatus('confirming')}

@@ -1,4 +1,4 @@
-import { useFocusEffect, useNavigation } from '@react-navigation/native';
+import { useFocusEffect } from '@react-navigation/native';
 import AddFriendCard from '@src/components/AddFriendCard';
 import SubPage from '@src/components/SubPage';
 import UserCard from '@src/components/UserCard';
@@ -8,14 +8,14 @@ import { UserDocument } from '@src/types/collection/usersCollection';
 import { RootState } from '@src/types/states/root';
 import colours from '@src/utils/colours';
 import { getFriendCollection } from '@src/utils/collections/friendCollection';
-import React, { useCallback, useEffect, useState } from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import React, { useCallback, useState } from 'react';
+import { StyleSheet, Text, View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { moderateScale, moderateVerticalScale } from 'react-native-size-matters';
 import { useSelector } from 'react-redux';
 import { store } from '@src/redux/store';
-import { resetAssignedFriends, setAssignedFriends } from '@src/redux/actions/divide';
+import { resetAssignedFriends } from '@src/redux/actions/divide';
 
 const DivideChooseFriends = () => {
   const { user } = useSelector((state: RootState) => state);

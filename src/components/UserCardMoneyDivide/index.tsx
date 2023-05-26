@@ -1,12 +1,9 @@
-import { navigate } from '@src/navigation';
 import colours from '@src/utils/colours';
 import React, { useEffect, useState } from 'react';
 import { Easing, StyleSheet } from 'react-native';
 import { Text, View } from 'react-native';
-import { TouchableHighlight } from 'react-native-gesture-handler';
 import { moderateScale } from 'react-native-size-matters';
 import ImageView from '../ImageView';
-import CustomCheckbox from '../input/CustomCheckbox';
 import { UserDocument } from '@src/types/collection/usersCollection';
 import { UserReducerState } from '@src/types/states/user';
 import { ItemDivide, ItemParts } from '@src/types/states/divide';
